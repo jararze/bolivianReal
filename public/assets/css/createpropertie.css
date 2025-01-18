@@ -1,0 +1,15 @@
+/* Ajustes para el mapa */
+.leaflet-container {
+    background-color: #f8fafc;
+}
+
+
+/* Estilo para los checkboxes */
+input[type="checkbox"] {
+    @apply w-4 h-4 cursor-pointer focus:ring-blue-500;
+}
+
+/* Hover effect para las labels */
+.inline-flex:hover span {
+    @apply text-blue-600;
+}
