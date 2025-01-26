@@ -4,20 +4,67 @@ use App\Http\Controllers\AmenityController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\FacilityController;
+use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\PropertyTypeController;
 use App\Http\Controllers\ServiceTypeController;
+use App\Models\Configuration;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/css/theme-dynamic.css', function () {
+    try {
+        $config = Configuration::where('key', 'appearance_settings')
+            ->where('status', true)
+            ->first();
+
+        // Convertir el valor a array si es una Collection
+        $appearanceSettings = $config ? ($config->value instanceof \Illuminate\Support\Collection
+            ? $config->value->toArray()
+            : $config->value) : [];
+
+        Log::info('Settings for CSS:', [
+            'settings' => $appearanceSettings
+        ]);
+
+        return response()
+            ->view('css.theme-dynamic', [
+                'settings' => $appearanceSettings
+            ])
+            ->header('Content-Type', 'text/css')
+            ->header('Cache-Control', 'public, max-age=3600');
+
+    } catch (\Exception $e) {
+        Log::error('CSS Error: ' . $e->getMessage());
+
+        return response(
+            ":root {
+                --primary-color: #48a640;
+                --secondary-color: #0dbae8;
+                --support-color: #f4903f;
+            }",
+            200
+        )->header('Content-Type', 'text/css');
+    }
+})->middleware(['web'])->name('theme.dynamic.css');
+
+Route::get('/api/refresh-random-properties', [HomeController::class, 'refreshRandomProperties']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::name('frontend.')->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/property/{id}', [HomeController::class, 'show'])->name('properties.show');
+//    Route::get('/properties-front', [PropertyController::class, 'index'])->name('properties_front.index');
+//    Route::get('/properties-front/{property}', [PropertyController::class, 'show'])->name('properties_front.show');
+//    Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+//    Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
 

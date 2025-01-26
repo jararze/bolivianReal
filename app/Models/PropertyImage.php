@@ -15,4 +15,9 @@ class PropertyImage extends Model
     {
         return $this->belongsTo(Property::class, 'property_id');
     }
+
+    public function getImageUrlAttribute()
+    {
+        return asset("{$this->name}");
+    }
 }

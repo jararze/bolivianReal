@@ -1552,6 +1552,7 @@
 </div>
 @vite('resources/js/app.js')
 
-@stack('script')
+@stack('scripts')
+<x-loading-spinner />
 </body>
 </html>

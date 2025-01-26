@@ -68,7 +68,7 @@
                                 <span class="switch-label order-1">Solo activos</span>
                             </label>
                             <a class="btn btn-primary" href="{{ route('backend.properties.create') }}">
-                                Agregar nuevo paquete
+                                Agregar nueva propiedad
                             </a>
                         </div>
 

@@ -121,17 +121,32 @@ class ConfigurationService
         });
     }
 
-    public function updateHomeSlider($request): void
+    public function updateHomeSlider($data)
     {
-        $settings = [
-            'slider_ids' => $request->property_ids ?? [], // Array of selected property IDs
-            'active' => $request->boolean('active', true) ,
-            'order' => $request->input('order', 'desc')
-        ];
 
-        Configuration::setConfig('home_slider', $settings, 'slider');
-        Cache::forget('home_slider');
+        try {
+            Log::debug('Updating slider with data:', $data);
+
+            $settings = [
+                'slider_ids' => $data['slider_ids'] ?? [], // Cambiar slider_ids por property_ids
+                'active' => (bool) ($data['active'] ?? true), // Convertir a booleano manualmente
+                'order' => $data['order'] ?? 'desc'
+            ];
+
+            Configuration::setConfig('home_slider', $settings, 'slider');
+            Cache::forget('home_slider');
+
+            return true;
+        } catch (\Exception $e) {
+            Log::error('Error in updateHomeSlider:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
     }
+
+
 
 
 

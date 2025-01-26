@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Property;
 use App\Services\ConfigurationService;
 
+use Illuminate\Support\Facades\Cache;
 use Log;
 use App\Http\Requests\Configuration\{
     UpdateGeneralInfoRequest,
@@ -58,6 +59,7 @@ class ConfigurationController extends Controller
         try {
             Log::info('Appearance Update Request:', $request->all());
             $this->configService->updateAppearance($request);
+            Cache::forget('appearance_settings');
             return $this->respondWithSuccess('backend.configurations.appearance', 'Apariencia actualizada correctamente');
         } catch (\Exception $e) {
             Log::error('Appearance Update Error: ' . $e->getMessage());
@@ -71,39 +73,74 @@ class ConfigurationController extends Controller
 
     public function homeSlider(): View
     {
-        $settings  = $this->configService->getHomeSlider();
+        $settings = $this->configService->getHomeSlider();
+        $search = request('search');
+        $selectedIds = $settings['slider_ids'] ?? [];
 
-        // Get all properties that could be in slider
+//        dd($selectedIds);
+
         $properties = Property::select('id', 'name', 'thumbnail')
+            ->when($search, function($query) use ($search) {
+                return $query->where(function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('neighborhood', 'like', "%{$search}%")
+                        ->orWhere('address', 'like', "%{$search}%");
+                });
+            })
+            // Ordenar seleccionados primero
+            ->orderByRaw("FIELD(id, " . implode(',', array_filter($selectedIds)) . ") DESC")
             ->latest()
-            ->get();
+            ->paginate(25)
+            ->withQueryString();
 
-        // Get currently selected properties
-        $selectedProperties = Property::whereIn('id', $settings['slider_ids'] ?? [])
-            ->select('id', 'name', 'thumbnail')
-            ->get();
 
         return view('backend.configurations.home-slider', [
             'settings' => $settings,
             'properties' => $properties,
-            'selectedProperties' => $selectedProperties,
         ]);
     }
 
-    public function updateHomeSlider(UpdateHomeSliderRequest $request): RedirectResponse
+    public function updateHomeSlider(UpdateHomeSliderRequest $request): \Illuminate\Http\JsonResponse
     {
 
         try {
-            $this->configService->updateHomeSlider($request);
 
-            return $this->respondWithSuccess('backend.configurations.home-slider',
-                'Slider actualizado correctamente');
+            Log::debug('Update Slider Request:', [
+                'received_data' => $request->all(),
+                'property_ids' => $request->input('property_ids')
+            ]);
+
+
+            $propertyIds = collect($request->input('property_ids', []))
+                ->filter()
+                ->map(function($id) {
+                    return (string) $id; // Asegurar que todos son strings
+                })
+                ->values()
+                ->toArray();
+
+            $settings = [
+                'slider_ids' => $propertyIds,
+                'active' => $request->boolean('active', true),
+                'order' => $request->input('order', 'desc')
+            ];
+
+            Log::debug('Settings to save:', $settings);
+
+            $this->configService->updateHomeSlider($settings);
+
+            return response()->json(['success' => true]);
 
         } catch (\Exception $e) {
-            return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors(['error' => 'Error al actualizar el slider: ' . $e->getMessage()]);
+            Log::error('Error updating slider:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el slider: ' . $e->getMessage()
+            ], 500);
         }
 
     }

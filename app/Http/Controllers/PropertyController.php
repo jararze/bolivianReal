@@ -139,6 +139,11 @@ class PropertyController extends Controller
         }
     }
 
+    public function show(Property $property): View
+    {
+        return view('frontend.properties.show', compact('property'));
+    }
+
 
 
     private function preparePropertyData(array $validated): array
