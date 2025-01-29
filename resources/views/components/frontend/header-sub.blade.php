@@ -43,23 +43,23 @@
                 <div class="header-bottom clearfix">
                     <nav id="site-main-nav" class="site-main-nav">
                         <ul class="main-menu clearfix">
-                            <li class="current-menu-item">
-                                <a href="index.html">Inicio</a>
+                            <li class="{{ Route::currentRouteName() == 'frontend.home' ? 'current-menu-item' : '' }}">
+                                <a href="{{ route('frontend.home') }}">Inicio</a>
                             </li>
-                            <li>
-                                <a href="index.html">Propiedades</a>
+                            <li class="{{ Route::currentRouteName() == 'frontend.properties.search' ? 'current-menu-item' : '' }}">
+                                <a href="{{ route('frontend.properties.search') }}">Propiedades</a>
                             </li>
-                            <li>
-                                <a href="index.html">Quienes somos</a>
+                            <li class="{{ Route::currentRouteName() == 'frontend.about' ? 'current-menu-item' : '' }}">
+                                <a href="{{ route('frontend.properties.search') }}">Quienes somos</a>
                             </li>
-                            <li>
-                                <a href="index.html">Servicios</a>
+                            <li class="{{ Route::currentRouteName() == 'frontend.services' ? 'current-menu-item' : '' }}">
+                                <a href="{{ route('frontend.properties.search') }}">Servicios</a>
                             </li>
-                            <li>
-                                <a href="index.html">Promociones</a>
+                            <li class="{{ Route::currentRouteName() == 'frontend.promotions' ? 'current-menu-item' : '' }}">
+                                <a href="{{ route('frontend.properties.search') }}">Promociones</a>
                             </li>
-                            <li>
-                                <a href="index.html">Contactanos</a>
+                            <li class="{{ Route::currentRouteName() == 'frontend.contact' ? 'current-menu-item' : '' }}">
+                                <a href="{{ route('frontend.properties.search') }}">Contáctanos</a>
                             </li>
                         </ul>
                     </nav>

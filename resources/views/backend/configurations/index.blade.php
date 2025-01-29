@@ -60,7 +60,7 @@
                     <div class="flex flex-col gap-3">
                         <a class="text-base font-medium leading-none text-gray-900 hover:text-primary-active"
                            href="{{ route('backend.configurations.home-slider') }}">
-                            Carrusel de propiedades
+                            Carrusel de propiedades/imagenes
                         </a>
                         <span class="text-2sm text-gray-700 leading-5">Selecciona las propiedades que se mostrarán en la página principal para captar la atención de tus clientes.</span>
                     </div>
@@ -71,71 +71,13 @@
                     <div class="flex items-center justify-between gap-2">
                         <i class="ki-filled ki-notification-on text-2xl link">
                         </i>
-                        <div class="menu" data-menu="true">
-                            <div class="menu-item" data-menu-item-offset="0, 10px" data-menu-item-placement="bottom-end"
-                                 data-menu-item-placement-rtl="bottom-start" data-menu-item-toggle="dropdown"
-                                 data-menu-item-trigger="click|lg:click">
-                                <button class="menu-toggle btn btn-sm btn-icon btn-light btn-clear">
-                                    <i class="ki-filled ki-dots-vertical">
-                                    </i>
-                                </button>
-                                <div class="menu-dropdown menu-default w-full max-w-[200px]" data-menu-dismiss="true">
-                                    <div class="menu-item">
-                                        <a class="menu-link" href="html/demo8/account/home/settings-enterprise.html">
-									<span class="menu-icon">
-									<i class="ki-filled ki-setting-3">
-									</i>
-									</span>
-                                            <span class="menu-title">
-									Settings
-									</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link" href="html/demo8/account/members/import-members.html">
-									<span class="menu-icon">
-									<i class="ki-filled ki-some-files">
-									</i>
-									</span>
-                                            <span class="menu-title">
-									Import
-									</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link" href="html/demo8/account/activity.html">
-									<span class="menu-icon">
-									<i class="ki-filled ki-cloud-change">
-									</i>
-									</span>
-                                            <span class="menu-title">
-									Activity
-									</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link" data-modal-toggle="#report_user_modal" href="#">
-									<span class="menu-icon">
-									<i class="ki-filled ki-dislike">
-									</i>
-									</span>
-                                            <span class="menu-title">
-									Report
-									</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="flex flex-col gap-3">
                         <a class="text-base font-medium leading-none text-gray-900 hover:text-primary-active"
-                           href="html/demo8/account/notifications.html">
-                            Notifications
+                           href="{{ route('backend.configurations.home-slider.order') }}">
+                            Orden carrusel
                         </a>
-                        <span class="text-2sm text-gray-700 leading-5">
-					Keep updated with important notices and event reminders.
-					</span>
+                        <span class="text-2sm text-gray-700 leading-5">Aqui podras ordenar el carrusel principal con las imagenes seleccionadas en Carrusel de propiedades/imagenes.</span>
                     </div>
                 </div>
             </div>

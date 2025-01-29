@@ -95,6 +95,11 @@ class Property extends Model
         return $this->belongsTo(User::class, 'agent_id');
     }
 
+    public function citys()
+    {
+        return $this->belongsTo(City::class, 'city');
+    }
+
     public function facilities()
     {
         return $this->belongsToMany(Facility::class, 'facility_properties')

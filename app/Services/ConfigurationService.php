@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Configuration;
+use App\Models\Property;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -115,6 +116,7 @@ class ConfigurationService
         return Cache::remember('home_slider', $this->cacheTime, function () {
             return Configuration::getConfig('home_slider', collect([
                 'slider_ids' => [], // Array of property IDs to show in slider
+                'custom_slides' => [],
                 'active' => true,   // Whether the slider is active
                 'order' => 'desc'   // Order of properties in slider
             ]));
@@ -129,6 +131,7 @@ class ConfigurationService
 
             $settings = [
                 'slider_ids' => $data['slider_ids'] ?? [], // Cambiar slider_ids por property_ids
+                'custom_slides' => $data['custom_slides'] ?? [],
                 'active' => (bool) ($data['active'] ?? true), // Convertir a booleano manualmente
                 'order' => $data['order'] ?? 'desc'
             ];
@@ -147,7 +150,45 @@ class ConfigurationService
     }
 
 
+    public function getOrderedSlides()
+    {
+        $settings = $this->getHomeSlider();
+        $slides = [];
 
+        // Agregar propiedades
+        foreach($settings['slider_ids'] as $propertyId) {
+            $property = Property::find($propertyId);
+            if($property) {
+                $slides[] = [
+                    'type' => 'property',
+                    'id' => $propertyId,
+                    'title' => $property->name,
+                    'image' => $property->thumbnail
+                ];
+            }
+        }
+
+        // Agregar slides personalizados
+        foreach($settings['custom_slides'] as $index => $slide) {
+            $slides[] = [
+                'type' => 'custom',
+                'id' => $index,
+                'title' => $slide['title'],
+                'image' => $slide['image']
+            ];
+        }
+
+        return $slides;
+    }
+
+    public function updateSlideOrder(array $order)
+    {
+        $settings = $this->getHomeSlider();
+        $settings['slide_order'] = $order;
+
+        Configuration::setConfig('home_slider', $settings->toArray(), 'slider');
+        Cache::forget('home_slider');
+    }
 
 
     /**

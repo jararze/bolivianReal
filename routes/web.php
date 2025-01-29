@@ -59,6 +59,7 @@ Route::get('/dashboard', function () {
 
 Route::name('frontend.')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/property/search', [HomeController::class, 'search'])->name('properties.search');
     Route::get('/property/{id}', [HomeController::class, 'show'])->name('properties.show');
 //    Route::get('/properties-front', [PropertyController::class, 'index'])->name('properties_front.index');
 //    Route::get('/properties-front/{property}', [PropertyController::class, 'show'])->name('properties_front.show');
@@ -98,6 +99,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Home Slider
         Route::get('/home-slider', [ConfigurationController::class, 'homeSlider'])->name('home-slider');
         Route::post('/home-slider', [ConfigurationController::class, 'updateHomeSlider'])->name('home-slider.update');
+        Route::post('/home-slider/upload', [ConfigurationController::class, 'uploadSlideImage'])->name('home-slider.upload');
+        Route::get('/home-slider/order', [ConfigurationController::class, 'sliderOrder'])->name('home-slider.order');
+        Route::post('/home-slider/order', [ConfigurationController::class, 'updateSliderOrder'])->name('home-slider.updateOrder');
+
 
         // About Us
         Route::get('/about-us', [ConfigurationController::class, 'aboutUs'])->name('about-us');

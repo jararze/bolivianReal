@@ -5031,14 +5031,15 @@ input[type="checkbox"]:checked + label:before {
   }
   .inspiry-slider-two .search-title,
   .inspiry-slider-three .search-title {
-    position: absolute;
-    top: 0;
-    z-index: 200;
-    margin: 0;
-    -webkit-transform: translate(0, -100%);
-    -ms-transform: translate(0, -100%);
-    -o-transform: translate(0, -100%);
-    transform: translate(0, -100%);
+      width: 15%;
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*z-index: 200;*/
+    /*margin: 0;*/
+    /*-webkit-transform: translate(0, -100%);*/
+    /*-ms-transform: translate(0, -100%);*/
+    /*-o-transform: translate(0, -100%);*/
+    /*transform: translate(0, -100%);*/
   }
   .main-advance-search .advance-search-form {
     margin-left: -5px;
@@ -6173,6 +6174,39 @@ input[type="checkbox"]:checked + label:before {
     border-width: 0 16px 16px 16px;
   }
 }
+
+/*.pagination {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    list-style: none;*/
+/*    padding: 0;*/
+/*}*/
+
+/*.pagination li {*/
+/*    margin: 0 5px;*/
+/*}*/
+
+/*.pagination .page-link {*/
+/*    padding: 8px 16px;*/
+/*    border: 1px solid #ddd;*/
+/*    color: #333;*/
+/*    text-decoration: none;*/
+/*    border-radius: 4px;*/
+/*}*/
+
+/*.pagination .active .page-link {*/
+/*    background-color: #007bff;*/
+/*    color: white;*/
+/*    border-color: #007bff;*/
+/*}*/
+
+/*.pagination .disabled .page-link {*/
+/*    color: #6c757d;*/
+/*    pointer-events: none;*/
+/*    background-color: #fff;*/
+/*    border-color: #ddd;*/
+/*}*/
+
 /*-----------------------------------------------------------------------------------*/
 /* 32.0 - Simple Property Listing Module Styles
 /*-----------------------------------------------------------------------------------*/
@@ -6186,7 +6220,7 @@ input[type="checkbox"]:checked + label:before {
   font-size: 18px;
 }
 .property-listing-simple .meta-item-value {
-  font-size: 17px;
+  font-size: 15px;
 }
 .property-listing-simple .title-and-meta .prefix-text {
   margin-right: 5px;

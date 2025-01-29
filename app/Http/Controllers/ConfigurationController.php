@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Property;
 use App\Services\ConfigurationService;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Log;
 use App\Http\Requests\Configuration\{
     UpdateGeneralInfoRequest,
@@ -77,8 +80,6 @@ class ConfigurationController extends Controller
         $search = request('search');
         $selectedIds = $settings['slider_ids'] ?? [];
 
-//        dd($selectedIds);
-
         $properties = Property::select('id', 'name', 'thumbnail')
             ->when($search, function($query) use ($search) {
                 return $query->where(function($q) use ($search) {
@@ -87,10 +88,9 @@ class ConfigurationController extends Controller
                         ->orWhere('address', 'like', "%{$search}%");
                 });
             })
-            // Ordenar seleccionados primero
             ->orderByRaw("FIELD(id, " . implode(',', array_filter($selectedIds)) . ") DESC")
             ->latest()
-            ->paginate(25)
+            ->paginate(15)
             ->withQueryString();
 
 
@@ -100,27 +100,70 @@ class ConfigurationController extends Controller
         ]);
     }
 
-    public function updateHomeSlider(UpdateHomeSliderRequest $request): \Illuminate\Http\JsonResponse
+
+    public function sliderOrder(): View
+    {
+        $settings = $this->configService->getHomeSlider();
+
+        $slides = $this->configService->getOrderedSlides();
+        return view('backend.configurations.home-slider-order', [
+            'settings' => $settings,
+            'slides' => $slides
+        ]);
+    }
+
+    public function updateSliderOrder(Request $request)
+    {
+        $this->configService->updateSlideOrder($request->slide_order);
+        return response()->json(['success' => true]);
+    }
+
+    public function uploadSlideImage(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|max:2048'
+        ]);
+
+        try {
+            $path = $request->file('image')->store('slider-images', 'public');
+            return response()->json([
+                'success' => true,
+                'url' => Storage::url($path)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al subir la imagen'
+            ], 500);
+        }
+    }
+
+    public function updateHomeSlider(UpdateHomeSliderRequest $request): JsonResponse
     {
 
         try {
 
             Log::debug('Update Slider Request:', [
                 'received_data' => $request->all(),
-                'property_ids' => $request->input('property_ids')
+                'property_ids' => $request->input('property_ids'),
+                'custom_slides' => $request->input('custom_slides')
             ]);
 
 
             $propertyIds = collect($request->input('property_ids', []))
                 ->filter()
-                ->map(function($id) {
-                    return (string) $id; // Asegurar que todos son strings
-                })
+                ->map(fn($id) => (string) $id)
+                ->values()
+                ->toArray();
+
+            $customSlides = collect($request->input('custom_slides', []))
+                ->filter()
                 ->values()
                 ->toArray();
 
             $settings = [
                 'slider_ids' => $propertyIds,
+                'custom_slides' => $customSlides,
                 'active' => $request->boolean('active', true),
                 'order' => $request->input('order', 'desc')
             ];

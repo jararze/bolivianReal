@@ -30,43 +30,53 @@
     @stack('styles')
 </head>
 <body class="inspiry-slider-two">
-<div class="page-loader">
-    <img class="page-loader-img" src="{{ asset('assets/front/images/page-loader-img.gif') }}" alt="Cargando..."/>
-</div>
-
-
-<x-frontend.header-sub/>
-@if(request()->routeIs('frontend.home'))
-    {{--        <x-frontend.header/>--}}
-
-    {{--        <x-frontend.slider/>--}}
-
-    <div style="display: flex; justify-content: center;">
-        <img src="{{ asset('assets/front/images/demo/341188514_239598671933331_5178139512667705721_n.png') }}"
-             style="width: 100%; height: 500px; object-fit: cover;"
-             alt="">
+    <div class="page-loader">
+        <img class="page-loader-img" src="{{ asset('assets/front/images/page-loader-img.gif') }}" alt="Cargando..."/>
     </div>
 
-@endif
 
-<div id="content-wrapper" class="site-content-wrapper">
-    <div id="content" class="site-content layout-wide">
-        <main id="main" class="site-main">
+    <x-frontend.header-sub/>
+    @if(request()->routeIs('frontend.home'))
+        {{--        <x-frontend.header/>--}}
+
+        <x-frontend.slider/>
+
+    @endif
+
+    @isset($header)
+        <div class="page-head "
+             style="background: url({{ asset('assets/front/images/banner2.jpg')}}) #494c53 no-repeat center top;  background-size: cover;">
+            <div class="container">
+                <div class="page-head-content">
+                    <h1 class="page-title"><span>{{ $header }}</span></h1>
+                </div>
+            </div>
+        </div>
+    @endisset
+
+    <div id="content-wrapper" class="site-content-wrapper {{ (request()->routeIs('frontend.home')) ? '' : 'site-pages' }}">
+        <div id="content" class="site-content {{ (request()->routeIs('frontend.home')) ? 'layout-wide' : 'layout-boxed' }}">
+
             @if(request()->routeIs('frontend.home'))
-                <x-frontend.search/>
+                <main id="main" class="site-main">
+                    <x-frontend.search/>
+                    {{ $slot }}
+                </main>
+            @else
+                <div class="container">
+                    {{ $slot }}
+                </div>
             @endif
 
-            {{ $slot }}
-        </main>
 
+        </div>
     </div>
-</div>
 
-<x-frontend.footer/>
+    <x-frontend.footer/>
 
 
-<!-- Modal de login -->
-<x-frontend.auth-modal/>
+    <!-- Modal de login -->
+    <x-frontend.auth-modal/>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

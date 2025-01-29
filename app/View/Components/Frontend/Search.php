@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Frontend;
 
+use App\Models\Amenity;
 use App\Models\City;
 use App\Models\PropertyType;
 use App\Models\ServiceType;
@@ -23,12 +24,17 @@ class Search extends Component
             ->where('status', true)
             ->get();
 
+        $amenities = Amenity::select(['id', 'name'])
+            ->where('status', true)
+            ->get();
 
-        return view('components.frontend.search', [
-            'cities' => $cities,
-            'propertyTypes' => $propertyTypes,
-            'serviceTypes' => $serviceTypes,
-        ]);
+
+        return view('components.frontend.search', compact(
+            'cities',
+            'propertyTypes',
+            'serviceTypes',
+            'amenities'
+        ));
 
     }
 }
