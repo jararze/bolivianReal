@@ -103,6 +103,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/home-slider/order', [ConfigurationController::class, 'sliderOrder'])->name('home-slider.order');
         Route::post('/home-slider/order', [ConfigurationController::class, 'updateSliderOrder'])->name('home-slider.updateOrder');
 
+        Route::get('/home-info', [ConfigurationController::class, 'homeInfo'])->name('home');
+        Route::post('/home-info', [ConfigurationController::class, 'updateHomeInfo'])->name('home.update');
 
         // About Us
         Route::get('/about-us', [ConfigurationController::class, 'aboutUs'])->name('about-us');

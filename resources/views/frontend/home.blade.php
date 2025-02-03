@@ -1,15 +1,49 @@
+@php
+    $refreshTime = site_config('home_info.refresh_time', 60) * 1000; // Convertir a milisegundos
+@endphp
 @push('scripts')
     <script>
         function refreshRandomProperties() {
+            const container = document.getElementById('random-properties-section');
+
+            if (!container) {
+                console.error('No se encontró el contenedor de propiedades aleatorias');
+                return;
+            }
+
             fetch('/api/refresh-random-properties')
-                .then(response => response.text())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
                 .then(html => {
-                    document.getElementById('random-properties-section').innerHTML = html;
+                    container.innerHTML = html;
+                    // Reinicializar los sliders después de actualizar el contenido
+                    if (typeof $ !== 'undefined') {
+                        $('.gallery-slider-two').flexslider({
+                            animation: "slide",
+                            controlNav: true,
+                            directionNav: false
+                        });
+                        $('.swipebox').swipebox();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al actualizar las propiedades:', error);
                 });
         }
 
-        // Actualizar cada minuto
-        setInterval(refreshRandomProperties, 60000);
+        // Esperar a que el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const refreshTime = {{ $refreshTime }}; // Usar el valor de la configuración
+            // Primera actualización después del tiempo configurado
+            setTimeout(refreshRandomProperties, refreshTime);
+            // Luego, actualizar según el tiempo configurado
+            setInterval(refreshRandomProperties, refreshTime);
+        });
     </script>
 @endpush
 
@@ -95,40 +129,23 @@
              style="background: url({{ asset('assets/front/images/demo/hiw-bg.jpg') }}) no-repeat center top; background-size: cover;">
         <div class="container">
             <header class="submit-property-header">
-                <h3 class="sub-title">{{ site_config('submit_property.subtitle', '¿Quieres vender o alquilar?') }}</h3>
-                <h2 class="title">{{ site_config('submit_property.title', 'Publica tu propiedad con nosotros') }}</h2>
+                <h3 class="sub-title">{{ site_config('home_info.upload_property_title', '¿Quieres vender o alquilar?') }}</h3>
                 <p>
-                    {{ site_config('submit_property.description', 'Contamos con una amplia base de clientes y las herramientas necesarias para encontrar el comprador ideal para tu propiedad.') }}
+                    {{ site_config('home_info.upload_property_description', 'Contamos con una amplia base de clientes y las herramientas necesarias para encontrar el comprador ideal para tu propiedad.') }}
                 </p>
             </header>
             <div class="row submit-property-placeholders">
-                <div class="col-sm-4 submit-property-placeholder">
-                    <div class="image-wrapper">
-                        <img src="{{ asset('assets/front/images/demo/icon-1.svg') }}" alt="Registro"/>
+                @foreach(site_config('home_info.steps', []) as $index => $step)
+                    <div class="col-sm-4 submit-property-placeholder">
+                        <div class="image-wrapper">
+                            <img src="{{ asset('assets/front/images/demo/icon-'.($index + 1).'.svg') }}" alt="{{ $step['title'] ?? '' }}"/>
+                        </div>
+                        <h3 class="submit-property-title">{{ $step['title'] ?? '' }}</h3>
+                        <p>
+                            {{ $step['description'] ?? '' }}
+                        </p>
                     </div>
-                    <h3 class="submit-property-title">{{ site_config('submit_property.step1.title', 'Regístrate') }}</h3>
-                    <p>
-                        {{ site_config('submit_property.step1.description', 'Crea tu cuenta en minutos y accede a nuestro sistema de gestión de propiedades.') }}
-                    </p>
-                </div>
-                <div class="col-sm-4 submit-property-placeholder">
-                    <div class="image-wrapper">
-                        <img src="{{ asset('assets/front/images/demo/icon-2.svg') }}" alt="Detalles"/>
-                    </div>
-                    <h3 class="submit-property-title">{{ site_config('submit_property.step2.title', 'Completa los detalles') }}</h3>
-                    <p>
-                        {{ site_config('submit_property.step2.description', 'Proporciona la información detallada de tu propiedad, incluyendo fotos y características especiales.') }}
-                    </p>
-                </div>
-                <div class="col-sm-4 submit-property-placeholder">
-                    <div class="image-wrapper">
-                        <img src="{{ asset('assets/front/images/demo/icon-3.svg') }}" alt="¡Listo!"/>
-                    </div>
-                    <h3 class="submit-property-title">{{ site_config('submit_property.step3.title', '¡Todo listo!') }}</h3>
-                    <p>
-                        {{ site_config('submit_property.step3.description', 'Tu propiedad estará visible para miles de potenciales compradores interesados.') }}
-                    </p>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
@@ -197,33 +214,36 @@
     <section class="video-section" style="margin: 20px 0px">
         <div class="video-title-wrapper">
             <h2 class="title text-center mb-0">
-                {{ site_config('video_section.title', 'Conoce más sobre nosotros') }}
+                Conoce más sobre nosotros
             </h2>
         </div>
 
         <div class="full-width-video-wrapper">
             <div class="video-container">
-                <iframe
-                    src="{{ site_config('video_section.video_url', 'https://www.youtube.com/embed/xBUtsWEU39I?si=nFadO4VcgPfW0GnB') }}"
-                    title="{{ site_config('video_section.title', 'Video Corporativo') }}"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-                </iframe>
+                @php
+                    $videoUrl = site_config('home_info.video_url');
+                @endphp
+                @if($videoUrl)
+                    <iframe
+                        src="{{ $videoUrl }}"
+                        title="Video Corporativo"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                @else
+                    {{-- Video por defecto o mensaje --}}
+                    <iframe
+                        src="https://www.youtube.com/embed/xBUtsWEU39I?si=nFadO4VcgPfW0GnB"
+                        title="Video Corporativo"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                @endif
             </div>
         </div>
 
-        @if(site_config('video_section.description'))
-            <div class="container mt-4">
-                <div class="row">
-                    <div class="col-md-8 mx-auto text-center">
-                        <p class="video-description">
-                            {{ site_config('video_section.description', 'Lorem ipsum') }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        @endif
     </section>
 
     <div class="featured-properties meta-item-half featured-properties-two">

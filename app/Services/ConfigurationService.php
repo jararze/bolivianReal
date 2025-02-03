@@ -191,6 +191,41 @@ class ConfigurationService
     }
 
 
+    public function getHomeInfo(): Collection
+    {
+        return Cache::remember('home_info', $this->cacheTime, function () {
+            return Configuration::getConfig('home_info', collect([
+                'refresh_time' => 60, // 5 segundos por defecto
+                'video_url' => '',
+                'upload_property_title' => '¿Quieres vender o alquilar?',
+                'upload_property_description' => 'Contamos con una amplia base de clientes y las herramientas necesarias para encontrar el comprador ideal para tu propiedad.',
+                'steps' => [
+                    [
+                        'title' => 'Regístrate',
+                        'description' => 'Crea tu cuenta en minutos y accede a nuestro sistema de gestión de propiedades.',
+                        'icon' => 'user-circle'
+                    ],
+                    [
+                        'title' => 'Completa los detalles',
+                        'description' => 'Proporciona la información detallada de tu propiedad, incluyendo fotos y características especiales.',
+                        'icon' => 'clipboard-list'
+                    ],
+                    [
+                        'title' => '¡Todo listo!',
+                        'description' => 'Tu propiedad estará visible para miles de potenciales compradores interesados.',
+                        'icon' => 'check-circle'
+                    ]
+                ]
+            ]));
+        });
+    }
+
+    public function updateHomeInfo(array $data): void
+    {
+        Configuration::setConfig('home_info', $data, 'home');
+        Cache::forget('home_info');
+    }
+
     /**
      * Image Handling Methods
      */

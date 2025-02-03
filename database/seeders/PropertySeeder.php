@@ -46,7 +46,7 @@ class PropertySeeder extends Seeder
         $this->prepareDefaultImages();
 
         // Crear propiedades en chunks para mejor rendimiento
-        $chunks = collect(range(1, 100))->chunk(10);
+        $chunks = collect(range(1, 200))->chunk(10);
 
         foreach ($chunks as $chunk) {
             DB::transaction(function() use ($chunk) {
@@ -57,10 +57,36 @@ class PropertySeeder extends Seeder
         }
     }
 
+    protected function prepareDefaultImages()
+    {
+        // Copiar imágenes de ejemplo al storage
+        $sourcePath = public_path('assets/front/images/properties');
+        $defaultImages = [];
+
+        if (File::exists($sourcePath)) {
+            $files = collect(File::files($sourcePath))
+                ->filter(fn($file) => in_array($file->getExtension(), ['jpg', 'jpeg', 'png']));
+
+            foreach ($files as $file) {
+                $defaultImages[] = [
+                    'path' => $file->getPathname(),
+                    'extension' => $file->getExtension()
+                ];
+            }
+        }
+
+        if (empty($defaultImages)) {
+            throw new \Exception('No se encontraron imágenes en: ' . $sourcePath);
+        }
+
+        $this->defaultImages = $defaultImages;
+    }
+
     protected function createPropertyWithRelations()
     {
-        // Crear la propiedad
-        $property = Property::create($this->generateProperty());
+        $propertyCode = $this->generatePropertyCode();
+        $propertyData = $this->generateProperty($propertyCode);
+        $property = Property::create($propertyData);
 
         // Crear imágenes aleatorias (3-5 por propiedad)
         $this->createPropertyImages($property);
@@ -74,73 +100,94 @@ class PropertySeeder extends Seeder
         return $property;
     }
 
-    protected function prepareDefaultImages()
+    protected function processImage($sourcePath, $type, $maxWidth, $maxHeight, $quality, $propertyCode)
     {
-        // Crear directorio si no existe
-        $targetPath = storage_path('app/public/properties/thumbnails');
-        $imagesPath = storage_path('app/public/properties/images');
+        $image = Image::read($sourcePath);
 
-        foreach ([$targetPath, $imagesPath] as $path) {
-            if (!File::exists($path)) {
-                File::makeDirectory($path, 0755, true);
-            }
+        // Generate base path and filename
+        $basePath = "properties/{$propertyCode}/{$type}";
+        $filename = uniqid('img_') . '.jpg';
+        $fullPath = storage_path("app/public/{$basePath}/{$filename}");
+
+        // Ensure directory exists
+        if (!file_exists(dirname($fullPath))) {
+            mkdir(dirname($fullPath), 0755, true);
         }
 
-        // Copiar imágenes de ejemplo al storage
-        $sourcePath = public_path('assets/front/images/properties');
-        $defaultImages = [];
+        // Process image
+        $processedImage = clone $image;
+        $processedImage->scaleDown(width: $maxWidth, height: $maxHeight);
 
-        if (File::exists($sourcePath)) {
-            $files = File::files($sourcePath);
-            foreach ($files as $file) {
-                if (in_array($file->getExtension(), ['jpg', 'jpeg', 'png'])) {
-                    // Generar nombres únicos
-                    $thumbName = 'thumb_' . Str::random(10) . '.jpg';
-                    $imageName = 'img_' . Str::random(10) . '.jpg';
-
-                    // Procesar thumbnail
-                    $thumb = Image::read($file)
-                        ->scaleDown(width: 800, height: 600)
-                        ->toJpeg(80);
-                    $thumb->save($targetPath . '/' . $thumbName);
-
-                    // Procesar imagen principal
-                    $image = Image::read($file)
-                        ->scaleDown(width: 1200, height: 800)
-                        ->toJpeg(85);
-                    $image->save($imagesPath . '/' . $imageName);
-
-                    $defaultImages[] = [
-                        'thumb' => 'properties/thumbnails/' . $thumbName,
-                        'image' => 'properties/images/' . $imageName
-                    ];
-                }
-            }
+        // Add watermark
+        $watermarkPath = storage_path('app/public/watermarks/logo.png');
+        if (file_exists($watermarkPath)) {
+            $watermark = Image::read($watermarkPath);
+            $watermark->resize($processedImage->width(), $processedImage->height());
+            $processedImage->place($watermark, 'center', 0, 0);
         }
 
-        if (empty($defaultImages)) {
-            throw new \Exception('No se encontraron imágenes en: ' . $sourcePath);
-        }
+        // Save image
+        $processedImage->encodeByExtension('jpg', $quality)->save($fullPath);
 
-        $this->defaultImages = $defaultImages;
+        // Create small version
+        $smallFilename = uniqid('img_') . '_small.jpg';
+        $smallPath = storage_path("app/public/{$basePath}/{$smallFilename}");
+
+        $smallImage = clone $image;
+        $smallImage->scaleDown(width: 400, height: 300);
+        if (file_exists($watermarkPath)) {
+            $watermark = Image::read($watermarkPath);
+            $watermark->resize($smallImage->width(), $smallImage->height());
+            $smallImage->place($watermark, 'center', 0, 0);
+        }
+        $smallImage->encodeByExtension('jpg', 70)->save($smallPath);
+
+        return [
+            'original' => "{$basePath}/{$filename}",
+            'small' => "{$basePath}/{$smallFilename}"
+        ];
     }
+
+
 
     protected function createPropertyImages(Property $property)
     {
+        // Verificar si tenemos imágenes por defecto
+        if (empty($this->defaultImages)) {
+            throw new \Exception('No hay imágenes por defecto disponibles');
+        }
+
         $imageCount = rand(3, 5);
+        $selectedImages = $this->faker->randomElements($this->defaultImages, $imageCount);
 
-        for ($i = 0; $i < $imageCount; $i++) {
-            if (!empty($this->defaultImages)) {
-                $randomImage = $this->faker->randomElement($this->defaultImages);
+        $firstImage = $selectedImages[0];
+        $thumbnailPaths = $this->processImage(
+            $firstImage['path'],
+            'thumbnails',
+            800,
+            600,
+            80,
+            $property->code
+        );
 
-                // Crear registro en property_images
-                PropertyImage::create([
-                    'property_id' => $property->id,
-                    'name' => $randomImage['image'], // Usamos la imagen principal, no el thumbnail
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-            }
+        $property->update(['thumbnail' => $thumbnailPaths['original']]);
+
+        foreach ($selectedImages as $image) {
+            $paths = $this->processImage(
+                $image['path'],
+                'images',
+                1200,
+                800,
+                85,
+                $property->code
+            );
+
+            PropertyImage::create([
+                'property_id' => $property->id,
+                'name' => $paths['original'],
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
         }
     }
     protected function createFacilities(Property $property)
@@ -199,15 +246,15 @@ class PropertySeeder extends Seeder
         ]);
     }
 
-    protected function generateProperty()
+    protected function generateProperty($propertyCode)
     {
         $isProject = $this->faker->boolean(20);
         $propertyName = $this->generatePropertyName();
         $lowestPrice = $this->faker->numberBetween(50000, 1000000);
 
         // Seleccionar un thumbnail aleatorio
-        $randomImage = $this->faker->randomElement($this->defaultImages);
-        $thumbnail = $randomImage['thumb'];
+//        $randomImage = $this->faker->randomElement($this->defaultImages);
+//        $thumbnail = $randomImage['thumb'];
 
         $maxPossibleAmenities = min(8, count($this->amenities));
         $randomCount = $this->faker->numberBetween(3, $maxPossibleAmenities);
@@ -219,7 +266,7 @@ class PropertySeeder extends Seeder
         return [
             'name' => $propertyName,
             'slug' => Str::slug($propertyName),
-            'code' => $this->generatePropertyCode(),
+            'code' => $propertyCode,
             'is_project' => $isProject,
             'service_type_id' => $this->faker->randomElement($this->serviceTypes),
             'project_id' => $isProject ? null : $this->faker->optional(0.3)->randomNumber(3),
@@ -230,7 +277,7 @@ class PropertySeeder extends Seeder
             'lowest_price' => $lowestPrice,
             'max_price' => $this->faker->optional(0.7)->numberBetween($lowestPrice, $lowestPrice * 1.5),
             'currency' => $this->faker->randomElement(['$us', 'Bs']),
-            'thumbnail' => $thumbnail, // Ahora es un string único
+//            'thumbnail' => $thumbnail, // Ahora es un string único
             'short_description' => $this->faker->paragraph(),
             'long_description' => $this->faker->paragraphs(3, true),
             'bedrooms' => $this->faker->numberBetween(1, 5),

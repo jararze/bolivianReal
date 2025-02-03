@@ -10,15 +10,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Log;
-use App\Http\Requests\Configuration\{
-    UpdateGeneralInfoRequest,
+use App\Http\Requests\Configuration\{UpdateGeneralInfoRequest,
     UpdateAppearanceRequest,
+    UpdateHomeInfoRequest,
     UpdateHomeSliderRequest,
     UpdateAboutUsRequest,
     UpdateSocialNetworksRequest,
     UpdateReasonsRequest,
-    UpdateAdvertisingRequest
-};
+    UpdateAdvertisingRequest};
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
@@ -184,6 +183,30 @@ class ConfigurationController extends Controller
                 'success' => false,
                 'message' => 'Error al actualizar el slider: ' . $e->getMessage()
             ], 500);
+        }
+
+    }
+
+    public function homeInfo(): View
+    {
+        $data = $this->configService->getHomeInfo();
+        return view('backend.configurations.home', ['values' => $data]);
+    }
+
+    public function updateHomeInfo(UpdateHomeInfoRequest $request): RedirectResponse
+    {
+        try {
+            $this->configService->updateHomeInfo($request->validated());
+            return $this->respondWithSuccess(
+                'backend.configurations.home',
+                'Información de la página principal actualizada correctamente'
+            );
+        } catch (\Exception $e) {
+            Log::error('Home Info Update Error: ' . $e->getMessage());
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors(['error' => 'Error al actualizar la información: ' . $e->getMessage()]);
         }
 
     }

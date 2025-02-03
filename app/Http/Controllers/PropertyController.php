@@ -64,27 +64,27 @@ class PropertyController extends Controller
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-        Log::channel('daily')->info('Datos recibidos en PropertyController@store:', [
-            'all_data' => $request->all(),
-            'files' => $request->allFiles()
-        ]);
+//        Log::channel('daily')->info('Datos recibidos en PropertyController@store:', [
+//            'all_data' => $request->all(),
+//            'files' => $request->allFiles()
+//        ]);
         try {
             $validated = $request->validated();
 
 
-            Log::info('Datos validados:', ['validated' => $validated]);
+//            Log::info('Datos validados:', ['validated' => $validated]);
 
             // Preparar los datos para la base de datos
             $propertyData = $this->preparePropertyData($validated);
 
             // Log los datos preparados
-            Log::info('Datos preparados para DB:', ['propertyData' => $propertyData]);
+//            Log::info('Datos preparados para DB:', ['propertyData' => $propertyData]);
 
             return DB::transaction(function () use ($request, $propertyData) {
                 try {
                     // Create property
                     $property = Property::create($propertyData);
-                    Log::info('Propiedad creada:', ['property' => $property->toArray()]);
+//                    Log::info('Propiedad creada:', ['property' => $property->toArray()]);
 
                     // Procesar relaciones
                     $this->processRelations($property, $request->validated());
@@ -158,7 +158,7 @@ class PropertyController extends Controller
                 'prefix' => 'P' . date('ym')
             ]);
 
-            Log::info('Código generado:', ['code' => $code]);
+//            Log::info('Código generado:', ['code' => $code]);
 
             // Filtrar solo los campos que van directamente a la tabla properties
             $propertyFields = [
@@ -179,7 +179,7 @@ class PropertyController extends Controller
             $propertyData['created_by'] = auth()->id();
             $propertyData['code'] = $code; // Agregar el código generado
 
-            Log::info('Datos de propiedad preparados:', ['propertyData' => $propertyData]);
+//            Log::info('Datos de propiedad preparados:', ['propertyData' => $propertyData]);
 
             return $propertyData;
 
@@ -220,13 +220,18 @@ class PropertyController extends Controller
         // Procesar thumbnail
         if ($request->hasFile('thumbnail')) {
             try {
-                $thumbnailPath = $this->handleImage(
+                $thumbnailPaths  = $this->handleImage(
                     $request->file('thumbnail'),
-                    'properties/thumbnails',
+                    'thumbnails',
                     800,
-                    600
+                    600,
+                    80,
+                    $property->code,
+                    true
                 );
-                $property->update(['thumbnail' => $thumbnailPath]);
+                $property->update([
+                    'thumbnail' => $thumbnailPaths['original'],
+                ]);
             } catch (\Exception $e) {
                 Log::error('Error procesando thumbnail:', [
                     'error' => $e->getMessage(),
@@ -257,56 +262,65 @@ class PropertyController extends Controller
      * @param  int  $maxWidth
      * @param  int  $maxHeight
      * @param  int  $quality
-     * @return string
+     * @return string[]
      * @throws \Exception
      */
     private function handleImage(
         UploadedFile $file,
-        string $path,
+        string $type,
         int $maxWidth = 1200,
         int $maxHeight = 1200,
-        int $quality = 80
-    ): string {
+        int $quality = 80,
+        string $propertyCode = '',
+        bool $createSmallVersion = false
+    ): array {
         try {
             // Create image instance
             $image = Image::read($file);
-
-            Log::info('Image Meta Information:', [
-                'mime' => $file->getMimeType(),        // e.g. image/jpeg
-                'width' => $image->width(),      // original width
-                'height' => $image->height(),    // original height
-                'original_name' => $file->getClientOriginalName(),
-                'extension' => $file->getClientOriginalExtension(),
-                'size' => $file->getSize()
-            ]);
 
             // Verificar dimensiones mínimas
             if ($image->width() < 800 || $image->height() < 600) {
                 throw new \Exception("La imagen debe tener al menos 800x600 píxeles.");
             }
 
-            // Resize image maintaining aspect ratio
-            $image->scaleDown(width: $maxWidth, height: $maxHeight);
-
-            $this->addWatermark($image);
 
             // Generate unique filename
+            $basePath = "properties/{$propertyCode}/{$type}";
             $filename = uniqid('img_').'.'.$file->getClientOriginalExtension();
-            $fullPath = storage_path("app/public/{$path}/{$filename}");
+            $fullPath = storage_path("app/public/{$basePath}/{$filename}");
 
             // Ensure directory exists
             if (!file_exists(dirname($fullPath))) {
                 mkdir(dirname($fullPath), 0755, true);
             }
 
-            // Save image with compression
-            $image->toJpeg($quality)->save($fullPath);
 
-            return "{$path}/{$filename}";
+            $originalImage = clone $image;
+            $originalImage->scaleDown(width: $maxWidth, height: $maxHeight);
+            $this->addWatermark($originalImage);
+            $originalImage->encodeByExtension('jpg', $quality)
+                ->save($fullPath);
+            $paths = ['original' => "{$basePath}/{$filename}"];
+
+            if ($createSmallVersion) {
+                $smallFilename = uniqid('img_') . '_small.' . $file->getClientOriginalExtension();
+                $smallPath = storage_path("app/public/{$basePath}/{$smallFilename}");
+
+                $smallImage = clone $image;
+                $smallImage->scaleDown(width: 400, height: 300);
+                $this->addWatermark($smallImage);
+                $smallImage->encodeByExtension('jpg', 70)
+                    ->save($smallPath);
+
+                $paths['small'] = "{$basePath}/{$smallFilename}";
+            }
+
+
+            return $paths;
         } catch (\Exception $e) {
             Log::error('Error processing image:', [
                 'error' => $e->getMessage(),
-                'path' => $path
+                'path' => $paths
             ]);
             throw new \Exception("Error processing image: {$e->getMessage()}");
         }
@@ -318,23 +332,70 @@ class PropertyController extends Controller
     private function addWatermark($image): void
     {
         try {
+
+//            Log::info('Ruta del watermark:', [
+//                'path' => storage_path('app/public/watermarks/logo.png'),
+//                'exists' => file_exists(storage_path('app/public/watermarks/logo.png'))
+//            ]);
+
+            $watermarkPath = storage_path('app/public/watermarks/logo.png');
+            if (!file_exists($watermarkPath)) {
+                Log::error('Watermark file not found:', ['path' => $watermarkPath]);
+                throw new \Exception("Watermark file not found");
+            }
+
+
             // Cargar la imagen de marca de agua
-            $watermark = Image::read(storage_path('app/public/watermarks/logo.png'));
+            $watermark = Image::read($watermarkPath);
+
+            $watermark->resize(
+                $image->width(),
+                $image->height()
+            );
+
+//            Log::info('Watermark details:', [
+//                'original_width' => $watermark->width(),
+//                'original_height' => $watermark->height(),
+//                'main_image_width' => $image->width(),
+//                'main_image_height' => $image->height()
+//            ]);
 
             // Redimensionar la marca de agua al 20% del ancho de la imagen
-            $watermarkWidth = (int) ($image->width() * 0.20);
-            $watermark->scale(width: $watermarkWidth);
+//            $watermarkWidth = (int) ($image->width() * 0.20);
+//
+//            $aspectRatio = $watermark->height() / $watermark->width();
+//            $watermarkHeight = (int) ($watermarkWidth * $aspectRatio);
+//
+//
+//            $watermark->resize($watermarkWidth, $watermarkHeight);
+
+
+//            Log::info('Resized watermark details:', [
+//                'new_width' => $watermark->width(),
+//                'new_height' => $watermark->height()
+//            ]);
 
             // Calcular posición (esquina inferior derecha con padding)
-            $padding = 20;
+//            $padding = 20;
             // Añadir la marca de agua con opacidad
             $image->place(
                 $watermark,
-                'bottom-right', // position
-                20,            // x offset
-                20,            // y offset
-                opacity: 0.7   // opacity como named parameter
+                'center', // position
+                0,            // x offset
+                0,            // y offset
+//                opacity: 0.6
             );
+
+//            Log::info('Watermark applied:', [
+//                'image_dimensions' => [
+//                    'width' => $image->width(),
+//                    'height' => $image->height()
+//                ],
+//                'watermark_dimensions' => [
+//                    'width' => $watermark->width(),
+//                    'height' => $watermark->height()
+//                ]
+//            ]);
 
         } catch (\Exception $e) {
             Log::error('Error adding watermark:', [
@@ -357,15 +418,19 @@ class PropertyController extends Controller
             foreach ($images as $index => $image) {
                 try {
                     // Process each image with specific dimensions for property gallery
-                    $path = $this->handleImage(
+                    $paths = $this->handleImage(
                         $image,
-                        'properties/images',
+                        'images',
                         1200,    // max width for gallery images
                         800,     // max height for gallery images
-                        85      // slightly higher quality for gallery
+                        85,      // slightly higher quality for gallery
+                        $property->code,
+                        true
                     );
 
-                    $uploadedImages[] = new PropertyImage(['name' => $path]);
+                    $uploadedImages[] = new PropertyImage([
+                        'name' => $paths['original'],
+                    ]);
                 } catch (\Exception $e) {
                     // Almacenar error específico para cada imagen
                     $errors[] = "Error en la imagen " . ($index + 1) . ": " . $e->getMessage();
@@ -391,6 +456,7 @@ class PropertyController extends Controller
             // Limpiar cualquier imagen que se haya subido
             foreach ($uploadedImages as $image) {
                 Storage::disk('public')->delete($image->name);
+                Storage::disk('public')->delete($image->name_small);
             }
 
             throw new \Exception('Error procesando imágenes: ' . $e->getMessage());

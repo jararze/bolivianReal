@@ -59,13 +59,13 @@ class HomeController extends Controller
             ->take(4)
             ->get();
 
-        foreach($randomProperties as $property) {
-            Log::info('Thumbnail: ' . storage_path('app/public/properties/thumbnail/' . $property->thumbnail));
-            foreach($property->images as $image) {
-                Log::info('Image path: ' . storage_path('app/public/properties/images/' . $image->image_path));
-                Log::info('Image exists: ' . file_exists(storage_path('app/public/properties/images/' . $image->image_path)));
-            }
-        }
+//        foreach($randomProperties as $property) {
+//            Log::info('Thumbnail: ' . storage_path('app/public/properties/thumbnail/' . $property->thumbnail));
+//            foreach($property->images as $image) {
+//                Log::info('Image path: ' . storage_path('app/public/properties/images/' . $image->image_path));
+//                Log::info('Image exists: ' . file_exists(storage_path('app/public/properties/images/' . $image->image_path)));
+//            }
+//        }
 
         return view('frontend.partials.random-properties', compact('randomProperties'))->render();
     }

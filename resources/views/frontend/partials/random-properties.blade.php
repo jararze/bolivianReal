@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" id="random-properties-section">
     <div class="row row-odd zero-horizontal-margin">
         @foreach($randomProperties->chunk(2) as $chunk)
             @foreach($chunk as $index => $property)
@@ -19,7 +19,7 @@
                                                         <img class="img-responsive"
                                                              src="{{ asset($image->name) }}"
                                                              alt="{{ $property->name }}"
-                                                             style="height: 210px;"
+                                                             style="height: 225px;"
                                                         >
                                                     </a>
                                                 </li>
@@ -31,7 +31,7 @@
                                         <img class="img-responsive"
                                              src="{{ $property->thumbnail ? asset($property->thumbnail) : asset('assets/front/images/property/property-12-660x600.jpg') }}"
                                              alt="{{ $property->name }}"
-                                             style="height: 210px;"
+                                             style="height: 225px;"
                                         >
                                     </a>
                                 @endif
@@ -135,7 +135,7 @@
                                                         <img class="img-responsive"
                                                              src="{{ asset($image->name) }}"
                                                              alt="{{ $property->name }}"
-                                                             style="height: 210px;"
+                                                             style="height: 225px;"
                                                         >
                                                     </a>
                                                 </li>
@@ -147,7 +147,7 @@
                                         <img class="img-responsive"
                                              src="{{ $property->thumbnail ? asset($property->thumbnail) : asset('assets/front/images/property/property-12-660x600.jpg') }}"
                                              alt="{{ $property->name }}"
-                                             style="height: 210px;"
+                                             style="height: 225px;"
                                         >
                                     </a>
                                 @endif
