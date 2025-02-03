@@ -17,7 +17,7 @@
                                                        class="swipebox"
                                                        href="{{ asset($image->name) }}">
                                                         <img class="img-responsive"
-                                                             src="{{ asset($image->name) }}"
+                                                             src="{{ asset('storage/' . $image->name) }}"
                                                              alt="{{ $property->name }}"
                                                              style="height: 225px;"
                                                         >
@@ -29,7 +29,7 @@
                                 @else
                                     <a href="{{ route('frontend.properties.show', $property->slug) }}">
                                         <img class="img-responsive"
-                                             src="{{ $property->thumbnail ? asset($property->thumbnail) : asset('assets/front/images/property/property-12-660x600.jpg') }}"
+                                             src="{{ $property->thumbnail ? asset('storage/' . $property->thumbnail) : asset('assets/front/images/property/property-12-660x600.jpg') }}"
                                              alt="{{ $property->name }}"
                                              style="height: 225px;"
                                         >
@@ -133,7 +133,7 @@
                                                        class="swipebox"
                                                        href="{{ asset($image->name) }}">
                                                         <img class="img-responsive"
-                                                             src="{{ asset($image->name) }}"
+                                                             src="{{ asset('storage/' .  $image->name) }}"
                                                              alt="{{ $property->name }}"
                                                              style="height: 225px;"
                                                         >
@@ -145,7 +145,7 @@
                                 @else
                                     <a href="{{ route('frontend.properties.show', $property->slug) }}">
                                         <img class="img-responsive"
-                                             src="{{ $property->thumbnail ? asset($property->thumbnail) : asset('assets/front/images/property/property-12-660x600.jpg') }}"
+                                             src="{{ $property->thumbnail ? asset('storage/' .  $property->thumbnail) : asset('assets/front/images/property/property-12-660x600.jpg') }}"
                                              alt="{{ $property->name }}"
                                              style="height: 225px;"
                                         >
