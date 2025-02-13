@@ -1,10 +1,12 @@
 @push('styles')
     <link href="{{ asset('assets/css/createpropertie.css')}}" rel="stylesheet"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
 @endpush
 @push('scripts')
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script type="module" src="{{ asset('assets/js/createPropertie.js') }}"></script>
 @endpush
 
@@ -25,6 +27,7 @@
 
     <div class="container-fixed">
         <form action="{{ route('backend.properties.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
             <div class="flex grow gap-5 lg:gap-7.5">
                 <div class="hidden lg:block w-[230px] shrink-0">
                     <div class="w-[230px]" data-sticky="true" data-sticky-animation="true"
@@ -123,7 +126,6 @@
                 </div>
                 <div class="flex flex-col items-stretch grow gap-5 lg:gap-7.5">
 
-                    @csrf
                     <div class="card p-6">
                         <div class="card-header mb-6" id="basic_info">
                             <h3 class="text-xl font-semibold">Información Básica</h3>
@@ -142,12 +144,18 @@
                             <div class="grid grid-cols-4 gap-4 items-center">
                                 <x-input-label for="address" :value="__('Direccion')" class="text-gray-700"/>
                                 <div class="col-span-3">
-                                    <x-text-input id="address" name="address" type="text" :value="old('address')"
-                                                  class="w-full"/>
+                                    <x-text-input
+                                        id="address"
+                                        name="address"
+                                        type="text"
+                                        :value="old('address')"
+                                        class="w-full"
+                                        placeholder="Ingresa la dirección y presiona Enter para buscar"
+                                    />
                                     <x-input-error class="mt-1" :messages="$errors->get('address')"/>
                                 </div>
                             </div>
-                            <!-- Zona, Tamano terreno, Tamano Contruido -->
+                            <!-- Zona, Superficie terreno, Superficie Contruido -->
                             <div class="grid grid-cols-3 gap-6">
                                 <div>
                                     <x-input-label for="neighborhood" :value="__('Zona')" class="mb-2 text-gray-700"/>
@@ -156,14 +164,14 @@
                                     <x-input-error class="mt-1" :messages="$errors->get('neighborhood')"/>
                                 </div>
                                 <div>
-                                    <x-input-label for="size" :value="__('Tamano terreno (mt2)')"
+                                    <x-input-label for="size" :value="__('Superficie terreno (MT2)')"
                                                    class="mb-2 text-gray-700"/>
                                     <x-text-input id="size" name="size" type="number" :value="old('size')"
                                                   class="w-full"/>
                                     <x-input-error class="mt-1" :messages="$errors->get('size')"/>
                                 </div>
                                 <div>
-                                    <x-input-label for="size_max" :value="__('Tamano Contruido (me2)')"
+                                    <x-input-label for="size_max" :value="__('Superficie Contruido (MT2)')"
                                                    class="mb-2 text-gray-700"/>
                                     <x-text-input id="size_max" name="size_max" type="number" :value="old('size_max')"
                                                   class="w-full"/>
@@ -191,12 +199,6 @@
                                 </div>
                             </div>
 
-                            <!-- Botón -->
-                            <div class="flex justify-end mt-6">
-                                <x-primary-button class="px-6 py-2">
-                                    {{ __('Guardar Cambios') }}
-                                </x-primary-button>
-                            </div>
                         </div>
                     </div>
 
@@ -316,7 +318,7 @@
                                     <x-input-error class="mt-1" :messages="$errors->get('garage')"/>
                                 </div>
                                 <div>
-                                    <x-input-label for="garage_size" :value="__('Tamano garaje en mt2')"
+                                    <x-input-label for="garage_size" :value="__('Superficie garaje en MT2')"
                                                    class="mb-2 text-gray-700"/>
                                     <x-text-input id="garage_size" name="garage_size" type="number"
                                                   :value="old('garage_size')"
@@ -340,7 +342,7 @@
                                                    class="form-label max-w-56"/>
                                     <div class="flex flex-col tems-start grow gap-3 w-full">
                                         <x-text-input id="short_description" name="short_description" type="text"
-                                                      :value="old('short_description')" autofocus required
+                                                      :value="old('short_description')" required
                                                       autocomplete="short_description" class="w-full"/>
                                         <x-input-error class="mt-2" :messages="$errors->get('short_description')"/>
                                     </div>
@@ -386,7 +388,7 @@
                                                    name="thumbnail"
                                                    accept="image/*"
                                                    class="hidden"
-                                                   required
+                                                   tabindex="-1"
                                             />
                                             @error('thumbnail')
                                             <div class="alert alert-danger mt-2">
@@ -480,6 +482,20 @@
                             </h3>
                         </div>
                         <div class="card-body">
+                            <div class="grid grid-cols-4 gap-4 items-center mb-6">
+                                <x-input-label for="address2" :value="__('Buscar ubicacion')" class="text-gray-700"/>
+                                <div class="col-span-3">
+                                    <x-text-input
+                                        id="address2"
+                                        name="address2"
+                                        type="text"
+                                        :value="old('address2')"
+                                        class="w-full"
+                                        placeholder="Ingresa la dirección y presiona Enter para buscar"
+                                    />
+                                    <x-input-error class="mt-1" :messages="$errors->get('address2')"/>
+                                </div>
+                            </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <!-- Latitud -->
                                 <div class="w-full">
