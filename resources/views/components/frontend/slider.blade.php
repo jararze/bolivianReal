@@ -84,7 +84,7 @@
                             </div>
                         </div>
                     </div>
-                    <img src="{{ asset($slide['data']->thumbnail) }}"
+                    <img src="{{ asset("storage/".$slide['data']->thumbnail) }}"
                          alt="{{ $slide['data']->name }}"
                          style="height: 800px; width: 100%; object-fit: cover;">
                 @else
