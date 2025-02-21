@@ -3,7 +3,7 @@
     $logo_internal = $settings['logo_internal'] ?? null;
     $site_name = $settings['site_name'] ?? "Real State";
 @endphp
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html class="h-full" data-theme="true" data-theme-mode="light" dir="ltr"
       lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -16,34 +16,36 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css " rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset("assets/css/form-handlers.css") }}">
     @vite('resources/css/app.scss')
     @stack('styles')
 
 </head>
-<body
+<script
     class="antialiased flex h-full text-base text-gray-700 [--tw-page-bg:#F6F6F9] [--tw-page-bg-dark:var(--tw-coal-200)] [--tw-content-bg:var(--tw-light)] [--tw-content-bg-dark:var(--tw-coal-500)] [--tw-content-scrollbar-color:#e8e8e8] [--tw-header-height:60px] [--tw-sidebar-width:90px] bg-[--tw-page-bg] dark:bg-[--tw-page-bg-dark]">
-<script>
-    const defaultThemeMode = 'light'; // light|dark|system
-    let themeMode;
+    <script>
+        const defaultThemeMode = 'light'; // light|dark|system
+        let themeMode;
 
-    if (document.documentElement) {
+        if (document.documentElement) {
         if (localStorage.getItem('theme')) {
-            themeMode = localStorage.getItem('theme');
-        } else if (document.documentElement.hasAttribute('data-theme-mode')) {
-            themeMode = document.documentElement.getAttribute('data-theme-mode');
-        } else {
-            themeMode = defaultThemeMode;
-        }
+        themeMode = localStorage.getItem('theme');
+    } else if (document.documentElement.hasAttribute('data-theme-mode')) {
+        themeMode = document.documentElement.getAttribute('data-theme-mode');
+    } else {
+        themeMode = defaultThemeMode;
+    }
 
         if (themeMode === 'system') {
-            themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        }
+        themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
 
         document.documentElement.classList.add(themeMode);
     }
 </script>
+<body>
 <div class="flex grow">
-{{--    @include('layouts.metronic.header')--}}
+    {{--    @include('layouts.metronic.header')--}}
     <div class="flex flex-col lg:flex-row grow pt-[--tw-header-height] lg:pt-0">
         @include('layouts.metronic.sidebar')
         <div
@@ -1550,9 +1552,10 @@
         </div>
     </div>
 </div>
+
 @vite('resources/js/app.js')
 
 @stack('scripts')
-<x-loading-spinner />
+<script src="{{ asset('assets/js/form-handlers.js') }}"></script>
 </body>
 </html>

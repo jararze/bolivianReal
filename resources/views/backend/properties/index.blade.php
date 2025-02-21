@@ -87,25 +87,25 @@
                                             <span class="sort asc"><span class="sort-label text-gray-700 font-normal">Nombre</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
-                                        <th class="w-[250px]">
+                                        <th class="w-[100px]">
                                             <span class="sort asc"><span class="sort-label text-gray-700 font-normal">Descripcion</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
-                                        <th class="w-[100px]">
+                                        <th class="w-[200px]">
                                             <span class="sort"><span
                                                     class="sort-label text-gray-700 font-normal">Creditos</span><span
                                                     class="sort-icon"></span></span></th>
                                         <th class="w-[100px]">
                                             <span class="sort"><span
-                                                    class="sort-label text-gray-700 font-normal">Monto</span><span
+                                                    class="sort-label text-gray-700 font-normal">Precio</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
                                         <th class="w-[100px]">
-                                            <span class="sort"><span class="sort-label text-gray-700 font-normal">Pantalla Inicio</span><span
+                                            <span class="sort"><span class="sort-label text-gray-700 font-normal">Proyecto?</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
                                         <th class="w-[100px]">
-                                            <span class="sort"><span class="sort-label text-gray-700 font-normal">Duracion (dias)</span><span
+                                            <span class="sort"><span class="sort-label text-gray-700 font-normal">TIpo</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
                                         <th class="w-[150px]">
@@ -136,29 +136,29 @@
                                             <td>
                                                 <div class="flex flex-col gap-1.5">
                                                     <span class="text-sm text-gray-800 font-normal">
-                                                        {{ $package->description }}
+                                                        {{ $package->code }}
                                                     </span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="flex flex-col gap-1.5">
                                                     <span class="text-sm text-gray-800 font-normal">
-                                                        {{ $package->credits }}
+                                                        {{ $package->short_description }}
                                                     </span>
                                                 </div>
                                             </td>
                                             <td class="text-sm text-gray-800 font-normal">
-                                                {{ $package->price }}
+                                                {{ $package->max_price }}
                                             </td>
                                             <td>
-                                                @if($package->front_display == 0)
+                                                @if($package->is_project == 0)
                                                     <span class="badge badge-outline badge-danger">No</span>
                                                 @else
                                                     <span class="badge badge-outline badge-success">Si</span>
                                                 @endif
                                             </td>
                                             <td class="text-sm text-gray-800 font-normal">
-                                                {{ $package->duration }}
+                                                {{ $package->serviceType->name }}
                                             </td>
                                             <td>
                                                 @if($package->status == 0)
@@ -169,7 +169,7 @@
                                             </td>
                                             <td>
                                                 <a class="btn btn-sm btn-icon btn-clear btn-light"
-                                                   href="{{ route('backend.properties.edit', $package->id) }}">
+                                                   href="{{ route('backend.properties.edit', $package->slug) }}">
                                                     <i class="ki-filled ki-notepad-edit">
                                                     </i>
                                                 </a>

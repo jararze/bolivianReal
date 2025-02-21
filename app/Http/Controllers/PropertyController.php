@@ -30,7 +30,7 @@ class PropertyController extends Controller
 {
     public function index(): View
     {
-        $properties = Property::with('images')->paginate(20);
+        $properties = Property::with('images')->get();
         return view('backend.properties.index', compact('properties'));
     }
 
@@ -466,9 +466,28 @@ class PropertyController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Property $package): View
+    public function edit($slug): View
     {
-        return view('backend.properties.edit', compact('package'));
+        $cities = City::select(['id', 'name'])->get();
+        $propertyTypes = PropertyType::select(['id', 'type_name'])->get();
+        $serviceTypes = ServiceType::select(['id', 'name'])->get();
+        $agents = User::select(['id', 'name'])->where('role', 'agent')->get();
+        $features = Facility::select(['id', 'name'])->get();
+        $amenities = Amenity::select(['id', 'name'])->get();
+        $property = Property::select(['id', 'name'])->where('slug', $slug)->firstOrFail();
+        $projects = Property::select(['id', 'name'])->where('is_project', true)->get();
+
+
+        return view('backend.properties.edit', compact(
+            'property',
+            'cities',
+            'propertyTypes',
+            'serviceTypes',
+            'agents',
+            'features',
+            'amenities',
+            'projects'
+        ));
     }
 
     /**

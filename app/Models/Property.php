@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+
 class Property extends Model
 {
     use SoftDeletes;
@@ -29,6 +30,7 @@ class Property extends Model
         'delivery' => 'datetime',
         'construction_Date' => 'datetime',
     ];
+
 
 
 

@@ -1,0 +1,50 @@
+/* Overlay para el modal */
+.loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;        /* Usar viewport width */
+    height: 100vh;       /* Usar viewport height */
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    /* Centrado perfecto */
+    /*display: flex;*/
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenedor del spinner */
+.loading-spinner-container {
+    position: fixed;     /* Posicionamiento fijo */
+    top: 50%;           /* Centra verticalmente */
+    left: 50%;          /* Centra horizontalmente */
+    transform: translate(-50%, -50%); /* Ajuste perfecto al centro */
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    min-width: 150px;   /* Ancho mínimo para consistencia */
+    min-height: 150px;  /* Alto mínimo para consistencia */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Spinner SVG */
+.spinner-loader {
+    height: 3rem;       /* Tamaño fijo para el spinner */
+    width: 3rem;
+    margin-bottom: 1rem;
+    animation: spin 1s linear infinite;
+}
+
+/* Texto del spinner */
+.loading-text {
+    margin-top: 1rem;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;   /* Semi-bold para mejor legibilidad */
+}

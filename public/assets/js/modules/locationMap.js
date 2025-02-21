@@ -1,7 +1,7 @@
 export const initLocationMap = () => {
     // Default coordinates (Santa Cruz de la Sierra)
-    const defaultLat = -17.783330;
-    const defaultLng = -63.182127;
+    const defaultLat = -16.524678;
+    const defaultLng = -68.108196;
 
     const initializeMap = () => {
         console.log('Initializing map...');
