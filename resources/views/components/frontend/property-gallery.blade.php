@@ -7,7 +7,7 @@
                 <a class="swipebox"
                    data-rel="gallery"
                    href="{{ $image->image_url }}">
-                    <img src="{{ asset($image->image_url) }}"
+                    <img src="{{ asset('storage/' . $image->image_url) }}"
                          style="height: 510px; width: 100%; object-fit: cover;"
                          alt="{{ $name }}">
                 </a>

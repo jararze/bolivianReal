@@ -204,7 +204,7 @@
                                 <div class="placeholder-thumb format-video">
                                     <a class="video-popup" href="https://www.youtube.com/watch?v=7CZz_QoWaV4" title="Virtual Tour">
                                         <i class="fa fa-play-circle-o"></i>
-                                        <img width="850" height="570" src="{{ asset($property->thumbnail) }}" class="img-responsive wp-post-image" alt="Exterior">
+                                        <img width="850" height="570" src="{{ asset('storage/' . $property->thumbnail) }}" class="img-responsive wp-post-image" alt="Exterior">
                                     </a>
                                 </div>
                             </section>
