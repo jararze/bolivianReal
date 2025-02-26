@@ -15,7 +15,7 @@
                                                 <li>
                                                     <a title="Feature Image" data-rel="gallery-{{ $property->id }}"
                                                        class="swipebox"
-                                                       href="{{ asset($image->name) }}">
+                                                       href="{{ asset('storage/' . $image->name) }}">
                                                         <img class="img-responsive"
                                                              src="{{ asset('storage/' . $image->name) }}"
                                                              alt="{{ $property->name }}"
