@@ -163,7 +163,7 @@
                                 <a href="{{ route('frontend.properties.show', $property->slug) }}">
                                     @if($property->thumbnail)
                                         <img class="img-responsive"
-                                             src="{{ asset($property->thumbnail) }}"
+                                             src="{{ asset('storage/' .  $property->thumbnail) }}"
                                              alt="{{ $property->name }}"
                                              style="width: 100%; height: 200px; object-fit: cover;">
                                     @else
@@ -259,7 +259,7 @@
                                 <a href="{{ route('frontend.properties.show', $property->slug) }}">
                                     @if($property->thumbnail)
                                         <img class="img-responsive"
-                                             src="{{ asset($property->thumbnail) }}"
+                                             src="{{ asset('storage/' .  $property->thumbnail) }}"
                                              alt="{{ $property->name }}"
                                              style="width: 100%; height: 350px; object-fit: cover;">
                                     @else
