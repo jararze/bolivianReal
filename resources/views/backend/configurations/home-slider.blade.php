@@ -290,7 +290,7 @@
                                                         class="text-primary text-xs font-medium bg-primary/10 px-2 py-1 rounded">Seleccionada</span>
                                                 @endif
                                             </div>
-                                            <img src="{{ $property->thumbnail }}"
+                                            <img src="{{ asset('storage/' .  $property->thumbnail) }}"
                                                  alt="{{ $property->name }}"
                                                  class="w-full h-40 object-cover rounded-lg mb-3"
                                                  loading="lazy">
