@@ -49,9 +49,9 @@
                                                     <li>
                                                         <a title="Feature Image" data-rel="gallery-{{ $property->id }}"
                                                            class="swipebox"
-                                                           href="{{ asset($image->name) }}">
+                                                           href="{{ asset('storage/' .  $image->name) }}">
                                                             <img class="img-responsive"
-                                                                 src="{{ asset($image->name) }}"
+                                                                 src="{{ asset('storage/' .  $image->name) }}"
                                                                  alt="{{ $property->name }}"
                                                                  style="height: 300px;"
                                                             >
@@ -64,7 +64,7 @@
                                         <li>
                                             <a href="{{ route('frontend.properties.show', $property->slug) }}">
                                                 <img class="img-responsive"
-                                                     src="{{ $property->thumbnail ? asset($property->thumbnail) : asset('assets/front/images/property/property-12-660x600.jpg') }}"
+                                                     src="{{ $property->thumbnail ? asset('storage/' .  $property->thumbnail) : asset('assets/front/images/property/property-12-660x600.jpg') }}"
                                                      alt="{{ $property->name }}"
                                                      style="height: 400px;"
                                                 >
