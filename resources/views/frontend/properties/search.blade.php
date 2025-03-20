@@ -52,7 +52,7 @@
                                                             <img class="img-responsive"
                                                                  src="{{ asset('storage/' .  $image->name) }}"
                                                                  alt="{{ $property->name }}"
-                                                                 style="height: 300px;"
+                                                                 style="height: 325px;"
                                                             >
                                                         </a>
                                                     </li>
