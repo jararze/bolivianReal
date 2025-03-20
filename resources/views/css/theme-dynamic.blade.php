@@ -96,7 +96,7 @@ border-right-color: var(--support-color) !important;
 .featured-properties-one .price,
 .featured-properties-two .price,
 .featured-properties-three .featured-property-post .price {
-color: var(--secondary-color) !important;
+{{--color: var(--secondary-color) !important;--}}
 }
 
 /* Elementos de búsqueda */
