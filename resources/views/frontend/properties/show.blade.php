@@ -836,7 +836,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}">Inicio</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('frontend.properties') }}">Propiedades</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('frontend.properties.search') }}">Propiedades</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{{ $property->name }}</li>
                     </ol>
                 </nav>
