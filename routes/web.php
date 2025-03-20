@@ -61,10 +61,23 @@ Route::name('frontend.')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/property/search', [HomeController::class, 'search'])->name('properties.search');
     Route::get('/property/{id}', [HomeController::class, 'show'])->name('properties.show');
+    Route::get('/about/', [HomeController::class, 'about'])->name('about');
+    Route::get('/services/', [HomeController::class, 'services'])->name('services');
+    Route::get('/promotions/', [HomeController::class, 'promotions'])->name('promotions');
 //    Route::get('/properties-front', [PropertyController::class, 'index'])->name('properties_front.index');
 //    Route::get('/properties-front/{property}', [PropertyController::class, 'show'])->name('properties_front.show');
+    Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 //    Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-//    Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+
+    Route::get('/submit-property', function () {
+        return view('frontend.submit-property');
+    })->name('submit-property');
+
+    Route::get('/project', function () {
+        return view('frontend.project');
+    })->name('project');
+
+    Route::post('/properties/store', [PropertyController::class, 'store'])->name('store');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

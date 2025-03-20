@@ -183,13 +183,13 @@
                                 <header class="entry-header">
                                     <h4 class="entry-title">
                                         <a href="{{ route('frontend.properties.show', $property->slug) }}" rel="bookmark">
-                                            {{ Str::limit($property->name, 30) }}
+                                            {{ Str::limit($property->name, 20) }}
                                         </a>
                                     </h4>
                                     <div class="price-and-status">
                                     <span class="price">
                                         {{ $property->currency == '$us' ? '$' : 'Bs.' }}
-                                        {{ number_format($property->lowest_price, 2) }}
+                                        {{ number_format($property->lowest_price, 0) }}
                                     </span>
                                         <a href="#">
                                         <span class="property-status-tag">

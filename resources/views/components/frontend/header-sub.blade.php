@@ -26,8 +26,8 @@
                         <!--<li><a href="index.html"><i class="fa fa-sign-out"></i>Logout</a></li>-->
 {{--                        <li><a href="profile.html"><i class="fa fa-user"></i>Profile</a></li>--}}
 {{--                        <li><a href="my-properties.html"><i class="fa fa-th-list"></i>My Properties</a></li>--}}
-{{--                        <li><a href="favorites.html"><i class="fa fa-star"></i>Favorites</a></li>--}}
-                        <li><a class="submit-property-link" href="submit-property.html"><i class="fa fa-plus-circle"></i>Quieres vender/alquilar</a></li>
+                        <li><a class="submit-property-link" href="{{ route("frontend.project") }}"><i class="fa fa-star"></i>Proyecto</a></li>
+                        <li><a class="submit-property-link" href="{{ route("frontend.submit-property") }}"><i class="fa fa-plus-circle"></i>Quieres vender/alquilar</a></li>
                     </ul>
                     <!-- .user-nav -->
                     <div class="contact-number">
@@ -50,16 +50,16 @@
                                 <a href="{{ route('frontend.properties.search') }}">Propiedades</a>
                             </li>
                             <li class="{{ Route::currentRouteName() == 'frontend.about' ? 'current-menu-item' : '' }}">
-                                <a href="{{ route('frontend.properties.search') }}">Quienes somos</a>
+                                <a href="{{ route('frontend.about') }}">Quienes somos</a>
                             </li>
                             <li class="{{ Route::currentRouteName() == 'frontend.services' ? 'current-menu-item' : '' }}">
-                                <a href="{{ route('frontend.properties.search') }}">Servicios</a>
+                                <a href="{{ route('frontend.services') }}">Servicios</a>
                             </li>
                             <li class="{{ Route::currentRouteName() == 'frontend.promotions' ? 'current-menu-item' : '' }}">
-                                <a href="{{ route('frontend.properties.search') }}">Promociones</a>
+                                <a href="{{ route('frontend.promotions') }}">Promociones</a>
                             </li>
                             <li class="{{ Route::currentRouteName() == 'frontend.contact' ? 'current-menu-item' : '' }}">
-                                <a href="{{ route('frontend.properties.search') }}">Contáctanos</a>
+                                <a href="{{ route('frontend.contact') }}">Contáctanos</a>
                             </li>
                         </ul>
                     </nav>

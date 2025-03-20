@@ -235,4 +235,24 @@ class HomeController extends Controller
             'featuredProperties'
         ));
     }
+
+    public function about(): View
+    {
+        return view('frontend.about');
+    }
+
+    public function services(): View
+    {
+        return view('frontend.services');
+    }
+
+    public function promotions(): View
+    {
+        return view('frontend.promotions');
+    }
+
+    public function contact(): View
+    {
+        return view('frontend.contact');
+    }
 }
