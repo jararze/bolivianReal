@@ -37,8 +37,7 @@
                     <article class="property-listing-simple property-listing-simple-2 hentry clearfix">
                         <div class="property-thumbnail col-sm-5 zero-horizontal-padding">
                             <div class="price-wrapper">
-                                <span
-                                    class="price">{{ $property->currency }} {{ number_format($property->max_price, 2) }} </span>
+                                <span class="price" style="color: white">{{ $property->currency }} {{ number_format($property->max_price, 2) }} </span>
                             </div>
                             <div class="gallery-slider-two flexslider">
                                 <ul class="slides">
