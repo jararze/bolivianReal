@@ -1,11 +1,24 @@
 @push('styles')
     <style>
+        body {
+            background-color: #f7f7f7;
+        }
+
+        .section-container {
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+
         .about-us-header {
-            background: url('{{ asset('assets/front/images/banner2.jpg') }}') #494c53 no-repeat center top;
+            background: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80') #494c53 no-repeat center top;
             background-size: cover;
-            padding: 80px 0;
+            padding: 60px 0;
             position: relative;
             color: #fff;
+            margin-bottom: 0;
         }
 
         .about-us-header::before {
@@ -21,174 +34,137 @@
         .about-us-header-content {
             position: relative;
             z-index: 2;
+            text-align: center;
+        }
+
+        .about-us-header-content h1 {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-family: 'Dosis', sans-serif;
+        }
+
+        .about-us-header-content p {
+            font-size: 18px;
+        }
+
+        .section-title {
+            color: #0DBAE8;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            font-family: 'Dosis', sans-serif;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #0DBAE8;
+        }
+
+        .section-subtitle {
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 30px;
+            text-align: center;
         }
 
         .about-us-section {
-            padding: 60px 0;
-        }
-
-        .about-us-section h2 {
-            color: #0DBAE8;
-            font-weight: 600;
-            margin-bottom: 30px;
-            font-family: 'Dosis', sans-serif;
-            text-transform: uppercase;
-        }
-
-        .about-us-section h3 {
-            font-family: 'Dosis', sans-serif;
-            color: #333;
-            margin: 25px 0 15px;
+            padding: 40px 0;
+            background-color: #f7f7f7;
         }
 
         .about-us-section p {
-            margin-bottom: 20px;
-            line-height: 1.7;
+            margin-bottom: 15px;
+            line-height: 1.6;
             color: #555;
         }
 
         .about-us-image {
-            border-radius: 5px;
+            margin-bottom: 20px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
         }
 
         .about-us-image img {
-            width: 100%;
-            height: auto;
-            transition: transform 0.3s ease;
-        }
-
-        .about-us-image:hover img {
-            transform: scale(1.03);
-        }
-
-        .team-section {
-            background-color: #f9f9f9;
-            padding: 60px 0;
-        }
-
-        .team-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .team-header h2 {
-            color: #0DBAE8;
-            font-weight: 600;
-            font-family: 'Dosis', sans-serif;
-            text-transform: uppercase;
-        }
-
-        .team-header p {
-            max-width: 700px;
-            margin: 0 auto;
-            color: #555;
-        }
-
-        .team-member {
-            margin-bottom: 30px;
-            text-align: center;
-            background: #fff;
-            border-radius: 5px;
-            padding-bottom: 20px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .team-member:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .team-member-image {
-            border-radius: 5px 5px 0 0;
-            overflow: hidden;
-            height: 250px;
-            margin-bottom: 20px;
-        }
-
-        .team-member-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .team-member h4 {
-            color: #333;
-            margin: 10px 0 5px;
-            font-weight: 600;
+        .about-us-history-image {
+            height: 320px;
         }
 
-        .team-member-position {
+        .pillars-section {
+            padding: 40px 0;
+            background-color: #fff;
+        }
+
+        .pillar-box {
+            text-align: center;
+            height: 100%;
+            padding: 0 15px;
+        }
+
+        .pillar-box h3 {
             color: #0DBAE8;
-            font-size: 14px;
             margin-bottom: 15px;
-            display: block;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-family: 'Dosis', sans-serif;
         }
 
-        .team-member-social {
-            margin-top: 15px;
-        }
-
-        .team-member-social a {
+        .pillar-box p {
             color: #555;
-            margin: 0 5px;
-            font-size: 18px;
-            transition: color 0.3s ease;
-        }
-
-        .team-member-social a:hover {
-            color: #0DBAE8;
+            line-height: 1.6;
+            font-size: 14px;
         }
 
         .values-section {
-            padding: 60px 0;
-        }
-
-        .values-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .values-header h2 {
-            color: #0DBAE8;
-            font-weight: 600;
-            font-family: 'Dosis', sans-serif;
-            text-transform: uppercase;
+            padding: 40px 0;
+            background-color: #f7f7f7;
         }
 
         .value-item {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .value-icon {
-            width: 80px;
-            height: 80px;
-            line-height: 80px;
-            font-size: 36px;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            font-size: 24px;
             color: #fff;
             background: #0DBAE8;
             border-radius: 50%;
-            margin: 0 auto 20px;
+            margin: 0 auto 15px;
         }
 
         .value-item h4 {
             color: #333;
-            margin-bottom: 15px;
+            margin: 10px 0;
             font-weight: 600;
+            font-family: 'Dosis', sans-serif;
         }
 
         .value-item p {
             color: #555;
+            font-size: 14px;
+            line-height: 1.6;
         }
 
         .stats-section {
-            background: url('{{ asset('assets/front/images/demo/hiw-bg.jpg') }}') no-repeat center center;
+            background: url('https://images.unsplash.com/photo-1560520031-3a4dc4e9de0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80') no-repeat center center;
             background-size: cover;
-            padding: 80px 0;
+            padding: 60px 0;
             position: relative;
             color: #fff;
         }
@@ -210,11 +186,11 @@
 
         .stat-item {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .stat-number {
-            font-size: 50px;
+            font-size: 42px;
             font-weight: 700;
             margin-bottom: 10px;
             font-family: 'Dosis', sans-serif;
@@ -222,22 +198,69 @@
         }
 
         .stat-label {
-            font-size: 18px;
+            font-size: 16px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        @media (max-width: 768px) {
-            .about-us-header {
-                padding: 60px 0;
-            }
+        .team-section {
+            padding: 40px 0;
+            background-color: #fff;
+        }
 
+        .team-member {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .team-member-image {
+            overflow: hidden;
+            height: 220px;
+            margin-bottom: 15px;
+        }
+
+        .team-member-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team-member h4 {
+            color: #333;
+            margin: 10px 0 0;
+            font-weight: 600;
+            font-family: 'Dosis', sans-serif;
+        }
+
+        .team-member-position {
+            color: #0DBAE8;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .team-member p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .team-member-social {
+            margin-top: 10px;
+        }
+
+        .team-member-social a {
+            color: #555;
+            margin: 0 5px;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
             .stat-number {
                 font-size: 36px;
             }
-
             .stat-label {
-                font-size: 16px;
+                font-size: 14px;
             }
         }
     </style>
@@ -246,31 +269,72 @@
 <x-frontend-layout>
     <div class="about-us-header">
         <div class="container">
-            <div class="about-us-header-content text-center">
-                <h1 class="page-title">Quiénes Somos</h1>
-                <p class="lead">Tu socio de confianza en el mundo de los bienes raíces</p>
+            <div class="about-us-header-content">
+                <h1>¡BIENVENIDOS A BOLIVIAN REAL ESTATE!</h1>
+                <p>Tu socio inmobiliario de confianza en La Paz desde 1990</p>
             </div>
         </div>
     </div>
 
     <div class="about-us-section">
-        <div class="container">
+        <div class="section-container">
+            <h2 class="section-title">NUESTRA HISTORIA</h2>
+
             <div class="row">
                 <div class="col-md-6">
-                    <h2>Nuestra Historia</h2>
-                    <p>Fundada en [año de fundación], [Nombre de tu empresa] ha sido pionera en el mercado inmobiliario de [tu ciudad/región] ofreciendo soluciones innovadoras y personalizadas para cada cliente.</p>
+                    <p><strong>BOLIVIAN REAL ESTATE</strong> es una empresa especializada en el área de bienes raíces, que inició sus actividades en 1990 con la misión de constituirse en una instancia asesora en la compra, venta, alquiler y anticréticos de bienes inmuebles en la ciudad de La Paz.</p>
 
-                    <p>A lo largo de los años, hemos construido una reputación basada en la excelencia, la integridad y el profundo conocimiento del mercado local. Nuestro compromiso con la satisfacción del cliente nos ha permitido crecer y convertirnos en líderes del sector.</p>
+                    <p>Constituida hace más de 35 años, considerada desde sus inicios como empresa líder en el mercado, BRE ha sabido adaptarse exitosamente ante las diferentes adversidades que se han presentado durante toda su trayectoria.</p>
 
-                    <h3>Nuestra Misión</h3>
-                    <p>Facilitar transacciones inmobiliarias exitosas mediante un servicio personalizado y profesional, garantizando una experiencia satisfactoria tanto para compradores como para vendedores.</p>
+                    <p>Somos una empresa familiar que ha crecido con La Paz, entendiendo las necesidades cambiantes del mercado inmobiliario y adaptándonos para ofrecer siempre el mejor servicio.</p>
 
-                    <h3>Nuestra Visión</h3>
-                    <p>Ser reconocidos como la empresa de bienes raíces más confiable y eficiente del mercado, innovando constantemente para superar las expectativas de nuestros clientes.</p>
+                    <p>Hoy nos encontramos con más fuerza, con nuevas ambiciones y nuevos objetivos, porque sabemos que podemos más, porque sabemos que podemos ser mejores para nosotros y para ti.</p>
                 </div>
                 <div class="col-md-6">
-                    <div class="about-us-image">
-                        <img src="{{ asset('assets/front/images/property/property-12-660x600.jpg') }}" alt="Nuestra Oficina">
+                    <div class="about-us-image about-us-history-image">
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Edificio en La Paz">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="about-us-image">
+                                <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" alt="Oficina BRE">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="about-us-image">
+                                <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" alt="Servicio al cliente">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pillars-section">
+        <div class="section-container">
+            <h2 class="section-title">NUESTROS PILARES</h2>
+            <p class="section-subtitle">Los fundamentos que sostienen nuestra empresa y servicio</p>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="pillar-box">
+                        <h3>MISIÓN</h3>
+                        <p>Ofrecer soluciones efectivas que prioricen la satisfacción de nuestros clientes, mediante la atención personalizada con excelencia y calidad.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="pillar-box">
+                        <h3>VISIÓN</h3>
+                        <p>Ser la empresa líder en el mercado inmobiliario de la ciudad de La Paz, generando seguridad, confianza y lealtad de nuestros clientes.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="pillar-box">
+                        <h3>COMPROMISO</h3>
+                        <p>La calidad y especialización del personal con que cuenta la empresa se constituye en el capital más preciado, que garantiza la excelencia del servicio ofertado.</p>
                     </div>
                 </div>
             </div>
@@ -278,50 +342,38 @@
     </div>
 
     <div class="values-section">
-        <div class="container">
-            <div class="values-header">
-                <h2>Nuestros Valores</h2>
-                <p>Los principios que guían nuestro trabajo diario</p>
-            </div>
+        <div class="section-container">
+            <h2 class="section-title">NUESTROS VALORES</h2>
+            <p class="section-subtitle">Los principios que guían nuestro trabajo diario</p>
 
             <div class="row">
-                <div class="col-md-3 col-sm-6">
-                    <div class="value-item">
-                        <div class="value-icon">
-                            <i class="fa fa-handshake"></i>
-                        </div>
-                        <h4>Integridad</h4>
-                        <p>Mantenemos los más altos estándares éticos en todas nuestras operaciones, garantizando transparencia y honestidad.</p>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-4">
                     <div class="value-item">
                         <div class="value-icon">
                             <i class="fa fa-star"></i>
                         </div>
                         <h4>Excelencia</h4>
-                        <p>Nos esforzamos por ofrecer un servicio excepcional, superando expectativas y manteniendo un alto nivel de profesionalismo.</p>
+                        <p>Se manifiesta en la satisfacción total del cliente. Nuestros servicios están garantizados por el compromiso de nuestra empresa de presentar el mejor resultado posible, manteniendo la mayor ética profesional.</p>
                     </div>
                 </div>
 
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-4">
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fa fa-handshake"></i>
+                        </div>
+                        <h4>Ética</h4>
+                        <p>Destacamos un comportamiento honesto, respetuoso y verídico sobre cada oferta y servicio proporcionado, generando confianza y transparencia en todas nuestras operaciones.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
                     <div class="value-item">
                         <div class="value-icon">
                             <i class="fa fa-users"></i>
                         </div>
                         <h4>Compromiso</h4>
-                        <p>Nos dedicamos plenamente a entender y satisfacer las necesidades específicas de cada cliente.</p>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-sm-6">
-                    <div class="value-item">
-                        <div class="value-icon">
-                            <i class="fa fa-lightbulb"></i>
-                        </div>
-                        <h4>Innovación</h4>
-                        <p>Adoptamos nuevas tecnologías y métodos para mejorar constantemente nuestros servicios y procesos.</p>
+                        <p>Mostrado a través de nuestra búsqueda constante de ofrecer resultados concretos para atender demandas específicas de cada uno de nuestros clientes con dedicación y perseverancia.</p>
                     </div>
                 </div>
             </div>
@@ -329,34 +381,34 @@
     </div>
 
     <div class="stats-section">
-        <div class="container">
+        <div class="section-container">
             <div class="stats-container">
                 <div class="row">
                     <div class="col-md-3 col-sm-6">
                         <div class="stat-item">
-                            <div class="stat-number">250+</div>
-                            <div class="stat-label">Propiedades Vendidas</div>
+                            <div class="stat-number">35+</div>
+                            <div class="stat-label">AÑOS DE EXPERIENCIA</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6">
+                        <div class="stat-item">
+                            <div class="stat-number">1500+</div>
+                            <div class="stat-label">PROPIEDADES GESTIONADAS</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6">
+                        <div class="stat-item">
+                            <div class="stat-number">3000+</div>
+                            <div class="stat-label">CLIENTES SATISFECHOS</div>
                         </div>
                     </div>
 
                     <div class="col-md-3 col-sm-6">
                         <div class="stat-item">
                             <div class="stat-number">15+</div>
-                            <div class="stat-label">Años de Experiencia</div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-sm-6">
-                        <div class="stat-item">
-                            <div class="stat-number">500+</div>
-                            <div class="stat-label">Clientes Satisfechos</div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3 col-sm-6">
-                        <div class="stat-item">
-                            <div class="stat-number">20+</div>
-                            <div class="stat-label">Agentes Profesionales</div>
+                            <div class="stat-label">PROFESIONALES ESPECIALIZADOS</div>
                         </div>
                     </div>
                 </div>
@@ -365,25 +417,23 @@
     </div>
 
     <div class="team-section">
-        <div class="container">
-            <div class="team-header">
-                <h2>Nuestro Equipo</h2>
-                <p>Profesionales apasionados y dedicados a hacer realidad tus sueños inmobiliarios</p>
-            </div>
+        <div class="section-container">
+            <h2 class="section-title">NUESTRO EQUIPO</h2>
+            <p class="section-subtitle">BOLIVIAN REAL ESTATE SRL cuenta con un equipo de profesionales del más alto nivel comprometidos en cumplir el objetivo prioritario de ofrecer las soluciones más efectivas para sus clientes.</p>
 
             <div class="row">
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="{{ asset('assets/front/images/demo/agent-1.jpg') }}" alt="Miembro del Equipo">
+                            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80" alt="Director General">
                         </div>
-                        <h4>Juan Pérez</h4>
+                        <h4>Fernando Mendoza</h4>
                         <span class="team-member-position">Director General</span>
-                        <p>Más de 15 años de experiencia en el sector inmobiliario con especialización en propiedades de lujo.</p>
+                        <p>Fundador de BRE, cuenta con más de 35 años de experiencia en el mercado inmobiliario paceño.</p>
                         <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
+                            <a href="#"><i class="fa fa-envelope"></i></a>
                         </div>
                     </div>
                 </div>
@@ -391,15 +441,15 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="{{ asset('assets/front/images/demo/agent-2.jpg') }}" alt="Miembro del Equipo">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80" alt="Gerente de Operaciones">
                         </div>
-                        <h4>María Gómez</h4>
-                        <span class="team-member-position">Jefe de Ventas</span>
-                        <p>Especialista en propiedades residenciales y comerciales con amplio conocimiento del mercado local.</p>
+                        <h4>Carla Fernández</h4>
+                        <span class="team-member-position">Gerente de Operaciones</span>
+                        <p>Especialista en gestión de propiedades de lujo y desarrollo de proyectos inmobiliarios.</p>
                         <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
+                            <a href="#"><i class="fa fa-envelope"></i></a>
                         </div>
                     </div>
                 </div>
@@ -407,15 +457,15 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="{{ asset('assets/front/images/demo/agent-3.jpg') }}" alt="Miembro del Equipo">
+                            <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80" alt="Asesor Inmobiliario">
                         </div>
-                        <h4>Carlos Rodríguez</h4>
-                        <span class="team-member-position">Asesor Inmobiliario</span>
-                        <p>Dedicado a encontrar la propiedad perfecta para cada cliente, con enfoque en el servicio personalizado.</p>
+                        <h4>Ricardo Torrez</h4>
+                        <span class="team-member-position">Asesor Inmobiliario Senior</span>
+                        <p>Experto en propiedades comerciales y oficinas en las zonas más exclusivas de La Paz.</p>
                         <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
+                            <a href="#"><i class="fa fa-envelope"></i></a>
                         </div>
                     </div>
                 </div>
@@ -423,15 +473,15 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="{{ asset('assets/front/images/demo/agent-4.jpg') }}" alt="Miembro del Equipo">
+                            <img src="https://images.unsplash.com/photo-1580894732444-8ecded7900cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80" alt="Asesora Financiera">
                         </div>
-                        <h4>Ana Martínez</h4>
+                        <h4>Sofía Vargas</h4>
                         <span class="team-member-position">Asesora Financiera</span>
-                        <p>Experta en asesoramiento financiero para inversiones inmobiliarias y financiación de propiedades.</p>
+                        <p>Especialista en financiamiento inmobiliario, anticréticos y modelos de inversión en bienes raíces.</p>
                         <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
+                            <a href="#"><i class="fa fa-envelope"></i></a>
                         </div>
                     </div>
                 </div>

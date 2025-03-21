@@ -1,11 +1,24 @@
 @push('styles')
     <style>
+        body {
+            background-color: #f7f7f7;
+        }
+
+        .section-container {
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+
         .contact-header {
-            background: url('{{ asset('assets/front/images/banner2.jpg') }}') #494c53 no-repeat center top;
+            background: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80') #494c53 no-repeat center top;
             background-size: cover;
             padding: 60px 0;
             position: relative;
             color: #fff;
+            margin-bottom: 0;
         }
 
         .contact-header::before {
@@ -21,12 +34,42 @@
         .contact-header-content {
             position: relative;
             z-index: 2;
+            text-align: center;
+        }
+
+        .contact-header-content h1 {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-family: 'Dosis', sans-serif;
+        }
+
+        .section-title {
+            color: #0DBAE8;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            font-family: 'Dosis', sans-serif;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #0DBAE8;
         }
 
         .contact-map-container {
             width: 100%;
             height: 450px;
             position: relative;
+            margin-bottom: 0;
         }
 
         .contact-map-container iframe {
@@ -36,8 +79,8 @@
         }
 
         .contact-content {
-            padding: 60px 0;
-            background: #fff;
+            padding: 40px 0;
+            background-color: #f7f7f7;
         }
 
         .contact-info-box {
@@ -45,10 +88,11 @@
             padding: 30px;
             border-radius: 5px;
             box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            height: 100%;
         }
 
         .contact-heading {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 600;
             margin-bottom: 25px;
             color: #333;
@@ -63,13 +107,14 @@
 
         .contact-details-icon {
             color: #0DBAE8;
-            font-size: 22px;
+            font-size: 20px;
             min-width: 30px;
             margin-right: 15px;
         }
 
         .contact-details-text {
             color: #555;
+            line-height: 1.6;
         }
 
         .contact-details-text strong {
@@ -79,10 +124,11 @@
         }
 
         .contact-form-box {
-            background: #4a5262;
+            background: #fff;
             padding: 30px;
             border-radius: 5px;
-            color: #fff;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            height: 100%;
         }
 
         .contact-form .form-control {
@@ -105,7 +151,7 @@
         }
 
         .contact-form .btn-submit {
-            background: #ff7e00;
+            background: #0DBAE8;
             color: #fff;
             border: none;
             padding: 12px 30px;
@@ -118,7 +164,7 @@
         }
 
         .contact-form .btn-submit:hover {
-            background: #e67200;
+            background: #0a8dac;
         }
 
         .working-hours {
@@ -185,59 +231,68 @@
 <x-frontend-layout>
     <div class="contact-header">
         <div class="container">
-            <div class="contact-header-content text-center">
-                <h1 class="page-title">Contáctanos</h1>
+            <div class="contact-header-content">
+                <h1 class="page-title">CONTÁCTANOS</h1>
                 <p class="lead">Estamos aquí para ayudarte con cualquier consulta inmobiliaria</p>
             </div>
         </div>
     </div>
 
     <div class="contact-map-container">
-        <!-- Reemplaza con tu clave de API de Google Maps y la ubicación correcta -->
+        <!-- Google Maps de la ubicación en La Paz, Bolivia (Torre Cesur) -->
         <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3591.979219447789!2d-80.19362048456688!3d25.781950383634235!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9b6823bb2dd99%3A0x3a8e29d1c1cb79e!2s900%20Biscayne%20Blvd%2C%20Miami%2C%20FL%2033132%2C%20EE.%20UU.!5e0!3m2!1ses!2ses!4v1616005910683!5m2!1ses!2ses"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3825.2924766664097!2d-68.07835102402495!3d-16.53930933898842!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x915f2072f8545115%3A0xa1ca4468bfa57c06!2sAv.%20Ballivian%201578%2C%20La%20Paz!5e0!3m2!1ses!2sbo!4v1711045391387!5m2!1ses!2sbo"
             allowfullscreen=""
             loading="lazy">
         </iframe>
     </div>
 
     <div class="contact-content">
-        <div class="container">
+        <div class="section-container">
             <div class="row">
                 <div class="col-md-5">
                     <div class="contact-info-box">
-                        <h3 class="contact-heading">Dirección</h3>
+                        <h3 class="section-title">INFORMACIÓN DE CONTACTO</h3>
+
+                        <div class="contact-details-item">
+                            <div class="contact-details-icon">
+                                <i class="fa fa-building"></i>
+                            </div>
+                            <div class="contact-details-text">
+                                <strong>Nombre o Razón Social</strong>
+                                BOLIVIAN REAL ESTATE SRL
+                            </div>
+                        </div>
 
                         <div class="contact-details-item">
                             <div class="contact-details-icon">
                                 <i class="fa fa-map-marker-alt"></i>
                             </div>
                             <div class="contact-details-text">
-                                <strong>Oficina Principal</strong>
-                                Calle Principal #123, Zona Centro<br>
-                                Santa Cruz, Bolivia
+                                <strong>Oficina Central</strong>
+                                Calacoto, Av. Ballivián N° 1578 <br>
+                                Edif. Torre Cesur piso 2 Of. 508<br>
+                                La Paz, Bolivia
                             </div>
                         </div>
-
-                        <h3 class="contact-heading">Detalles de Contacto</h3>
 
                         <div class="contact-details-item">
                             <div class="contact-details-icon">
                                 <i class="fa fa-phone-alt"></i>
                             </div>
                             <div class="contact-details-text">
-                                <strong>Teléfono</strong>
-                                +591 3 333-4444
+                                <strong>Teléfonos</strong>
+                                (591) 2794041 – (591) 2774229
                             </div>
                         </div>
 
                         <div class="contact-details-item">
                             <div class="contact-details-icon">
-                                <i class="fa fa-mobile-alt"></i>
+                                <i class="fab fa-whatsapp"></i>
                             </div>
                             <div class="contact-details-text">
-                                <strong>Celular</strong>
-                                +591 7 777-8888
+                                <strong>WhatsApp</strong>
+                                (591) 79684093
                             </div>
                         </div>
 
@@ -247,7 +302,7 @@
                             </div>
                             <div class="contact-details-text">
                                 <strong>Email</strong>
-                                info@tuempresa.com
+                                info@bolivianrealestate.com
                             </div>
                         </div>
 
@@ -259,7 +314,7 @@
                                     <i class="fa fa-clock"></i>
                                 </div>
                                 <div class="contact-details-text">
-                                    Lunes - Viernes: 8:30 am a 6:00 pm
+                                    Lunes - Viernes: 9:00 am a 6:00 pm
                                 </div>
                             </div>
 
@@ -277,10 +332,10 @@
                             <h3 class="contact-heading">Síguenos</h3>
                             <div class="social-links">
                                 <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
                                 <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
                                 <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
                             </div>
                         </div>
                     </div>
@@ -288,7 +343,7 @@
 
                 <div class="col-md-7">
                     <div class="contact-form-box">
-                        <h3 class="contact-heading">Envíanos un Mensaje</h3>
+                        <h3 class="section-title">ENVÍANOS UN MENSAJE</h3>
 
                         <form class="contact-form" action="#" method="post">
                             @csrf
@@ -301,8 +356,21 @@
                                 </div>
                             </div>
 
-                            <input type="text" name="phone" class="form-control" placeholder="Teléfono">
-                            <input type="text" name="subject" class="form-control" placeholder="Asunto">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="text" name="phone" class="form-control" placeholder="Teléfono*" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <select name="inquiry_type" class="form-control" required>
+                                        <option value="">Tipo de consulta*</option>
+                                        <option value="compra">Compra de propiedad</option>
+                                        <option value="venta">Venta de propiedad</option>
+                                        <option value="alquiler">Alquiler</option>
+                                        <option value="anticresis">Anticrético</option>
+                                        <option value="otros">Otra consulta</option>
+                                    </select>
+                                </div>
+                            </div>
 
                             <textarea name="message" class="form-control" placeholder="Mensaje*" required></textarea>
 

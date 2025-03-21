@@ -7637,3 +7637,122 @@ blockquote:before {
     font-size: 230px;
   }
 }
+
+
+.site-footer {
+    background-color: #3a3e47 !important;
+    color: #fff !important;
+    padding: 60px 0 30px !important;
+}
+
+.footer-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
+}
+
+.footer-logo {
+    margin-bottom: 30px;
+}
+
+.footer-logo img {
+    height: 100px;
+    margin-bottom: 15px;
+}
+
+.copyright-text {
+    color: #aaa;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+.copyright-text a {
+    color: #0DBAE8;
+    text-decoration: none;
+}
+
+.copyright-text a:hover {
+    text-decoration: underline;
+}
+
+.widget-title {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-family: 'Dosis', sans-serif;
+}
+
+.footer-widget-area ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-widget-area ul li {
+    margin-bottom: 10px;
+}
+
+.footer-widget-area ul li a {
+    color: #aaa;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-widget-area ul li a:hover {
+    color: #0DBAE8;
+}
+
+.social-networks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.social-networks a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border-radius: 3px;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.social-networks a:hover {
+    background-color: #0DBAE8;
+}
+
+.footer-bottom {
+    background-color: #2d3039;
+    padding: 15px 0;
+    text-align: center;
+}
+
+.footer-bottom img {
+    height: 30px;
+    margin: 0 5px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.footer-bottom img:hover {
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .site-footer {
+        padding: 40px 0 20px;
+    }
+
+    .footer-widget-area .col-md-3 {
+        margin-bottom: 30px;
+    }
+}

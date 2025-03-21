@@ -1,11 +1,24 @@
 @push('styles')
     <style>
+        body {
+            background-color: #f7f7f7;
+        }
+
+        .section-container {
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+
         .promotions-header {
-            background: url('{{ asset('assets/front/images/banner2.jpg') }}') #494c53 no-repeat center top;
+            background: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80') #494c53 no-repeat center top;
             background-size: cover;
-            padding: 80px 0;
+            padding: 60px 0;
             position: relative;
             color: #fff;
+            margin-bottom: 0;
         }
 
         .promotions-header::before {
@@ -21,11 +34,40 @@
         .promotions-header-content {
             position: relative;
             z-index: 2;
+            text-align: center;
+        }
+
+        .promotions-header-content h1 {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-family: 'Dosis', sans-serif;
+        }
+
+        .section-title {
+            color: #0DBAE8;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            font-family: 'Dosis', sans-serif;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #0DBAE8;
         }
 
         .promo-filters {
             background-color: #f5f5f5;
-            padding: 30px 0;
+            padding: 20px 0;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
@@ -60,7 +102,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('{{ asset('assets/front/images/pattern.png') }}');
+            background: url('https://images.unsplash.com/photo-1579621970795-87facc2f976d?ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80');
+            background-size: cover;
+            background-position: center;
             opacity: 0.1;
         }
 
@@ -137,7 +181,7 @@
         }
 
         .promotions-grid {
-            padding: 60px 0;
+            padding: 40px 0;
         }
 
         .promo-card {
@@ -152,13 +196,13 @@
         }
 
         .promo-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
 
         .promo-image {
             position: relative;
-            height: 200px;
+            height: 250px;
             overflow: hidden;
         }
 
@@ -170,7 +214,7 @@
         }
 
         .promo-card:hover .promo-image img {
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         .promo-tag {
@@ -222,6 +266,9 @@
 
         .promo-content {
             padding: 25px 20px;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
         }
 
         .promo-title {
@@ -269,6 +316,7 @@
         .promo-details {
             margin-bottom: 20px;
             color: #555;
+            flex-grow: 1;
         }
 
         .promo-details ul {
@@ -289,6 +337,7 @@
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
+            text-align: center;
         }
 
         .promo-cta:hover {
@@ -349,21 +398,58 @@
             background: #0a8dac;
         }
 
-        /* Estilos para la animación de "Hot Deal" */
+        /* Estilos para la etiqueta "Hot Deal" */
         .hot-deal {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hot-deal-badge {
+            position: absolute;
+            top: 55px;
+            left: 11px;
+            width: 200px;
+            background: #ff3b30;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 0;
+            text-align: center;
+            transform: rotate(-45deg) translateX(-70px) translateY(-20px);
+            transform-origin: top left;
+            z-index: 10;
+            box-shadow: 0 3px 10px rgba(255, 59, 48, 0.3);
             animation: pulse 1.5s infinite;
         }
 
         @keyframes pulse {
             0% {
-                transform: scale(1);
+                transform: rotate(-45deg) translateX(-70px) translateY(-20px) scale(1);
             }
             50% {
-                transform: scale(1.05);
+                transform: rotate(-45deg) translateX(-70px) translateY(-20px) scale(1.05);
             }
             100% {
-                transform: scale(1);
+                transform: rotate(-45deg) translateX(-70px) translateY(-20px) scale(1);
             }
+        }
+
+        /* Estilos para la etiqueta "Exclusivo" */
+        .exclusive-badge {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200px;
+            background: #ff3b30;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 10px 0;
+            text-align: center;
+            transform: rotate(-45deg) translateX(-70px) translateY(-20px);
+            transform-origin: top left;
+            z-index: 10;
+            box-shadow: 0 3px 10px rgba(255, 59, 48, 0.3);
         }
 
         /* Responsive styles */
@@ -482,15 +568,15 @@
 <x-frontend-layout>
     <div class="promotions-header">
         <div class="container">
-            <div class="promotions-header-content text-center">
-                <h1 class="page-title">Ofertas y Promociones</h1>
+            <div class="promotions-header-content">
+                <h1 class="page-title">OFERTAS Y PROMOCIONES</h1>
                 <p class="lead">Descubre oportunidades únicas para invertir en bienes raíces con los mejores precios del mercado</p>
             </div>
         </div>
     </div>
 
     <div class="promo-filters">
-        <div class="container">
+        <div class="section-container">
             <div class="text-center">
                 <button class="filter-button active" data-filter="all">Todas</button>
                 <button class="filter-button" data-filter="sale">En Venta</button>
@@ -503,7 +589,7 @@
     </div>
 
     <div class="promo-counter">
-        <div class="container">
+        <div class="section-container">
             <div class="counter-content">
                 <h2 class="counter-title">Ofertas por Tiempo Limitado</h2>
                 <p class="counter-description">No pierdas la oportunidad de aprovechar nuestras promociones especiales. Estas ofertas exclusivas terminan en:</p>
@@ -533,29 +619,29 @@
     </div>
 
     <div id="promo-grid" class="promotions-grid">
-        <div class="container">
+        <div class="section-container">
             <div class="row">
                 <!-- Promo 1 - Hot Deal -->
                 <div class="col-md-4 col-sm-6">
-                    <div class="promo-card hot-deal" data-category="sale">
-                        <div class="promo-image">
-                            <img src="{{ asset('assets/front/images/property/property-1-660x600.jpg') }}" alt="Promoción Apartamento">
-                            <div class="promo-badge">HOT DEAL</div>
-                            <div class="promo-tag">Venta</div>
+                    <div class="promo-card" data-category="sale">
+                        <div class="promo-image hot-deal">
+                            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Apartamento de Lujo en Zona Exclusiva">
+                            <div class="hot-deal-badge">HOT DEAL</div>
+                            <div class="promo-tag">VENTA</div>
                             <div class="promo-timer" data-end-date="2025-04-30T23:59:59">
                                 <i class="fa fa-clock"></i>
-                                <span class="timer-text">3d 12h 45m restantes</span>
+                                <span class="timer-text">41d 1h 14m restantes</span>
                             </div>
                         </div>
                         <div class="promo-content">
-                            <h3 class="promo-title">Apartamento de Lujo en Zona Exclusiva</h3>
+                            <h3 class="promo-title">Apartamento de Lujo</h3>
                             <div class="promo-price">
                                 <span class="original-price">$250,000</span>
                                 <span class="discounted-price"><span class="price-currency">$</span>199,000</span>
                                 <span class="discount-badge">-20%</span>
                             </div>
                             <div class="promo-details">
-                                <p>Apartamento completamente amueblado con vistas panorámicas a la ciudad. Oportunidad única por tiempo limitado.</p>
+                                <p>Apartamento completamente amueblado con vistas panorámicas a la ciudad. </p>
                                 <ul>
                                     <li>3 dormitorios, 2 baños</li>
                                     <li>120m² de superficie</li>
@@ -571,11 +657,11 @@
                 <div class="col-md-4 col-sm-6">
                     <div class="promo-card" data-category="rental">
                         <div class="promo-image">
-                            <img src="{{ asset('assets/front/images/property/property-2-660x600.jpg') }}" alt="Promoción Casa">
-                            <div class="promo-tag">Alquiler</div>
+                            <img src="https://images.unsplash.com/photo-1558036117-15d82a90b9b1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Casa Familiar con Jardín">
+                            <div class="promo-tag">ALQUILER</div>
                             <div class="promo-timer" data-end-date="2025-04-25T23:59:59">
                                 <i class="fa fa-clock"></i>
-                                <span class="timer-text">2d 18h 30m restantes</span>
+                                <span class="timer-text">36d 1h 14m restantes</span>
                             </div>
                         </div>
                         <div class="promo-content">
@@ -602,8 +688,8 @@
                 <div class="col-md-4 col-sm-6">
                     <div class="promo-card" data-category="new">
                         <div class="promo-image">
-                            <img src="{{ asset('assets/front/images/property/property-3-660x600.jpg') }}" alt="Promoción Loft">
-                            <div class="promo-tag">Nuevo</div>
+                            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Loft Moderno en el Centro">
+                            <div class="promo-tag">NUEVO</div>
                         </div>
                         <div class="promo-content">
                             <h3 class="promo-title">Loft Moderno en el Centro</h3>
@@ -628,10 +714,10 @@
                 <!-- Promo 4 -->
                 <div class="col-md-4 col-sm-6">
                     <div class="promo-card" data-category="special">
-                        <div class="promo-image">
-                            <img src="{{ asset('assets/front/images/property/property-4-660x600.jpg') }}" alt="Promoción Terreno">
-                            <div class="promo-badge">EXCLUSIVO</div>
-                            <div class="promo-tag">Especial</div>
+                        <div class="promo-image hot-deal">
+                            <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Terreno con Vista al Mar">
+                            <div class="hot-deal-badge">EXCLUSIVO</div>
+                            <div class="promo-tag">ESPECIAL</div>
                         </div>
                         <div class="promo-content">
                             <h3 class="promo-title">Terreno con Vista al Mar</h3>
@@ -657,11 +743,11 @@
                 <div class="col-md-4 col-sm-6">
                     <div class="promo-card" data-category="limited">
                         <div class="promo-image">
-                            <img src="{{ asset('assets/front/images/property/property-5-660x600.jpg') }}" alt="Promoción Oficina">
-                            <div class="promo-tag">Tiempo Limitado</div>
+                            <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Oficina Corporativa Premium">
+                            <div class="promo-tag">TIEMPO LIMITADO</div>
                             <div class="promo-timer" data-end-date="2025-04-20T23:59:59">
                                 <i class="fa fa-clock"></i>
-                                <span class="timer-text">1d 8h 15m restantes</span>
+                                <span class="timer-text">31d 1h 14m restantes</span>
                             </div>
                         </div>
                         <div class="promo-content">
@@ -688,8 +774,8 @@
                 <div class="col-md-4 col-sm-6">
                     <div class="promo-card" data-category="sale">
                         <div class="promo-image">
-                            <img src="{{ asset('assets/front/images/property/property-6-660x600.jpg') }}" alt="Promoción Villa">
-                            <div class="promo-tag">Venta</div>
+                            <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Villa de Lujo con Piscina">
+                            <div class="promo-tag">VENTA</div>
                         </div>
                         <div class="promo-content">
                             <h3 class="promo-title">Villa de Lujo con Piscina</h3>
@@ -699,11 +785,93 @@
                                 <span class="discount-badge">-10%</span>
                             </div>
                             <div class="promo-details">
-                                <p>Espectacular villa con piscina y jardín en zona residencial exclusiva.</p>
+                                <p>Espectacular villa con piscina y jardín en zona residencial exclusiva. Oportunidad única por tiempo limitado.</p>
                                 <ul>
                                     <li>5 dormitorios, 4 baños</li>
                                     <li>350m² de superficie</li>
                                     <li>Piscina privada y área de entretenimiento</li>
+                                </ul>
+                            </div>
+                            <a href="#" class="promo-cta">Ver Detalles</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promo 7 -->
+                <div class="col-md-4 col-sm-6">
+                    <div class="promo-card" data-category="rental">
+                        <div class="promo-image">
+                            <img src="https://images.unsplash.com/photo-1600607687644-c7513dba89c6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Departamento Amoblado">
+                            <div class="promo-tag">ALQUILER</div>
+                        </div>
+                        <div class="promo-content">
+                            <h3 class="promo-title">Departamento Amoblado</h3>
+                            <div class="promo-price">
+                                <span class="original-price">$900/mes</span>
+                                <span class="discounted-price"><span class="price-currency">$</span>750/mes</span>
+                                <span class="discount-badge">-17%</span>
+                            </div>
+                            <div class="promo-details">
+                                <p>Moderno departamento completamente amoblado, ideal para parejas o ejecutivos.</p>
+                                <ul>
+                                    <li>2 dormitorios, 1 baño</li>
+                                    <li>90m² de superficie</li>
+                                    <li>Ubicación céntrica con excelente vista</li>
+                                </ul>
+                            </div>
+                            <a href="#" class="promo-cta">Ver Detalles</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promo 8 -->
+                <div class="col-md-4 col-sm-6">
+                    <div class="promo-card" data-category="special">
+                        <div class="promo-image">
+                            <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Casa de Dos Pisos">
+                            <div class="promo-tag">ESPECIAL</div>
+                        </div>
+                        <div class="promo-content">
+                            <h3 class="promo-title">Casa de Dos Pisos en Achumani</h3>
+                            <div class="promo-price">
+                                <span class="original-price">$320,000</span>
+                                <span class="discounted-price"><span class="price-currency">$</span>280,000</span>
+                                <span class="discount-badge">-12.5%</span>
+                            </div>
+                            <div class="promo-details">
+                                <p>Hermosa casa en exclusivo barrio residencial con excelente distribución y acabados.</p>
+                                <ul>
+                                    <li>4 dormitorios, 3 baños</li>
+                                    <li>280m² de superficie</li>
+                                    <li>Garaje para 2 vehículos y jardín trasero</li>
+                                </ul>
+                            </div>
+                            <a href="#" class="promo-cta">Ver Detalles</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promo 9 -->
+                <div class="col-md-4 col-sm-6">
+                    <div class="promo-card" data-category="new">
+                        <div class="promo-image hot-deal">
+                            <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Casa Moderna">
+                            <div class="hot-deal-badge">NUEVO</div>
+                            <div class="promo-tag">NUEVO</div>
+                        </div>
+                        <div class="promo-content">
+                            <h3 class="promo-title">Casa Moderna en Calacoto</h3>
+                            <div class="promo-price">
+                                <span class="original-price">$420,000</span>
+                                <span class="discounted-price"><span class="price-currency">$</span>395,000</span>
+                                <span class="discount-badge">-6%</span>
+                            </div>
+                            <div class="promo-details">
+                                <p>Impresionante casa de diseño contemporáneo con amplios espacios y mucha luz natural.</p>
+                                <ul>
+                                    <li>4 dormitorios, 3.5 baños</li>
+                                    <li>320m² de superficie</li>
+                                    <li>Diseño arquitectónico moderno y eficiente</li>
                                 </ul>
                             </div>
                             <a href="#" class="promo-cta">Ver Detalles</a>
@@ -715,7 +883,7 @@
     </div>
 
     <div class="promo-newsletter">
-        <div class="container">
+        <div class="section-container">
             <h3 class="newsletter-title">Recibe Nuestras Promociones Exclusivas</h3>
             <p class="newsletter-description">Suscríbete a nuestro boletín y sé el primero en enterarte de nuestras ofertas especiales y propiedades destacadas.</p>
 

@@ -8,7 +8,7 @@
                    data-rel="gallery"
                    href="{{ asset('storage/' . $image->name) }}">
                     <img src="{{ asset('storage/' . $image->name) }}"
-                         style="height: 510px; width: 100%; object-fit: cover;"
+                         style="height: 527px; width: 100%; object-fit: cover;"
                          alt="{{ $name }}">
                 </a>
             </li>
