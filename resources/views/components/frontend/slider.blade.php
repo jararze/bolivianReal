@@ -8,12 +8,12 @@
                             <div class="slide-inner-container">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <h3 class="slide-entry-title entry-title">
+                                        <h3 class="slide-entry-title entry-title" style="font-size: 21px !important;">
                                             <a href="{{ route('frontend.properties.show', $slide['data']->slug) }}">
                                                 {{ $slide['data']->name }}
                                             </a>
                                         </h3>
-                                        <div class="price-and-status">
+                                        <div class="price-and-status" style="font-size: 14px !important;">
                                             <span class="price">
                                                 {{ $slide['data']->currency }}
                                                 {{ number_format($slide['data']->lowest_price, 2) }}
@@ -86,11 +86,11 @@
                     </div>
                     <img src="{{ asset("storage/".$slide['data']->thumbnail) }}"
                          alt="{{ $slide['data']->name }}"
-                         style="height: 800px; width: 100%; object-fit: cover;">
+                         style="height: 550px; width: 100%; object-fit: cover;">
                 @else
                     <img src="{{ $slide['data']['image'] }}"
                          alt="{{ $slide['data']['title'] }}"
-                         style="height: 800px; width: 100%; object-fit: cover;">
+                         style="height: 550px; width: 100%; object-fit: cover;">
                 @endif
             </li>
         @empty

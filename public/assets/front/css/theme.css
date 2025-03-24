@@ -445,7 +445,7 @@ input[type="password"],
     border-right-color: transparent;
   }
   .header-variation-two .header-social-nav .fa {
-    border-right-color: #e2e2e2;
+    /*border-right-color: #e2e2e2;*/
   }
   .header-variation-two .header-social-nav .twitter {
     border-bottom-color: #58c7ff;

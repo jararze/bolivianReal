@@ -36,8 +36,9 @@
 
 
     <x-frontend.header-sub/>
+{{--    <x-frontend.header/>--}}
     @if(request()->routeIs('frontend.home'))
-        {{--        <x-frontend.header/>--}}
+
 
         <x-frontend.slider/>
 
@@ -59,7 +60,7 @@
 
             @if(request()->routeIs('frontend.home'))
                 <main id="main" class="site-main">
-                    <x-frontend.search/>
+{{--                    <x-frontend.search/>--}}
                     {{ $slot }}
                 </main>
             @else

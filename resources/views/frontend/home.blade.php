@@ -150,68 +150,68 @@
         </div>
     </section>
 
-    <div class="featured-properties featured-properties-one">
-        <div class="container">
-            <header class="section-header" style="margin-top: 10px">
-                <h3 class="section-title">Propiedades demandadas</h3>
-            </header>
-            <div class="row zero-horizontal-margin">
-                @foreach($hotProperties as $property)
-                    <div class="zero-horizontal-padding col-xs-6 col-md-3">
-                        <article class="hentry featured-property-post featured-property-post-{{ $loop->iteration % 2 == 0 ? 'even' : 'odd' }}">
-                            <div class="property-thumbnail">
-                                <a href="{{ route('frontend.properties.show', $property->slug) }}">
-                                    @if($property->thumbnail)
-                                        <img class="img-responsive"
-                                             src="{{ asset('storage/' .  $property->thumbnail) }}"
-                                             alt="{{ $property->name }}"
-                                             style="width: 100%; height: 200px; object-fit: cover;">
-                                    @else
-                                        <img class="img-responsive"
-                                             src="{{ asset('assets/front/images/property/property-12-660x600.jpg') }}"
-                                             alt="{{ $property->name }}"
-                                             style="width: 100%; height: 200px; object-fit: cover;">
-                                    @endif
-                                </a>
+{{--    <div class="featured-properties featured-properties-one">--}}
+{{--        <div class="container">--}}
+{{--            <header class="section-header" style="margin-top: 10px">--}}
+{{--                <h3 class="section-title">Propiedades demandadas</h3>--}}
+{{--            </header>--}}
+{{--            <div class="row zero-horizontal-margin">--}}
+{{--                @foreach($hotProperties as $property)--}}
+{{--                    <div class="zero-horizontal-padding col-xs-6 col-md-3">--}}
+{{--                        <article class="hentry featured-property-post featured-property-post-{{ $loop->iteration % 2 == 0 ? 'even' : 'odd' }}">--}}
+{{--                            <div class="property-thumbnail">--}}
+{{--                                <a href="{{ route('frontend.properties.show', $property->slug) }}">--}}
+{{--                                    @if($property->thumbnail)--}}
+{{--                                        <img class="img-responsive"--}}
+{{--                                             src="{{ asset('storage/' .  $property->thumbnail) }}"--}}
+{{--                                             alt="{{ $property->name }}"--}}
+{{--                                             style="width: 100%; height: 200px; object-fit: cover;">--}}
+{{--                                    @else--}}
+{{--                                        <img class="img-responsive"--}}
+{{--                                             src="{{ asset('assets/front/images/property/property-12-660x600.jpg') }}"--}}
+{{--                                             alt="{{ $property->name }}"--}}
+{{--                                             style="width: 100%; height: 200px; object-fit: cover;">--}}
+{{--                                    @endif--}}
+{{--                                </a>--}}
 {{--                                @if($property->is_project)--}}
 {{--                                    <div class="property-label">--}}
 {{--                                        <span class="label label-success">PROYECTO</span>--}}
 {{--                                    </div>--}}
 {{--                                @endif--}}
-                            </div>
-                            <div class="property-description">
-                                <header class="entry-header">
-                                    <h4 class="entry-title">
-                                        <a href="{{ route('frontend.properties.show', $property->slug) }}" rel="bookmark">
-                                            {{ Str::limit($property->name, 20) }}
-                                        </a>
-                                    </h4>
-                                    <div class="price-and-status">
-                                    <span class="price">
-                                        {{ $property->currency == '$us' ? '$' : 'Bs.' }}
-                                        {{ number_format($property->lowest_price, 0) }}
-                                    </span>
-                                        <a href="#">
-                                        <span class="property-status-tag">
-                                            {{ $property->is_project ? 'PROYECTO' : 'EN VENTA' }}
-                                        </span>
-                                        </a>
-                                    </div>
-                                    @if($property->short_description)
-                                        <p class="property-short-desc">
-                                            {{ Str::limit($property->short_description, 100) }}
-                                        </p>
-                                    @endif
-                                </header>
-                            </div>
-                        </article>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
+{{--                            </div>--}}
+{{--                            <div class="property-description">--}}
+{{--                                <header class="entry-header">--}}
+{{--                                    <h4 class="entry-title">--}}
+{{--                                        <a href="{{ route('frontend.properties.show', $property->slug) }}" rel="bookmark">--}}
+{{--                                            {{ Str::limit($property->name, 20) }}--}}
+{{--                                        </a>--}}
+{{--                                    </h4>--}}
+{{--                                    <div class="price-and-status">--}}
+{{--                                    <span class="price">--}}
+{{--                                        {{ $property->currency == '$us' ? '$' : 'Bs.' }}--}}
+{{--                                        {{ number_format($property->lowest_price, 0) }}--}}
+{{--                                    </span>--}}
+{{--                                        <a href="#">--}}
+{{--                                        <span class="property-status-tag">--}}
+{{--                                            {{ $property->is_project ? 'PROYECTO' : 'EN VENTA' }}--}}
+{{--                                        </span>--}}
+{{--                                        </a>--}}
+{{--                                    </div>--}}
+{{--                                    @if($property->short_description)--}}
+{{--                                        <p class="property-short-desc">--}}
+{{--                                            {{ Str::limit($property->short_description, 100) }}--}}
+{{--                                        </p>--}}
+{{--                                    @endif--}}
+{{--                                </header>--}}
+{{--                            </div>--}}
+{{--                        </article>--}}
+{{--                    </div>--}}
+{{--                @endforeach--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 
-    <section class="video-section" style="margin: 20px 0px">
+    <section class="video-section" style="margin: 0 0 20px 0px">
         <div class="video-title-wrapper">
             <h2 class="title text-center mb-0">
                 Conoce más sobre nosotros
