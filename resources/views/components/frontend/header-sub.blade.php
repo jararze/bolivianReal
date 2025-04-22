@@ -99,7 +99,7 @@
                 <!-- .header-top -->
                 <div class="header-bottom clearfix" style="top: 53px; position: absolute !important; z-index: 1050">
                     <div class="advance-search header-advance-search">
-                        <form class="advance-search-form" action="#" method="get">
+                        <form class="advance-search-form" action="{{ route('frontend.properties.search') }}" method="get">
                             <div class="inline-fields clearfix">
                                 <div class="option-bar property-location">
                                     <select name="location" id="location" class="search-select">
