@@ -5,8 +5,19 @@ import { initProjectFields  } from './modules/projectFields.js';
 
 
 document.addEventListener('DOMContentLoaded', function() {
+
+    // Verificar si el mapa ya está inicializado
+    const mapContainer = document.getElementById('map');
+
+    if (mapContainer && !mapContainer._leaflet_id) {
+        // Inicializar el mapa solo si no está ya inicializado
+        initLocationMap();
+    } else {
+        console.log('Map already initialized or container not found');
+    }
+
+
     initImageUpload();
-    initLocationMap();
     initServices();
     initProjectFields();
 });

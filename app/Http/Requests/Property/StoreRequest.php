@@ -30,8 +30,8 @@ class StoreRequest extends FormRequest
             'garage_size' => ['nullable', 'numeric'],
             'short_description' => ['required', 'string'],
             'long_description' => ['required', 'string'],
-            'thumbnail' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:5120', 'dimensions:min_width=800,min_height=600'],
-            'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048', 'dimensions:min_width=800,min_height=600'],
+            'thumbnail' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:5120', 'dimensions:min_width=600,min_height=400'],
+            'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048', 'dimensions:min_width=600,min_height=400'],
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric'],
             'features' => ['nullable', 'array'],
@@ -55,17 +55,17 @@ class StoreRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        // Log todos los datos recibidos
-//        Log::channel('daily')->info('Datos recibidos en StoreRequest:', [
-//            'all_data' => $this->all(),
-//            'files' => $this->allFiles()
-//        ]);
-//
-//        // Log errores de validación
-//        Log::channel('daily')->error('Errores de validación en StoreRequest:', [
-//            'errors' => $validator->errors()->toArray(),
-//            'failed_rules' => $validator->failed()
-//        ]);
+//         Log todos los datos recibidos
+        Log::channel('daily')->info('Datos recibidos en StoreRequest:', [
+            'all_data' => $this->all(),
+            'files' => $this->allFiles()
+        ]);
+
+        // Log errores de validación
+        Log::channel('daily')->error('Errores de validación en StoreRequest:', [
+            'errors' => $validator->errors()->toArray(),
+            'failed_rules' => $validator->failed()
+        ]);
 
         parent::failedValidation($validator);
     }
@@ -73,9 +73,9 @@ class StoreRequest extends FormRequest
     protected function prepareForValidation()
     {
         // Log antes de la preparación
-//        Log::channel('daily')->info('Datos antes de preparación:', [
-//            'raw_data' => $this->all()
-//        ]);
+        Log::channel('daily')->info('Datos antes de preparación:', [
+            'raw_data' => $this->all()
+        ]);
 
         // Convertir strings 'true'/'false' a booleanos para campos boolean
         $booleanFields = ['currency', 'chosen_currency', 'featured', 'hot', 'status', 'is_project'];
@@ -92,9 +92,9 @@ class StoreRequest extends FormRequest
         }
 
         // Log después de la preparación
-//        Log::channel('daily')->info('Datos después de preparación:', [
-//            'prepared_data' => $this->all()
-//        ]);
+        Log::channel('daily')->info('Datos después de preparación:', [
+            'prepared_data' => $this->all()
+        ]);
     }
 
     public function messages(): array

@@ -28,6 +28,30 @@
     <div class="container-fixed">
         <form action="{{ route('backend.properties.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
+
+            @if(session('error') || $errors->any())
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
+                    @if(session('error'))
+                        <p>{{ session('error') }}</p>
+                    @endif
+
+                    @if($errors->any())
+                        <ul class="list-disc list-inside">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </div>
+            @endif
+
+            @if(session('success'))
+                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+                    <p>{{ session('success') }}</p>
+                </div>
+            @endif
+
+
             <div class="flex grow gap-5 lg:gap-7.5">
                 <div class="hidden lg:block w-[230px] shrink-0">
                     <div class="w-[230px]" data-sticky="true" data-sticky-animation="true"
@@ -350,15 +374,13 @@
                             </div>
                             <div class="w-full">
                                 <div class="flex items-baseline flex-wrap lg:flex-nowrap gap-2.5 mb-7">
-                                    <x-input-label for="long_description" :value="__('Descripcion larga')"
-                                                   class="form-label max-w-56"/>
+                                    <x-input-label for="long_description" :value="__('Descripcion larga')" class="form-label max-w-56"/>
                                     <div class="flex flex-col tems-start grow gap-3 w-full">
-                                        <x-textarea-input
-                                            id="long_description"
+                                        <x-rich-text-editor
                                             name="long_description"
+                                            :value="old('long_description')"
+                                            rows="10"
                                             placeholder="Descripción larga"
-                                            rows="6"
-                                            value="{{ old('long_description') }}"
                                         />
                                         <x-input-error class="mt-2" :messages="$errors->get('long_description')"/>
                                     </div>
@@ -430,6 +452,7 @@
                                 </div>
 
                                 <!-- Área de Drop para Imágenes Adicionales -->
+                                <!-- Área de Drop para Imágenes Adicionales -->
                                 <div>
                                     <label class="text-gray-700 text-sm font-medium mb-2">Imágenes Adicionales</label>
                                     <div class="mt-2">
@@ -443,14 +466,22 @@
                                                    accept="image/*"
                                                    class="hidden"
                                             />
-                                            <!-- En create.blade.php, después del input de imágenes -->
-                                            @error('images')
-                                            <div class="alert alert-danger mt-2">
-                                                @foreach($errors->get('images') as $error)
-                                                    <div>{{ $error }}</div>
-                                                @endforeach
-                                            </div>
-                                            @enderror
+
+                                            <!-- Mensajes de error para imágenes -->
+                                            @if($errors->has('images.*') || $errors->has('images'))
+                                                <div class="alert alert-danger mt-2 absolute top-2 left-2 right-2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                                                    @foreach($errors->get('images') as $error)
+                                                        <div>{{ $error }}</div>
+                                                    @endforeach
+
+                                                    @foreach($errors->get('images.*') as $index => $messages)
+                                                        @foreach($messages as $message)
+                                                            <div>Imagen {{ intval(str_replace('images.', '', $index)) + 1 }}: {{ $message }}</div>
+                                                        @endforeach
+                                                    @endforeach
+                                                </div>
+                                            @endif
+
                                             <div id="drop-placeholder" class="text-center">
                                                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none"
                                                      stroke="currentColor" viewBox="0 0 24 24">
@@ -462,7 +493,21 @@
                                                     click para seleccionar</p>
                                             </div>
                                         </div>
-                                        <x-input-error class="mt-2" :messages="$errors->get('images')"/>
+
+                                        <!-- Mensaje de error adicional fuera del área de drop -->
+                                        @if($errors->has('images.*') || $errors->has('images'))
+                                            <div class="mt-2 p-2 bg-red-100 border border-red-400 text-red-700 rounded">
+                                                @foreach($errors->get('images') as $error)
+                                                    <div>{{ $error }}</div>
+                                                @endforeach
+
+                                                @foreach($errors->get('images.*') as $index => $messages)
+                                                    @foreach($messages as $message)
+                                                        <div>Imagen {{ intval(str_replace('images.', '', $index)) + 1 }}: {{ $message }}</div>
+                                                    @endforeach
+                                                @endforeach
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

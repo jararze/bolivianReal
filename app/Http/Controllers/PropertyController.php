@@ -64,62 +64,69 @@ class PropertyController extends Controller
      */
     public function store(StoreRequest $request): RedirectResponse
     {
-//        Log::channel('daily')->info('Datos recibidos en PropertyController@store:', [
-//            'all_data' => $request->all(),
-//            'files' => $request->allFiles()
-//        ]);
         try {
+            Log::info('Iniciando store en PropertyController');
+
             $validated = $request->validated();
-
-
-//            Log::info('Datos validados:', ['validated' => $validated]);
+            Log::info('Datos validados:', ['validated' => $validated]);
 
             // Preparar los datos para la base de datos
             $propertyData = $this->preparePropertyData($validated);
-
-            // Log los datos preparados
-//            Log::info('Datos preparados para DB:', ['propertyData' => $propertyData]);
+            Log::info('Datos preparados para DB:', ['propertyData' => $propertyData]);
 
             return DB::transaction(function () use ($request, $propertyData) {
                 try {
                     // Create property
                     $property = Property::create($propertyData);
-//                    Log::info('Propiedad creada:', ['property' => $property->toArray()]);
+                    Log::info('Propiedad creada:', ['property' => $property->toArray()]);
 
                     // Procesar relaciones
                     $this->processRelations($property, $request->validated());
+                    Log::info('Relaciones procesadas');
 
                     // Procesar imágenes
                     try {
                         $this->processImages($property, $request);
+                        Log::info('Imágenes procesadas');
                     } catch (ValidationException $e) {
+                        Log::error('Error de validación en imágenes:', ['errors' => $e->errors()]);
                         throw $e;
                     } catch (\Exception $e) {
-                        throw new ValidationException(validator([], []), [
-                            'images' => [$e->getMessage()]
-                        ]);
+                        Log::error('Error procesando imágenes:', ['message' => $e->getMessage()]);
+                        // Eliminar la propiedad si hubo un error con las imágenes
+                        $property->delete();
+                        throw new \Exception('Error procesando imágenes: ' . $e->getMessage());
                     }
 
                     flash()->success('Propiedad creada satisfactoriamente.');
+                    Log::info('Proceso completado con éxito');
 
                     return redirect()->route(
                         $request->action === 'save' ? 'backend.properties.index' : 'backend.properties.create'
                     );
                 } catch (ValidationException $e) {
                     DB::rollBack();
+                    Log::error('Excepción de validación en transacción:', ['errors' => $e->errors()]);
                     return back()
                         ->withErrors($e->errors())
+                        ->withInput();
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    Log::error('Excepción en transacción:', ['message' => $e->getMessage()]);
+                    return back()
+                        ->withError($e->getMessage())
                         ->withInput();
                 }
             });
 
         } catch (ValidationException $e) {
+            Log::error('Excepción de validación:', ['errors' => $e->errors()]);
             flash()->error('Por favor corrige los errores en el formulario.');
             return back()
                 ->withErrors($e->errors())
                 ->withInput();
         } catch (QueryException $e) {
-            Log::error('Database error creating property:', [
+            Log::error('Error de base de datos creando propiedad:', [
                 'error' => $e->getMessage(),
                 'code' => $e->getCode(),
                 'user_id' => auth()->id()
@@ -129,12 +136,13 @@ class PropertyController extends Controller
             return back()->withInput();
 
         } catch (\Exception $e) {
-            Log::error('Error creating property:', [
+            Log::error('Error creando propiedad:', [
                 'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
                 'user_id' => auth()->id()
             ]);
 
-            flash()->warning('Ocurrió un error al crear la propiedad. Por favor, intente nuevamente.');
+            flash()->warning('Ocurrió un error al crear la propiedad: ' . $e->getMessage());
             return back()->withInput();
         }
     }
@@ -220,7 +228,7 @@ class PropertyController extends Controller
         // Procesar thumbnail
         if ($request->hasFile('thumbnail')) {
             try {
-                $thumbnailPaths  = $this->handleImage(
+                $thumbnailPaths = $this->handleImage(
                     $request->file('thumbnail'),
                     'thumbnails',
                     800,
@@ -237,7 +245,7 @@ class PropertyController extends Controller
                     'error' => $e->getMessage(),
                     'property_id' => $property->id
                 ]);
-                throw $e;
+                throw new \Exception('Error procesando la imagen principal: ' . $e->getMessage());
             }
         }
 
@@ -250,7 +258,7 @@ class PropertyController extends Controller
                     'error' => $e->getMessage(),
                     'property_id' => $property->id
                 ]);
-                throw $e;
+                throw new \Exception('Error procesando imágenes adicionales: ' . $e->getMessage());
             }
         }
     }
@@ -274,15 +282,16 @@ class PropertyController extends Controller
         string $propertyCode = '',
         bool $createSmallVersion = false
     ): array {
+        $paths = []; // Inicializar la variable paths aquí
+
         try {
             // Create image instance
             $image = Image::read($file);
 
             // Verificar dimensiones mínimas
-            if ($image->width() < 800 || $image->height() < 600) {
-                throw new \Exception("La imagen debe tener al menos 800x600 píxeles.");
-            }
-
+//            if ($image->width() < 800 || $image->height() < 600) {
+//                throw new \Exception("La imagen debe tener al menos 800x600 píxeles.");
+//            }
 
             // Generate unique filename
             $basePath = "properties/{$propertyCode}/{$type}";
@@ -293,7 +302,6 @@ class PropertyController extends Controller
             if (!file_exists(dirname($fullPath))) {
                 mkdir(dirname($fullPath), 0755, true);
             }
-
 
             $originalImage = clone $image;
             $originalImage->scaleDown(width: $maxWidth, height: $maxHeight);
@@ -315,12 +323,11 @@ class PropertyController extends Controller
                 $paths['small'] = "{$basePath}/{$smallFilename}";
             }
 
-
             return $paths;
         } catch (\Exception $e) {
             Log::error('Error processing image:', [
                 'error' => $e->getMessage(),
-                'path' => $paths
+                'path' => $paths ?? 'No path available'  // Usar operador de fusión null para evitar errores
             ]);
             throw new \Exception("Error processing image: {$e->getMessage()}");
         }
@@ -474,9 +481,16 @@ class PropertyController extends Controller
         $agents = User::select(['id', 'name'])->where('role', 'agent')->get();
         $features = Facility::select(['id', 'name'])->get();
         $amenities = Amenity::select(['id', 'name'])->get();
-        $property = Property::select(['id', 'name'])->where('slug', $slug)->firstOrFail();
-        $projects = Property::select(['id', 'name'])->where('is_project', true)->get();
 
+        // Cargar la propiedad con todas sus relaciones
+        $property = Property::with(['amenities', 'facilities', 'images'])
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        $projects = Property::select(['id', 'name'])
+            ->where('is_project', true)
+            ->where('id', '!=', $property->id) // Excluir la propiedad actual
+            ->get();
 
         return view('backend.properties.edit', compact(
             'property',
@@ -493,28 +507,139 @@ class PropertyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, Property $package): RedirectResponse
+    public function update(Request $request, Property $property): RedirectResponse
     {
         try {
-            DB::transaction(function () use ($request, $package) {
-                $package->update($request->validated());
+            Log::info('Iniciando update en PropertyController para la propiedad ' . $property->id);
+
+            // Obtener todos los datos del formulario
+            $data = $request->all();
+            Log::info('Datos recibidos:', ['data' => $data]);
+
+            return DB::transaction(function () use ($request, $property, $data) {
+                try {
+                    // 1. Filtrar solo los campos que pertenecen a la tabla properties
+                    $propertyData = array_intersect_key($data, array_flip([
+                        'name', 'address', 'neighborhood', 'size', 'size_max',
+                        'city', 'country', 'propertytype_id', 'service_type_id',
+                        'currency', 'chosen_currency', 'lowest_price', 'max_price',
+                        'bedrooms', 'bathrooms', 'garage', 'garage_size',
+                        'short_description', 'long_description', 'latitude', 'longitude',
+                        'video', 'featured', 'hot', 'agent_id', 'status', 'is_project',
+                        'units', 'project_id'
+                    ]));
+
+                    // 2. Actualizar los datos básicos de la propiedad
+                    $property->update($propertyData);
+                    Log::info('Datos básicos de la propiedad actualizados');
+
+                    // 3. Procesar las relaciones (facilities, amenities)
+                    if (isset($data['features']) && is_array($data['features'])) {
+                        $facilityData = [];
+                        foreach ($data['features'] as $index => $featureId) {
+                            $facilityData[$featureId] = [
+                                'name' => $data['place_names'][$index] ?? '',
+                                'distance' => $data['distances'][$index] ?? ''
+                            ];
+                        }
+                        $property->facilities()->sync($facilityData);
+                    }
+
+                    if (isset($data['amenities']) && is_array($data['amenities'])) {
+                        $property->amenities()->sync($data['amenities']);
+                    }
+                    Log::info('Relaciones procesadas');
+
+                    // 4. Procesar imágenes
+                    $this->handleImagesUpdate($property, $request);
+
+                    flash()->success('Propiedad actualizada satisfactoriamente.');
+                    Log::info('Proceso de actualización completado con éxito');
+
+                    return redirect()->route('backend.properties.index');
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    Log::error('Error en la actualización:', [
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString()
+                    ]);
+                    throw $e;
+                }
             });
 
-            flash()->success('Paquete actualizado.');
-
-            return redirect()->route('backend.properties.index');
-
-        } catch (ValidationException $e) {
-            return back()
-                ->withErrors($e->errors())
-                ->withInput();
-        } catch (QueryException $e) {
-            flash()->warning('Error de base de datos al actualizar el paquete: '.$e->getMessage());
         } catch (\Exception $e) {
-            flash()->warning('Ocurrió un error al actualizar el paquete: '.$e->getMessage());
+            Log::error('Error actualizando propiedad:', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString()
+            ]);
+
+            flash()->warning('Ocurrió un error al actualizar la propiedad: ' . $e->getMessage());
+            return back()->withInput();
+        }
+    }
+
+    /**
+     * Método específico para manejar las imágenes durante la actualización
+     */
+    private function handleImagesUpdate(Property $property, Request $request): void
+    {
+        // Eliminar thumbnail si se solicita
+        if ($request->has('remove_thumbnail') && $request->remove_thumbnail == '1') {
+            if ($property->thumbnail && Storage::disk('public')->exists($property->thumbnail)) {
+                Storage::disk('public')->delete($property->thumbnail);
+            }
+            $property->update(['thumbnail' => null]);
         }
 
-        return back()->withInput();
+        // Procesar nuevo thumbnail
+        if ($request->hasFile('thumbnail')) {
+            try {
+                if ($property->thumbnail && Storage::disk('public')->exists($property->thumbnail)) {
+                    Storage::disk('public')->delete($property->thumbnail);
+                }
+
+                $thumbnailPaths = $this->handleImage(
+                    $request->file('thumbnail'),
+                    'thumbnails',
+                    800, 600, 80,
+                    $property->code,
+                    true
+                );
+
+                $property->update(['thumbnail' => $thumbnailPaths['original']]);
+            } catch (\Exception $e) {
+                Log::error('Error procesando thumbnail en actualización:', [
+                    'error' => $e->getMessage(),
+                    'property_id' => $property->id
+                ]);
+                throw $e;
+            }
+        }
+
+        // Eliminar imágenes marcadas para eliminación
+        if ($request->has('delete_images') && is_array($request->delete_images)) {
+            foreach ($property->images as $index => $image) {
+                if (isset($request->delete_images[$index]) && $request->delete_images[$index] == '1') {
+                    if (Storage::disk('public')->exists($image->name)) {
+                        Storage::disk('public')->delete($image->name);
+                    }
+                    $image->delete();
+                }
+            }
+        }
+
+        // Procesar imágenes adicionales nuevas
+        if ($request->hasFile('images')) {
+            try {
+                $this->processPropertyImages($request->file('images'), $property);
+            } catch (\Exception $e) {
+                Log::error('Error procesando imágenes adicionales en actualización:', [
+                    'error' => $e->getMessage(),
+                    'property_id' => $property->id
+                ]);
+                throw $e;
+            }
+        }
     }
 
     /**

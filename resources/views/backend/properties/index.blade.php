@@ -6,7 +6,7 @@
         </h1>
         <div class="flex items-center flex-wrap gap-1 text-sm">
             <a class="text-gray-700 hover:text-primary" href="{{ route('backend.properties.index') }}">
-                {{ __('Recidencias') }}
+                {{ __('Residencias') }}
             </a>
             <span class="text-gray-400 text-sm">/</span>
             <span class="text-gray-700">Propiedades</span>
@@ -51,7 +51,7 @@
                 <div class="card card-grid min-w-full">
                     <div class="card-header flex-wrap py-5">
                         <h3 class="card-title">
-                            Paquetes
+                            Propiedades
                         </h3>
 
                         <div class="flex gap-6 items-center">

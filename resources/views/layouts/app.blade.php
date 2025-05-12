@@ -21,29 +21,28 @@
     @stack('styles')
 
 </head>
-<script
-    class="antialiased flex h-full text-base text-gray-700 [--tw-page-bg:#F6F6F9] [--tw-page-bg-dark:var(--tw-coal-200)] [--tw-content-bg:var(--tw-light)] [--tw-content-bg-dark:var(--tw-coal-500)] [--tw-content-scrollbar-color:#e8e8e8] [--tw-header-height:60px] [--tw-sidebar-width:90px] bg-[--tw-page-bg] dark:bg-[--tw-page-bg-dark]">
-    <script>
-        const defaultThemeMode = 'light'; // light|dark|system
-        let themeMode;
+<script>
+    const defaultThemeMode = 'light'; // light|dark|system
+    let themeMode;
 
-        if (document.documentElement) {
+    if (document.documentElement) {
         if (localStorage.getItem('theme')) {
-        themeMode = localStorage.getItem('theme');
-    } else if (document.documentElement.hasAttribute('data-theme-mode')) {
-        themeMode = document.documentElement.getAttribute('data-theme-mode');
-    } else {
-        themeMode = defaultThemeMode;
-    }
+            themeMode = localStorage.getItem('theme');
+        } else if (document.documentElement.hasAttribute('data-theme-mode')) {
+            themeMode = document.documentElement.getAttribute('data-theme-mode');
+        } else {
+            themeMode = defaultThemeMode;
+        }
 
         if (themeMode === 'system') {
-        themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
+            themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
 
         document.documentElement.classList.add(themeMode);
     }
 </script>
-<body>
+<body
+    class="antialiased flex h-full text-base text-gray-700 [--tw-page-bg:#F6F6F9] [--tw-page-bg-dark:var(--tw-coal-200)] [--tw-content-bg:var(--tw-light)] [--tw-content-bg-dark:var(--tw-coal-500)] [--tw-content-scrollbar-color:#e8e8e8] [--tw-header-height:60px] [--tw-sidebar-width:90px] bg-[--tw-page-bg] dark:bg-[--tw-page-bg-dark]">
 <div class="flex grow">
     {{--    @include('layouts.metronic.header')--}}
     <div class="flex flex-col lg:flex-row grow pt-[--tw-header-height] lg:pt-0">
