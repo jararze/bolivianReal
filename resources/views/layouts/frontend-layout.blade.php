@@ -22,7 +22,7 @@
     <link href="{{ asset('assets/front/css/font-awesome.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/front/css/animate.css') }}" rel="stylesheet">
     <link href="{{ asset("assets/front/js/magnific-popup/magnific-popup.css")}}" rel="stylesheet">
-    <link href="{{ asset('assets/front/css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/front/css/main.css') }}?v={{ time() }}" rel="stylesheet">
     <link href="{{ asset('assets/front/css/theme.css') }}" rel="stylesheet">
 
     <link href="{{ route('theme.dynamic.css') }}" rel="stylesheet">
