@@ -30,54 +30,53 @@
     @stack('styles')
 </head>
 <body class="inspiry-slider-two">
-    <div class="page-loader">
-        <img class="page-loader-img" src="{{ asset('assets/front/images/page-loader-img.gif') }}" alt="Cargando..."/>
-    </div>
+<div class="page-loader">
+    <img class="page-loader-img" src="{{ asset('assets/front/images/page-loader-img.gif') }}" alt="Cargando..."/>
+</div>
 
 
-    <x-frontend.header-sub/>
+<x-frontend.header-sub/>
 {{--    <x-frontend.header/>--}}
-    @if(request()->routeIs('frontend.home'))
+@if(request()->routeIs('frontend.home'))
 
+    <x-frontend.slider/>
 
-        <x-frontend.slider/>
+@endif
 
-    @endif
-
-    @isset($header)
-        <div class="page-head "
-             style="background: url({{ asset('assets/front/images/banner2.jpg')}}) #494c53 no-repeat center top;  background-size: cover;">
-            <div class="container">
-                <div class="page-head-content">
-                    <h1 class="page-title"><span>{{ $header }}</span></h1>
-                </div>
+@isset($header)
+    <div class="page-head "
+         style="background: url({{ asset('assets/front/images/banner2.jpg')}}) #494c53 no-repeat center top;  background-size: cover;">
+        <div class="container">
+            <div class="page-head-content">
+                <h1 class="page-title"><span>{{ $header }}</span></h1>
             </div>
         </div>
-    @endisset
-
-    <div id="content-wrapper" class="site-content-wrapper {{ (request()->routeIs('frontend.home')) ? '' : 'site-pages' }}">
-        <div id="content" class="site-content {{ (request()->routeIs('frontend.home')) ? 'layout-wide' : 'layout-boxed' }}">
-
-            @if(request()->routeIs('frontend.home'))
-                <main id="main" class="site-main">
-{{--                    <x-frontend.search/>--}}
-                    {{ $slot }}
-                </main>
-            @else
-                <div class="container">
-                    {{ $slot }}
-                </div>
-            @endif
-
-
-        </div>
     </div>
+@endisset
 
-    <x-frontend.footer/>
+<div id="content-wrapper" class="site-content-wrapper {{ (request()->routeIs('frontend.home')) ? '' : 'site-pages' }}">
+    <div id="content" class="site-content {{ (request()->routeIs('frontend.home')) ? 'layout-wide' : 'layout-boxed' }}">
+
+        @if(request()->routeIs('frontend.home'))
+            <main id="main" class="site-main">
+                {{--                    <x-frontend.search/>--}}
+                {{ $slot }}
+            </main>
+        @else
+            <div class="container">
+                {{ $slot }}
+            </div>
+        @endif
 
 
-    <!-- Modal de login -->
-    <x-frontend.auth-modal/>
+    </div>
+</div>
+
+<x-frontend.footer/>
+
+
+<!-- Modal de login -->
+<x-frontend.auth-modal/>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -129,6 +128,90 @@
         });
 
     })(jQuery);
+</script>
+
+<script>
+    $(document).ready(function() {
+        // Inicializar Select2 si está disponible
+        if ($.fn.select2) {
+            $('.search-select').select2({
+                dropdownAutoWidth: true,
+                width: '100%',
+                minimumResultsForSearch: 6
+            });
+
+            // Filtrado de vecindarios basado en la ciudad seleccionada
+            const $citySelect = $('#location');
+            const $neighborhoodSelect = $('#neighborhood');
+
+            function filterNeighborhoods() {
+                const cityId = $citySelect.val();
+
+                // Obtener todos los vecindarios originales si no los tenemos guardados
+                if (!window.allNeighborhoods) {
+                    window.allNeighborhoods = [];
+                    $neighborhoodSelect.find('option').each(function() {
+                        window.allNeighborhoods.push({
+                            value: $(this).val(),
+                            text: $(this).text(),
+                            cityId: $(this).data('city')
+                        });
+                    });
+                }
+
+                // Limpiar el select de vecindarios
+                $neighborhoodSelect.empty();
+
+                // Filtrar y añadir las opciones relevantes
+                window.allNeighborhoods.forEach(function(neighborhood) {
+                    if (neighborhood.value === 'any' || cityId === 'any' || neighborhood.cityId == cityId) {
+                        $neighborhoodSelect.append(new Option(neighborhood.text, neighborhood.value));
+                    }
+                });
+
+                // Actualizar el Select2 para reflejar los cambios
+                $neighborhoodSelect.val('any').trigger('change');
+            }
+
+            // Aplicar filtro inicial
+            filterNeighborhoods();
+
+            // Filtrar cuando cambie la ciudad
+            $citySelect.on('change', filterNeighborhoods);
+        }
+
+        // Aplicar parámetros de URL a los selects si existen
+        function applyUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Para cada parámetro en la URL, establecer el valor en el select correspondiente
+            for (const [key, value] of urlParams.entries()) {
+                const $element = $('[name="' + key + '"]');
+                if ($element.length > 0) {
+                    $element.val(value);
+
+                    // Si es un select2, disparar el evento change
+                    if ($element.hasClass('search-select')) {
+                        $element.trigger('change');
+                    }
+                }
+            }
+
+            // Si hay parámetros avanzados, mostrar los campos avanzados
+            const hasAdvancedParams = [
+                'price_range', 'size_range', 'bedrooms', 'bathrooms', 'garage',
+                'is_project', 'property_age', 'featured', 'keyword', 'code'
+            ].some(param => urlParams.has(param) && urlParams.get(param) !== 'any' && urlParams.get(param) !== '');
+
+            if (hasAdvancedParams) {
+                $('#advanced-search-fields').show();
+                $('#toggle-advanced-search i').removeClass('fa-plus').addClass('fa-minus');
+            }
+        }
+
+        // Aplicar parámetros de URL cuando se carga la página
+        applyUrlParams();
+    });
 </script>
 </body>
 </html>

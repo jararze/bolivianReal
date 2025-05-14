@@ -13,7 +13,9 @@ class StoreRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
-            'neighborhood' => ['required', 'string', 'max:255'],
+            'neighborhood_id' => ['required', 'exists:neighborhoods,id'],
+            // Puedes mantener 'neighborhood' como nullable si lo necesitas temporalmente durante la transición
+//            'neighborhood' => ['nullable', 'string', 'max:255'],
             'size' => ['required', 'numeric'],
             'size_max' => ['required', 'numeric'],
             'city' => ['required', 'exists:cities,id'],

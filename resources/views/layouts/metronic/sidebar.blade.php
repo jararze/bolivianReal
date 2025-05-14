@@ -268,6 +268,26 @@
                     <div class="menu-item" data-menu-item-placement="right-start"
                          data-menu-item-toggle="accordion|lg:dropdown" data-menu-item-trigger="click|lg:hover">
                         <div class="menu-link grow cursor-pointer">
+                            <span class="menu-title"> Barrios </span>
+                            <span class="menu-arrow"><i
+                                    class="ki-filled ki-right text-3xs rtl:translate rtl:rotate-180"></i></span>
+                        </div>
+                        <div class="menu-default menu-dropdown gap-0.5 w-[220px]">
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.neighborhood.index') }}">
+                                    <span class="menu-title"> Listado </span>
+                                </a>
+                            </div>
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.neighborhood.create') }}">
+                                    <span class="menu-title"> Agregar </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="menu-item" data-menu-item-placement="right-start"
+                         data-menu-item-toggle="accordion|lg:dropdown" data-menu-item-trigger="click|lg:hover">
+                        <div class="menu-link grow cursor-pointer">
                             <span class="menu-title"> Amenities </span>
                             <span class="menu-arrow"><i
                                     class="ki-filled ki-right text-3xs rtl:translate rtl:rotate-180"></i></span>
@@ -342,12 +362,10 @@
                  data-menu-item-trigger="click|lg:hover">
                 <div
                     class="menu-link rounded-[9px] border border-transparent menu-item-here:border-gray-200 menu-item-here:bg-light menu-link-hover:bg-light menu-link-hover:border-gray-200 w-[62px] h-[60px] flex flex-col justify-center items-center gap-1 p-2 grow">
-          <span
-              class="menu-icon menu-item-here:text-primary menu-item-active:text-primary menu-link-hover:text-primary text-gray-600">
-            <i class="ki-filled ki-users text-1.5xl"></i>
-          </span>
-                    <span
-                        class="menu-title menu-item-here:text-primary menu-item-active:text-primary menu-link-hover:text-primary font-medium text-xs text-gray-600"> Residencias </span>
+                      <span
+                          class="menu-icon menu-item-here:text-primary menu-item-active:text-primary menu-link-hover:text-primary text-gray-600">
+                        <i class="ki-filled ki-users text-1.5xl"></i>
+                      </span><span class="menu-title menu-item-here:text-primary menu-item-active:text-primary menu-link-hover:text-primary font-medium text-xs text-gray-600"> Residencias </span>
                 </div>
                 <div
                     class="menu-default menu-dropdown gap-0.5 w-[220px] scrollable-y-auto lg:overflow-visible max-h-[50vh]">

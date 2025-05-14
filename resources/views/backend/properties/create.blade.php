@@ -8,6 +8,56 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
     <script type="module" src="{{ asset('assets/js/createPropertie.js') }}"></script>
+
+    <script>
+        // Función para cargar los barrios en base a la ciudad seleccionada
+        function loadNeighborhoods(cityId) {
+            const neighborhoodSelect = document.getElementById('neighborhood_id');
+
+            // Limpiar opciones actuales
+            neighborhoodSelect.innerHTML = '<option value="">Cargando barrios...</option>';
+
+            if (!cityId) {
+                neighborhoodSelect.innerHTML = '<option value="">Primero seleccione una ciudad</option>';
+                return;
+            }
+
+            // Usar la URL generada por Laravel
+            const url = `/api/neighborhoods/by-city/${cityId}`;
+
+            // Realizar petición AJAX para obtener los barrios
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error HTTP: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    neighborhoodSelect.innerHTML = '<option value="">Seleccione un barrio</option>';
+
+                    data.forEach(neighborhood => {
+                        const option = document.createElement('option');
+                        option.value = neighborhood.id;
+                        option.textContent = neighborhood.name;
+                        neighborhoodSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error cargando barrios:', error);
+                    neighborhoodSelect.innerHTML = '<option value="">Error cargando barrios</option>';
+                });
+        }
+
+        // Llamar a la función si hay una ciudad seleccionada por defecto
+        document.addEventListener('DOMContentLoaded', function() {
+            const citySelect = document.getElementById('city');
+            if (citySelect && citySelect.value) {
+                loadNeighborhoods(citySelect.value);
+            }
+        });
+    </script>
+
 @endpush
 
 <x-app-layout>
@@ -182,10 +232,15 @@
                             <!-- Zona, Superficie terreno, Superficie Contruido -->
                             <div class="grid grid-cols-3 gap-6">
                                 <div>
-                                    <x-input-label for="neighborhood" :value="__('Zona')" class="mb-2 text-gray-700"/>
-                                    <x-text-input id="neighborhood" name="neighborhood" type="text"
-                                                  :value="old('neighborhood')" class="w-full"/>
-                                    <x-input-error class="mt-1" :messages="$errors->get('neighborhood')"/>
+                                    <x-input-label for="neighborhood_id" :value="__('Zona')" class="mb-2 text-gray-700"/>
+                                    <x-select-input
+                                        class="w-full"
+                                        id="neighborhood_id"
+                                        name="neighborhood_id"
+                                        :options="['' => 'Primero seleccione una ciudad']"
+                                        selected="{{ old('neighborhood_id') }}"
+                                    />
+                                    <x-input-error class="mt-1" :messages="$errors->get('neighborhood_id')"/>
                                 </div>
                                 <div>
                                     <x-input-label for="size" :value="__('Superficie terreno (MT2)')"
@@ -210,6 +265,7 @@
                                         class="w-full"
                                         id="city"
                                         name="city"
+                                        onchange="loadNeighborhoods(this.value)"
                                         :options="['' => 'Seleccione una ciudad'] + $cities->pluck('name', 'id')->toArray()"
                                         selected="{{ old('city') }}"
                                     />

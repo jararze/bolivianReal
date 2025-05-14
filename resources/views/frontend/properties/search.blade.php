@@ -1,3 +1,35 @@
+@push('styles')
+    <style>
+        /* Estilos para asegurar que los placeholders de selects se vean correctamente */
+        .search-sidebar select.form-control option:first-child {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .search-sidebar select.form-control,
+        .search-sidebar input.form-control {
+            height: 40px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        /* Estilos para selectores Select2 si los usas */
+        .search-sidebar .select2-container--default .select2-selection--single {
+            height: 40px;
+            margin-bottom: 10px;
+        }
+
+        .search-sidebar .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 40px;
+            color: #333;
+        }
+
+        .search-sidebar .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 38px;
+        }
+    </style>
+@endpush
+
 <x-frontend-layout>
 
     <x-slot name="header">
@@ -193,112 +225,180 @@
                     <h3 class="advance-search-widget-title"><i class="fa fa-search"></i>Busca tu propiedad</h3>
                     <form action="{{ route('frontend.properties.search') }}" method="GET" class="search-sidebar">
                         <div class="row field-wrap">
+                            <!-- Ciudad -->
                             <div class="option-bar col-xs-12 property-location">
                                 <select name="location" class="form-control search-select">
-                                    <option value="">Cualquier ubicación</option>
+                                    <option value="any" {{ !request('location') || request('location') == 'any' ? 'selected' : '' }}>Ciudad</option>
                                     @foreach($cities as $city)
-                                        <option
-                                            value="{{ $city->id }}" {{ request('location') == $city->id ? 'selected' : '' }}>
+                                        <option value="{{ $city->id }}" {{ request('location') == $city->id ? 'selected' : '' }}>
                                             {{ $city->name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
+
+                            <!-- Zona (nuevo) -->
+                            <div class="option-bar col-xs-12 property-neighborhood">
+                                <select name="neighborhood_id" id="neighborhood" class="form-control search-select">
+                                    <option value="any" {{ !request('neighborhood_id') || request('neighborhood_id') == 'any' ? 'selected' : '' }}>Zona</option>
+                                    @foreach($neighborhoods as $neighborhood)
+                                        <option value="{{ $neighborhood->id }}"
+                                                data-city="{{ $neighborhood->city_id }}"
+                                            {{ request('neighborhood_id') == $neighborhood->id ? 'selected' : '' }}>
+                                            {{ $neighborhood->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Tipo de propiedad -->
                             <div class="option-bar col-xs-12 property-type">
                                 <select name="type" class="form-control search-select">
-                                    <option value="">Cualquier tipo</option>
+                                    <option value="any" {{ !request('type') || request('type') == 'any' ? 'selected' : '' }}>Tipo de propiedad</option>
                                     @foreach($propertyTypes as $type)
-                                        <option
-                                            value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
+                                        <option value="{{ $type->id }}" {{ request('type') == $type->id ? 'selected' : '' }}>
                                             {{ $type->type_name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
+
+                            <!-- Estado de la propiedad -->
                             <div class="option-bar col-xs-12 property-status">
                                 <select name="status" class="form-control search-select">
-                                    <option value="">Cualquier tipo</option>
+                                    <option value="any" {{ !request('status') || request('status') == 'any' ? 'selected' : '' }}>Estado</option>
                                     @foreach($serviceTypes as $type2)
-                                        <option
-                                            value="{{ $type2->id }}" {{ request('status') == $type2->id ? 'selected' : '' }}>
+                                        <option value="{{ $type2->id }}" {{ request('status') == $type2->id ? 'selected' : '' }}>
                                             {{ $type2->name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
+
+                            <!-- Categoría: Proyecto o Propiedad (nuevo) -->
+                            <div class="option-bar col-xs-12 property-is-project">
+                                <select name="is_project" class="form-control search-select">
+                                    <option value="any" {{ !request('is_project') || request('is_project') == 'any' ? 'selected' : '' }}>Categoría</option>
+                                    <option value="1" {{ request('is_project') == '1' ? 'selected' : '' }}>Proyecto en construcción</option>
+                                    <option value="0" {{ request('is_project') == '0' ? 'selected' : '' }}>Propiedad terminada</option>
+                                </select>
+                            </div>
+
+                            <!-- Palabra clave -->
                             <div class="option-bar col-xs-12 property-keyword">
                                 <input type="text" name="keyword" id="keyword-txt"
                                        value="{{ request('keyword') }}"
-                                       placeholder="Palabra clave (ej: nombre, dirección)">
+                                       placeholder="Palabra clave (ej: nombre, dirección)"
+                                       class="form-control">
                             </div>
+
+                            <!-- Código de propiedad -->
                             <div class="option-bar col-xs-12 property-id">
-                                <input type="text" name="property_id" id="property-id-txt"
-                                       value="{{ request('property_id') }}"
-                                       placeholder="Código de propiedad">
+                                <input type="text" name="code" id="property-id-txt"
+                                       value="{{ request('code') ?? request('property_id') }}"
+                                       placeholder="Código de propiedad"
+                                       class="form-control">
                             </div>
+
+                            <!-- Dormitorios -->
                             <div class="option-bar col-xs-12 property-bedrooms">
-                                <select name="bedrooms" id="select-bedrooms" class="search-select">
-                                    <option value="">Dormitorios (Mínimo)</option>
-                                    @for($i = 1; $i <= 10; $i++)
+                                <select name="bedrooms" id="select-bedrooms" class="form-control search-select">
+                                    <option value="any" {{ !request('bedrooms') || request('bedrooms') == 'any' ? 'selected' : '' }}>Dormitorios</option>
+                                    @for($i = 1; $i <= 5; $i++)
                                         <option value="{{ $i }}" {{ request('bedrooms') == $i ? 'selected' : '' }}>
-                                            {{ $i }} {{ $i == 1 ? 'dormitorio' : 'dormitorios' }}
+                                            Al menos {{ $i }} {{ $i == 1 ? 'dormitorio' : 'dormitorios' }}
                                         </option>
                                     @endfor
                                 </select>
                             </div>
+
+                            <!-- Baños -->
                             <div class="option-bar col-xs-12 property-bathrooms">
-                                <select name="bathrooms" id="select-bathrooms" class="search-select">
-                                    <option value="">Baños (Mínimo)</option>
-                                    @for($i = 1; $i <= 10; $i++)
+                                <select name="bathrooms" id="select-bathrooms" class="form-control search-select">
+                                    <option value="any" {{ !request('bathrooms') || request('bathrooms') == 'any' ? 'selected' : '' }}>Baños</option>
+                                    @for($i = 1; $i <= 4; $i++)
                                         <option value="{{ $i }}" {{ request('bathrooms') == $i ? 'selected' : '' }}>
-                                            {{ $i }} {{ $i == 1 ? 'baño' : 'baños' }}
+                                            Al menos {{ $i }} {{ $i == 1 ? 'baño' : 'baños' }}
                                         </option>
                                     @endfor
                                 </select>
                             </div>
-                            <div class="option-bar col-xs-12 property-min-price">
-                                <select name="min_price" id="select-min-price" class="search-select">
-                                    <option value="">Precio mínimo</option>
-                                    @foreach([1000, 5000, 10000, 50000, 100000, 200000, 300000, 400000, 500000,
-                                             600000, 700000, 800000, 900000, 1000000, 1500000, 2000000, 2500000, 5000000] as $price)
-                                        <option
-                                            value="{{ $price }}" {{ request('min_price') == $price ? 'selected' : '' }}>
-                                            {{ number_format($price, 0) }}
+
+                            <!-- Garajes (nuevo) -->
+                            <div class="option-bar col-xs-12 property-garage">
+                                <select name="garage" id="select-garage" class="form-control search-select">
+                                    <option value="any" {{ !request('garage') || request('garage') == 'any' ? 'selected' : '' }}>Garajes</option>
+                                    @for($i = 1; $i <= 3; $i++)
+                                        <option value="{{ $i }}" {{ request('garage') == $i ? 'selected' : '' }}>
+                                            Al menos {{ $i }} {{ $i == 1 ? 'garaje' : 'garajes' }}
                                         </option>
-                                    @endforeach
+                                    @endfor
                                 </select>
                             </div>
-                            <div class="option-bar col-xs-12 property-max-price">
-                                <select name="max_price" id="select-max-price" class="search-select">
-                                    <option value="">Precio máximo</option>
-                                    @foreach([5000, 10000, 50000, 100000, 200000, 300000, 400000, 500000,
-                                             600000, 700000, 800000, 900000, 1000000, 1500000, 2000000, 2500000, 5000000, 10000000] as $price)
-                                        <option
-                                            value="{{ $price }}" {{ request('max_price') == $price ? 'selected' : '' }}>
-                                            {{ number_format($price, 0) }}
-                                        </option>
-                                    @endforeach
+
+                            <!-- Rango de precios (reemplaza min/max price) -->
+                            <div class="option-bar col-xs-12 property-price-range">
+                                <select name="price_range" class="form-control search-select">
+                                    <option value="any" {{ !request('price_range') || request('price_range') == 'any' ? 'selected' : '' }}>Rango de precio</option>
+                                    <option value="0-50000" {{ request('price_range') == '0-50000' ? 'selected' : '' }}>Hasta $50,000</option>
+                                    <option value="50000-100000" {{ request('price_range') == '50000-100000' ? 'selected' : '' }}>$50,000 - $100,000</option>
+                                    <option value="100000-200000" {{ request('price_range') == '100000-200000' ? 'selected' : '' }}>$100,000 - $200,000</option>
+                                    <option value="200000-300000" {{ request('price_range') == '200000-300000' ? 'selected' : '' }}>$200,000 - $300,000</option>
+                                    <option value="300000-500000" {{ request('price_range') == '300000-500000' ? 'selected' : '' }}>$300,000 - $500,000</option>
+                                    <option value="500000-1000000" {{ request('price_range') == '500000-1000000' ? 'selected' : '' }}>$500,000 - $1,000,000</option>
+                                    <option value="1000000-0" {{ request('price_range') == '1000000-0' ? 'selected' : '' }}>Más de $1,000,000</option>
                                 </select>
                             </div>
-                            <div class="option-bar col-xs-12 property-min-area">
-                                <input type="text" name="min_area" id="min-area"
-                                       value="{{ request('min_area') }}"
-                                       pattern="[0-9]+"
-                                       placeholder="Área mínima (m²)"
-                                       title="Por favor, ingrese solo números">
+
+                            <!-- Rango de superficie (reemplaza min/max area) -->
+                            <div class="option-bar col-xs-12 property-size-range">
+                                <select name="size_range" class="form-control search-select">
+                                    <option value="any" {{ !request('size_range') || request('size_range') == 'any' ? 'selected' : '' }}>Superficie</option>
+                                    <option value="0-50" {{ request('size_range') == '0-50' ? 'selected' : '' }}>Hasta 50 m²</option>
+                                    <option value="50-100" {{ request('size_range') == '50-100' ? 'selected' : '' }}>50 - 100 m²</option>
+                                    <option value="100-150" {{ request('size_range') == '100-150' ? 'selected' : '' }}>100 - 150 m²</option>
+                                    <option value="150-200" {{ request('size_range') == '150-200' ? 'selected' : '' }}>150 - 200 m²</option>
+                                    <option value="200-300" {{ request('size_range') == '200-300' ? 'selected' : '' }}>200 - 300 m²</option>
+                                    <option value="300-500" {{ request('size_range') == '300-500' ? 'selected' : '' }}>300 - 500 m²</option>
+                                    <option value="500-0" {{ request('size_range') == '500-0' ? 'selected' : '' }}>Más de 500 m²</option>
+                                </select>
                             </div>
-                            <div class="option-bar col-xs-12 property-max-area">
-                                <input type="text" name="max_area" id="max-area"
-                                       value="{{ request('max_area') }}"
-                                       pattern="[0-9]+"
-                                       placeholder="Área máxima (m²)"
-                                       title="Por favor, ingrese solo números">
+
+                            <!-- Antigüedad (nuevo) -->
+                            <div class="option-bar col-xs-12 property-age">
+                                <select name="property_age" class="form-control search-select">
+                                    <option value="any" {{ !request('property_age') || request('property_age') == 'any' ? 'selected' : '' }}>Antigüedad</option>
+                                    <option value="new" {{ request('property_age') == 'new' ? 'selected' : '' }}>A estrenar</option>
+                                    <option value="less-than-5" {{ request('property_age') == 'less-than-5' ? 'selected' : '' }}>Menos de 5 años</option>
+                                    <option value="5-to-10" {{ request('property_age') == '5-to-10' ? 'selected' : '' }}>Entre 5 y 10 años</option>
+                                    <option value="10-to-20" {{ request('property_age') == '10-to-20' ? 'selected' : '' }}>Entre 10 y 20 años</option>
+                                    <option value="more-than-20" {{ request('property_age') == 'more-than-20' ? 'selected' : '' }}>Más de 20 años</option>
+                                </select>
                             </div>
+
+                            <!-- Propiedades destacadas o en demanda (nuevo) -->
+                            <div class="option-bar col-xs-12 property-featured">
+                                <select name="featured" class="form-control search-select">
+                                    <option value="any" {{ !request('featured') || request('featured') == 'any' ? 'selected' : '' }}>Tipo de listado</option>
+                                    <option value="1" {{ request('featured') == '1' ? 'selected' : '' }}>Propiedades destacadas</option>
+                                    <option value="hot" {{ request('featured') == 'hot' ? 'selected' : '' }}>Propiedades en demanda</option>
+                                </select>
+                            </div>
+
+                            <!-- Mantener compatibilidad con min/max price y min/max area -->
+                            <input type="hidden" name="min_price" value="{{ request('min_price') }}">
+                            <input type="hidden" name="max_price" value="{{ request('max_price') }}">
+                            <input type="hidden" name="min_area" value="{{ request('min_area') }}">
+                            <input type="hidden" name="max_area" value="{{ request('max_area') }}">
+
+                            <!-- Botón de búsqueda -->
                             <div class="option-bar col-xs-12 submit-btn-wrappe">
                                 <input type="submit" value="Buscar" class="form-submit-btn">
                             </div>
                         </div>
                         <!-- .field-wrap -->
+
+                        <!-- Características adicionales (amenidades) -->
                         <div class="extra-search-fields">
                             <h5 class="title">
                                 <span class="text-wrapper">Características adicionales</span>
@@ -306,16 +406,16 @@
                             <ul class="features-checkboxes-wrapper list-unstyled clearfix">
                                 @foreach($amenities as $amenity)
                                     <li>
-                                        <span class="option-set">
-                                            <input type="checkbox"
-                                                   name="amenities[]"
-                                                   id="feature-{{ $amenity->id }}"
-                                                   value="{{ $amenity->id }}"
-                                                   {{ in_array($amenity->id, (array)request('amenities')) ? 'checked' : '' }}>
-                                            <label for="feature-{{ $amenity->id }}">
-                                                {{ $amenity->name }}
-                                            </label>
-                                        </span>
+                                <span class="option-set">
+                                    <input type="checkbox"
+                                           name="amenities[]"
+                                           id="feature-{{ $amenity->id }}"
+                                           value="{{ $amenity->id }}"
+                                           {{ in_array($amenity->id, (array)request('amenities')) ? 'checked' : '' }}>
+                                    <label for="feature-{{ $amenity->id }}">
+                                        {{ $amenity->name }}
+                                    </label>
+                                </span>
                                     </li>
                                 @endforeach
                             </ul>
@@ -324,18 +424,20 @@
                     </form>
                     <!-- .advance-search-form -->
                 </section>
+
+                <!-- Propiedades destacadas -->
                 <section class="widget widget-featured-properties">
                     <h3 class="widget-title">Propiedades Destacadas</h3>
                     <ul class="widget-featured-properties">
                         @forelse($featuredProperties as $property)
                             <li>
                                 <figure class="featured-properties-thumbnail">
-                                    <span class="price">
-                                        {{ $property->currency }} {{ number_format($property->lowest_price, 2) }}
-                                        @if($property->serviceType)
-                                            {{ $property->serviceType->name }}
-                                        @endif
-                                    </span>
+                            <span class="price">
+                                {{ $property->currency }} {{ number_format($property->lowest_price, 2) }}
+                                @if($property->serviceType)
+                                    {{ $property->serviceType->name }}
+                                @endif
+                            </span>
                                     <a href="{{ route('frontend.properties.show', $property->slug) }}">
                                         @if($property->images->first())
                                             <img class="img-responsive"

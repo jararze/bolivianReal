@@ -5,6 +5,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\NeighborhoodController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyController;
@@ -89,6 +90,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('cities', CityController::class, ['as' => 'backend']);
 
+    Route::resource('neighborhood', NeighborhoodController::class, ['as' => 'backend']);
+
     Route::resource('amenities', AmenityController::class, ['as' => 'backend']);
 
     Route::resource('facilities', FacilityController::class, ['as' => 'backend']);
@@ -96,6 +99,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('packages', PackageController::class, ['as' => 'backend']);
 
     Route::resource('properties', PropertyController::class, ['as' => 'backend']);
+
+    Route::get('/api/neighborhoods/by-city/{cityId}', [PropertyController::class, 'getNeighborhoodsByCity']);
 
     Route::prefix('configurations')->name('backend.configurations.')->group(function () {
         // Main Dashboard

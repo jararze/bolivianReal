@@ -129,5 +129,10 @@ class Property extends Model
         return $this->belongsTo(City::class, 'city', 'id');
     }
 
+    public function neighborhood()
+    {
+        return $this->belongsTo(Neighborhood::class);
+    }
+
 
 }

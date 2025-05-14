@@ -7,6 +7,7 @@ use App\Http\Requests\Property\UpdateRequest;
 use App\Models\Amenity;
 use App\Models\City;
 use App\Models\Facility;
+use App\Models\Neighborhood;
 use App\Models\Property;
 use App\Models\PropertyImage;
 use App\Models\PropertyType;
@@ -40,6 +41,7 @@ class PropertyController extends Controller
     public function create(): View
     {
         $cities = City::select(['id', 'name'])->get();
+        $neighborhoods = collect();
         $propertyTypes = PropertyType::select(['id', 'type_name'])->get();
         $serviceTypes = ServiceType::select(['id', 'name'])->get();
         $agents = User::select(['id', 'name'])->where('role', 'agent')->get();
@@ -50,6 +52,7 @@ class PropertyController extends Controller
 
         return view('backend.properties.create', [
             'cities' => $cities,
+            'neighborhoods' => $neighborhoods,
             'propertyTypes' => $propertyTypes,
             'serviceTypes' => $serviceTypes,
             'agents' => $agents,
@@ -57,6 +60,31 @@ class PropertyController extends Controller
             'features' => $features,
             'amenities' => $amenities,
         ]);
+    }
+
+    /**
+     * Obtener barrios por ciudad para AJAX.
+     */
+    public function getNeighborhoodsByCity($cityId)
+    {
+        try {
+            $neighborhoods = Neighborhood::where('city_id', $cityId)
+                ->where('status', 1)
+                ->select(['id', 'name'])
+                ->orderBy('name')
+                ->get();
+
+            return response()->json($neighborhoods);
+        } catch (\Exception $e) {
+            // Log del error
+            Log::error('Error obteniendo barrios:', [
+                'error' => $e->getMessage(),
+                'city_id' => $cityId
+            ]);
+
+            // Devolver respuesta de error
+            return response()->json(['error' => 'Error al cargar los barrios'], 500);
+        }
     }
 
     /**
@@ -156,7 +184,6 @@ class PropertyController extends Controller
 
     private function preparePropertyData(array $validated): array
     {
-
         try {
             // Generar código único
             $code = IdGenerator::generate([
@@ -166,11 +193,9 @@ class PropertyController extends Controller
                 'prefix' => 'P' . date('ym')
             ]);
 
-//            Log::info('Código generado:', ['code' => $code]);
-
             // Filtrar solo los campos que van directamente a la tabla properties
             $propertyFields = [
-                'name', 'address', 'neighborhood', 'size', 'size_max',
+                'name', 'address', 'neighborhood_id', 'size', 'size_max',
                 'city', 'country', 'propertytype_id', 'property_status',
                 'chosen_currency', 'lowest_price', 'max_price',
                 'bedrooms', 'bathrooms', 'garage', 'garage_size',
@@ -187,8 +212,6 @@ class PropertyController extends Controller
             $propertyData['created_by'] = auth()->id();
             $propertyData['code'] = $code; // Agregar el código generado
 
-//            Log::info('Datos de propiedad preparados:', ['propertyData' => $propertyData]);
-
             return $propertyData;
 
         } catch (\Exception $e) {
@@ -198,7 +221,6 @@ class PropertyController extends Controller
             ]);
             throw new \Exception('Error generando código de propiedad: ' . $e->getMessage());
         }
-
     }
 
     private function processRelations(Property $property, array $validated): void

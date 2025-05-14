@@ -4,6 +4,7 @@ namespace App\View\Components\Frontend;
 
 use App\Models\Amenity;
 use App\Models\City;
+use App\Models\Neighborhood;
 use App\Models\PropertyType;
 use App\Models\ServiceType;
 use Closure;
@@ -40,11 +41,16 @@ class HeaderSub extends Component
             ->where('status', true)
             ->get();
 
+        $neighborhoods = Neighborhood::select(['id', 'name', 'city_id'])
+            ->where('status', true)
+            ->get();
+
         return view('components.frontend.header-sub', compact(
             'cities',
             'propertyTypes',
             'serviceTypes',
-            'amenities'
+            'amenities',
+            'neighborhoods'
         ));
     }
 }

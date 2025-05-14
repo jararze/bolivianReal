@@ -97,36 +97,48 @@
                     <!-- .contact-number -->
                 </div>
                 <!-- .header-top -->
-                <div class="header-bottom clearfix" style="top: 53px; position: absolute !important; z-index: 1050">
+                <div class="header-bottom clearfix" style="top: 53px; position: absolute !important; z-index: 1050; width: 83% !important;">
                     <div class="advance-search header-advance-search">
                         <form class="advance-search-form" action="{{ route('frontend.properties.search') }}" method="get">
                             <div class="inline-fields clearfix">
                                 <div class="option-bar property-location">
                                     <select name="location" id="location" class="search-select">
-                                        <option value="any">Ciudad (Cualquiera)</option>
+                                        <option value="any">CIUDAD</option>
                                         @foreach($cities as $city)
                                             <option value="{{ $city->id }}">{{ $city->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
+
+                                <div class="option-bar property-neighborhood">
+                                    <select name="neighborhood_id" id="neighborhood" class="search-select">
+                                        <option value="any">ZONA</option>
+                                        @foreach($neighborhoods as $neighborhood)
+                                            <option value="{{ $neighborhood->id }}" data-city="{{ $neighborhood->city_id }}">{{ $neighborhood->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                                 <div class="option-bar property-type">
-                                    <select name="type" id="select-property-type" class="search-select">
-                                        <option value="any" selected="selected">Tipo de Propiedad (Cualquiera)</option>
+                                    <select name="propertytype_id" id="select-property-type" class="search-select">
+                                        <option value="any">TIPO DE PROPIEDAD</option>
                                         @foreach($propertyTypes as $propertyType)
                                             <option value="{{ $propertyType->id }}">{{ $propertyType->type_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
+
                                 <div class="option-bar property-status">
-                                    <select name="status" id="select-status" class="search-select">
-                                        <option value="any" selected="selected">Estado de la Propiedad (Cualquiera)</option>
+                                    <select name="service_type_id" id="select-status" class="search-select">
+                                        <option value="any">ESTADO</option>
                                         @foreach($serviceTypes as $serviceType)
                                             <option value="{{ $serviceType->id }}">{{ $serviceType->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
+
                                 <div class="option-bar form-control-buttons">
-                                    <a class="hidden-fields-reveal-btn" href="#">
+                                    <a class="hidden-fields-reveal-btn" href="#" id="toggle-advanced-search">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-plus-container" width="20" height="20" viewBox="0 0 20 20">
                                             <g fill="#C15302">
                                                 <path class="icon icon-minus" d="M10.035 20.035c-2.092 0-4.313-.563-5.688-1.938-.406-.406-.688-.73-.688-1.141 0-.424.266-.859.891-.797.257.025.585.172.75.347 1.327.969 2.967 1.529 4.735 1.529 4.437 0 8.001-3.564 8.001-8.001 0-4.436-3.564-8-8.001-8-4.436 0-8 3.564-8 8 0 1.226.337 2.306.829 3.344 0 .001.277.495.313.938.04.491-.234.703-.656.875-.377.153-.859-.109-1.083-.452-.87-1.335-1.403-2.999-1.403-4.704 0-5.414 4.586-10 10-10 5.413 0 10 4.586 10 10 0 5.413-4.587 10-10 10zm-12-14v8-8zm16 5h-8c-.553 0-1-.447-1-1 0-.553.447-1 1-1h8c.553 0 1 .447 1 1 0 .553-.447 1-1 1z"/>
@@ -134,98 +146,110 @@
                                             </g>
                                         </svg>
                                     </a>
-                                    <input type="submit" value="Buscar" class="form-submit-btn">
+                                    <input type="submit" value="BUSCAR" class="form-submit-btn">
                                 </div>
                             </div>
                             <!-- .inline-fields -->
-                            <div class="hidden-fields clearfix">
+
+                            <div id="advanced-search-fields" style="display: none;" class="hidden-fields clearfix">
+                                <!-- Campos de precio -->
+                                <div class="option-bar property-price-range">
+                                    <select name="price_range" id="select-price-range" class="search-select">
+                                        <option value="any">Rango de precio</option>
+                                        <option value="0-50000">Hasta $50,000</option>
+                                        <option value="50000-100000">$50,000 - $100,000</option>
+                                        <option value="100000-200000">$100,000 - $200,000</option>
+                                        <option value="200000-300000">$200,000 - $300,000</option>
+                                        <option value="300000-500000">$300,000 - $500,000</option>
+                                        <option value="500000-1000000">$500,000 - $1,000,000</option>
+                                        <option value="1000000-0">Más de $1,000,000</option>
+                                    </select>
+                                </div>
+
+                                <!-- Campos de búsqueda por tamaño -->
+                                <div class="option-bar property-size-range">
+                                    <select name="size_range" id="select-size-range" class="search-select">
+                                        <option value="any">Superficie (m²)</option>
+                                        <option value="0-50">Hasta 50 m²</option>
+                                        <option value="50-100">50 - 100 m²</option>
+                                        <option value="100-150">100 - 150 m²</option>
+                                        <option value="150-200">150 - 200 m²</option>
+                                        <option value="200-300">200 - 300 m²</option>
+                                        <option value="300-500">300 - 500 m²</option>
+                                        <option value="500-0">Más de 500 m²</option>
+                                    </select>
+                                </div>
+
+                                <!-- Dormitorios -->
                                 <div class="option-bar property-bedrooms">
                                     <select name="bedrooms" id="select-bedrooms" class="search-select">
-                                        <option value="any" selected="selected">Camas mínimas (Cualquiera)</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
+                                        <option value="any">Dormitorios</option>
+                                        <option value="1">Al menos 1</option>
+                                        <option value="2">Al menos 2</option>
+                                        <option value="3">Al menos 3</option>
+                                        <option value="4">Al menos 4</option>
+                                        <option value="5">5 o más</option>
                                     </select>
                                 </div>
+
+                                <!-- Baños -->
                                 <div class="option-bar property-bathrooms">
                                     <select name="bathrooms" id="select-bathrooms" class="search-select">
-                                        <option value="any" selected="selected">Baños mínimos (Cualquiera)</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
+                                        <option value="any">Baños</option>
+                                        <option value="1">Al menos 1</option>
+                                        <option value="2">Al menos 2</option>
+                                        <option value="3">Al menos 3</option>
+                                        <option value="4">4 o más</option>
                                     </select>
                                 </div>
-                                <div class="option-bar property-min-price">
-                                    <select name="min-price" id="select-min-price" class="search-select">
-                                        <option value="any" selected="selected">Precio mínimo (Cualquiera)</option>
-                                        <option value="1000">$1,000</option>
-                                        <option value="5000">$5,000</option>
-                                        <option value="10000">$10,000</option>
-                                        <option value="50000">$50,000</option>
-                                        <option value="100000">$100,000</option>
-                                        <option value="200000">$200,000</option>
-                                        <option value="300000">$300,000</option>
-                                        <option value="400000">$400,000</option>
-                                        <option value="500000">$500,000</option>
-                                        <option value="600000">$600,000</option>
-                                        <option value="700000">$700,000</option>
-                                        <option value="800000">$800,000</option>
-                                        <option value="900000">$900,000</option>
-                                        <option value="1000000">$1,000,000</option>
-                                        <option value="1500000">$1,500,000</option>
-                                        <option value="2000000">$2,000,000</option>
-                                        <option value="2500000">$2,500,000</option>
-                                        <option value="5000000">$5,000,000</option>
+
+                                <!-- Garajes -->
+                                <div class="option-bar property-garage">
+                                    <select name="garage" id="select-garage" class="search-select">
+                                        <option value="any">Garajes</option>
+                                        <option value="1">Al menos 1</option>
+                                        <option value="2">Al menos 2</option>
+                                        <option value="3">3 o más</option>
                                     </select>
                                 </div>
-                                <div class="option-bar property-max-price">
-                                    <select name="max-price" id="select-max-price" class="search-select">
-                                        <option value="any" selected="selected">Precio máximo (Cualquiera)</option>
-                                        <option value="5000">$5,000</option>
-                                        <option value="10000">$10,000</option>
-                                        <option value="50000">$50,000</option>
-                                        <option value="100000">$100,000</option>
-                                        <option value="200000">$200,000</option>
-                                        <option value="300000">$300,000</option>
-                                        <option value="400000">$400,000</option>
-                                        <option value="500000">$500,000</option>
-                                        <option value="600000">$600,000</option>
-                                        <option value="700000">$700,000</option>
-                                        <option value="800000">$800,000</option>
-                                        <option value="900000">$900,000</option>
-                                        <option value="1000000">$1,000,000</option>
-                                        <option value="1500000">$1,500,000</option>
-                                        <option value="2000000">$2,000,000</option>
-                                        <option value="2500000">$2,500,000</option>
-                                        <option value="5000000">$5,000,000</option>
-                                        <option value="10000000">$10,000,000</option>
+
+                                <!-- Tipos de propiedad específicos -->
+                                <div class="option-bar property-is-project">
+                                    <select name="is_project" id="select-is-project" class="search-select">
+                                        <option value="any">Categoría</option>
+                                        <option value="1">Proyecto en construcción</option>
+                                        <option value="0">Propiedad terminada</option>
                                     </select>
                                 </div>
+
+                                <div class="option-bar property-age">
+                                    <select name="property_age" id="select-property-age" class="search-select">
+                                        <option value="any">ANTIGÜEDAD</option>
+                                        <option value="new">A estrenar</option>
+                                        <option value="less-than-5">Menos de 5 años</option>
+                                        <option value="5-to-10">Entre 5 y 10 años</option>
+                                        <option value="10-to-20">Entre 10 y 20 años</option>
+                                        <option value="more-than-20">Más de 20 años</option>
+                                    </select>
+                                </div>
+
+                                <!-- Estado de destacados -->
+                                <div class="option-bar property-featured">
+                                    <select name="featured" id="select-featured" class="search-select">
+                                        <option value="any">Mostrar solo</option>
+                                        <option value="1">Propiedades destacadas</option>
+                                        <option value="hot">Propiedades en demanda</option>
+                                    </select>
+                                </div>
+
+                                <!-- Palabra clave para búsqueda en descripción, nombre, etc. -->
                                 <div class="option-bar property-keyword">
-                                    <input type="text" name="keyword" id="keyword-txt" value="" placeholder="Palabra clave">
+                                    <input type="text" name="keyword" id="keyword-txt" value="" placeholder="Palabra clave o dirección">
                                 </div>
+
+                                <!-- Código de propiedad para búsqueda directa -->
                                 <div class="option-bar property-id">
-                                    <input type="text" name="property-id" id="property-id-txt" value="" placeholder="ID de la propiedad">
-                                </div>
-                                <div class="option-bar property-min-area">
-                                    <input type="text" name="min-area" id="min-area" pattern="[0-9]+" value="" placeholder="Área mínima (pies cuadrados)" title="¡Por favor, proporciona solo dígitos!">
-                                </div>
-                                <div class="option-bar property-max-area">
-                                    <input type="text" name="max-area" id="max-area" pattern="[0-9]+" value="" placeholder="Área máxima (pies cuadrados)" title="¡Por favor, proporciona solo dígitos!">
+                                    <input type="text" name="code" id="property-id-txt" value="" placeholder="Código de propiedad">
                                 </div>
                             </div>
                             <!-- .hidden-fields -->
@@ -241,6 +265,8 @@
     </div>
     <!-- .container -->
 </header>
+
+
 
 
 
