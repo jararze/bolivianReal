@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Residencial Las Palmas - Exclusiva Propiedad en Alquiler</title>
+    <title>Exclusiva Propiedad en Alquiler</title>
 
     <!-- Fuentes -->
     <link href='https://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet'>
@@ -36,7 +36,7 @@
 <nav class="navbar">
     <div class="navbar-container">
         <a href="#" class="navbar-logo">
-            <img src="https://via.placeholder.com/150x50?text=INMOBILIARIA" alt="Logo" />
+            <img src="{{ asset('assets/front/images/logoBlack.png') }}" alt="Logo" />
         </a>
 
         <ul class="navbar-menu">
@@ -853,7 +853,7 @@
     <div class="footer-pattern"></div>
     <div class="footer-container">
         <div class="footer-logo">
-            <img src="https://via.placeholder.com/150x50?text=INMOBILIARIA" alt="Logo">
+            <img src="{{ asset('assets/front/images/logoBlack.png') }}" style="height: 150px;" alt="Logo">
         </div>
 
         <p>&copy; {{ date('Y') }} Inmobiliaria. Todos los derechos reservados.</p>

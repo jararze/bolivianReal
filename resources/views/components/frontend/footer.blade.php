@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-3 footer-logo">
                 <a href="#">
-                    <img src="{{ asset('assets/front/images/logo.png') }}" alt="Bolivian Real Estate" />
+                    <img src="{{ asset('assets/front/images/logoBlack.png') }}" alt="Bolivian Real Estate" />
                 </a>
                 <p class="copyright-text">
                     ©Copyright 2025 Todos los derechos reservados <a href="#">Teknicos</a>
