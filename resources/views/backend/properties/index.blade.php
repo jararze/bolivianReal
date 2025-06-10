@@ -88,12 +88,12 @@
                                                     class="sort-icon"></span></span>
                                         </th>
                                         <th class="w-[100px]">
-                                            <span class="sort asc"><span class="sort-label text-gray-700 font-normal">Descripcion</span><span
+                                            <span class="sort asc"><span class="sort-label text-gray-700 font-normal">Codigo</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
                                         <th class="w-[200px]">
                                             <span class="sort"><span
-                                                    class="sort-label text-gray-700 font-normal">Creditos</span><span
+                                                    class="sort-label text-gray-700 font-normal">Descripcion</span><span
                                                     class="sort-icon"></span></span></th>
                                         <th class="w-[100px]">
                                             <span class="sort"><span
@@ -105,11 +105,15 @@
                                                     class="sort-icon"></span></span>
                                         </th>
                                         <th class="w-[100px]">
-                                            <span class="sort"><span class="sort-label text-gray-700 font-normal">TIpo</span><span
+                                            <span class="sort"><span class="sort-label text-gray-700 font-normal">Tipo</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
                                         <th class="w-[150px]">
                                             <span class="sort asc"><span class="sort-label text-gray-700 font-normal">Estatus</span><span
+                                                    class="sort-icon"></span></span>
+                                        </th>
+                                        <th class="w-[100px]">
+                                            <span class="sort asc"><span class="sort-label text-gray-700 font-normal">Fecha</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
                                         <th class="w-[60px]">
@@ -166,6 +170,13 @@
                                                 @else
                                                     <span class="badge badge-outline badge-success">Activo</span>
                                                 @endif
+                                            </td>
+                                            <td>
+                                                <div class="flex flex-col gap-1.5">
+                                                    <span class="text-sm text-gray-800 font-normal">
+                                                        {{ $package->created_at }}
+                                                    </span>
+                                                </div>
                                             </td>
                                             <td>
                                                 <a class="btn btn-sm btn-icon btn-clear btn-light"

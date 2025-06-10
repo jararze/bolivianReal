@@ -51,7 +51,7 @@ class PropertyController extends Controller
     ];
     public function index(): View
     {
-        $properties = Property::with('images')->get();
+        $properties = Property::with('images')->orderBy('created_at', 'DESC')->get();
         return view('backend.properties.index', compact('properties'));
     }
 
