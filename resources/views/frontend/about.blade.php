@@ -425,9 +425,9 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80" alt="Director General">
+                            <img src="{{ asset('assets/front/images/agent/Teresa.jpg') }}" alt="Director General">
                         </div>
-                        <h4>Fernando Mendoza</h4>
+                        <h4>Ma. Teresa Bilbao Rioja de Jordán</h4>
                         <span class="team-member-position">Director General</span>
                         <p>Fundador de BRE, cuenta con más de 35 años de experiencia en el mercado inmobiliario paceño.</p>
                         <div class="team-member-social">
@@ -441,9 +441,9 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80" alt="Gerente de Operaciones">
+                            <img src="{{ asset('assets/front/images/agent/pablo.jpg') }}" alt="Gerente de Operaciones">
                         </div>
-                        <h4>Carla Fernández</h4>
+                        <h4>Pablo Jordán Bilbao Rioja</h4>
                         <span class="team-member-position">Gerente de Operaciones</span>
                         <p>Especialista en gestión de propiedades de lujo y desarrollo de proyectos inmobiliarios.</p>
                         <div class="team-member-social">
@@ -457,9 +457,9 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80" alt="Asesor Inmobiliario">
+                            <img src="{{ asset('assets/front/images/agent/andrea.jpg') }}" alt="Asesor Inmobiliario">
                         </div>
-                        <h4>Ricardo Torrez</h4>
+                        <h4>Andrea Jordán Bilbao Rioja</h4>
                         <span class="team-member-position">Asesor Inmobiliario Senior</span>
                         <p>Experto en propiedades comerciales y oficinas en las zonas más exclusivas de La Paz.</p>
                         <div class="team-member-social">
@@ -473,9 +473,9 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="https://images.unsplash.com/photo-1580894732444-8ecded7900cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80" alt="Asesora Financiera">
+                            <img src="{{ asset('assets/front/images/agent/robrto.jpg') }}" alt="Asesora Financiera">
                         </div>
-                        <h4>Sofía Vargas</h4>
+                        <h4>Roberto Jordán Galdames</h4>
                         <span class="team-member-position">Asesora Financiera</span>
                         <p>Especialista en financiamiento inmobiliario, anticréticos y modelos de inversión en bienes raíces.</p>
                         <div class="team-member-social">
@@ -486,6 +486,60 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-3 col-sm-6">
+                    <div class="team-member">
+                        <div class="team-member-image">
+                            <img src="{{ asset('assets/front/images/agent/aurora.jpg') }}" alt="Director General">
+                        </div>
+                        <h4>Aurora Canaza</h4>
+                        <span class="team-member-position">Director General</span>
+                        <p>Fundador de BRE, cuenta con más de 35 años de experiencia en el mercado inmobiliario paceño.</p>
+                        <div class="team-member-social">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                            <a href="#"><i class="fa fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="team-member">
+                        <div class="team-member-image">
+                            <img src="{{ asset('assets/front/images/agent/patricia.jpg') }}" alt="Gerente de Operaciones">
+                        </div>
+                        <h4>Patricia Zelada</h4>
+                        <span class="team-member-position">Gerente de Operaciones</span>
+                        <p>Especialista en gestión de propiedades de lujo y desarrollo de proyectos inmobiliarios.</p>
+                        <div class="team-member-social">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                            <a href="#"><i class="fa fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6">
+                    <div class="team-member">
+                        <div class="team-member-image">
+                            <img src="{{ asset('assets/front/images/agent/viviana.jpg') }}" alt="Asesor Inmobiliario">
+                        </div>
+                        <h4>Viviana Rada</h4>
+                        <span class="team-member-position">Asesor Inmobiliario Senior</span>
+                        <p>Experto en propiedades comerciales y oficinas en las zonas más exclusivas de La Paz.</p>
+                        <div class="team-member-social">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                            <a href="#"><i class="fa fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
         </div>
     </div>
 </x-frontend-layout>

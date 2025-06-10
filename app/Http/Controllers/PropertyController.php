@@ -29,6 +29,26 @@ use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class PropertyController extends Controller
 {
+    private const IMAGE_CONFIG = [
+        'thumbnail' => [
+            'width' => 800,
+            'height' => 600,
+            'quality' => 85,
+            'create_small' => true,
+            'small_width' => 400,
+            'small_height' => 300,
+            'small_quality' => 75
+        ],
+        'gallery' => [
+            'width' => 1200,
+            'height' => 800,
+            'quality' => 85,
+            'create_small' => true,
+            'small_width' => 600,
+            'small_height' => 400,
+            'small_quality' => 75
+        ]
+    ];
     public function index(): View
     {
         $properties = Property::with('images')->get();
@@ -542,7 +562,7 @@ class PropertyController extends Controller
                 try {
                     // 1. Filtrar solo los campos que pertenecen a la tabla properties
                     $propertyData = array_intersect_key($data, array_flip([
-                        'name', 'address', 'neighborhood', 'size', 'size_max',
+                        'name', 'address', 'neighborhood_id', 'size', 'size_max',
                         'city', 'country', 'propertytype_id', 'service_type_id',
                         'currency', 'chosen_currency', 'lowest_price', 'max_price',
                         'bedrooms', 'bathrooms', 'garage', 'garage_size',

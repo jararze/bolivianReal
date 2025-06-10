@@ -82,7 +82,22 @@
                     </div>
                     <!-- .social-networks -->
                     <ul class="user-nav">
-                        <li><a class="login-register-link" href="#login-modal" data-toggle="modal"><i class="fa fa-sign-in"></i>Registrate</a></li>
+                        @auth
+                            <!-- Usuario logueado -->
+                            <li><a class="login-register-link" href="{{ route('dashboard') }}"><i class="fa fa-user"></i>Mi Perfil</a></li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}" style="display: inline;">
+                                    @csrf
+                                    <a class="login-register-link" href="#" onclick="event.preventDefault(); this.closest('form').submit();">
+                                        <i class="fa fa-sign-out"></i>Cerrar Sesión
+                                    </a>
+                                </form>
+                            </li>
+                        @else
+                            <!-- Usuario no logueado -->
+                            <li><a class="login-register-link" href="{{ route("login") }}" data-toggle="modal"><i class="fa fa-sign-in"></i>Entrar</a></li>
+                            <li><a class="login-register-link" href="#login-modal" data-toggle="modal"><i class="fa fa-sign-in"></i>Registrate</a></li>
+                        @endauth
                         <li><a class="submit-property-link" href="{{ route("frontend.project") }}"><i class="fa fa-star"></i>Proyecto</a></li>
                         <li><a class="submit-property-link" href="{{ route("frontend.submit-property") }}"><i class="fa fa-plus-circle"></i>Quieres vender/alquilar</a></li>
                     </ul>
