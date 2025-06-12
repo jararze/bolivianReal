@@ -50,7 +50,7 @@
                                         {{ number_format($property->lowest_price, 2) }}
                                     </span>
                                     <a href="#"><span
-                                            class="property-status-tag">{{ $property->is_project ? 'PROYECTO' : 'EN VENTA' }}</span></a>
+                                            class="property-status-tag">{{ $property->propertyType->type_name }}</span></a>
                                 </div>
                             </header>
                             <div class="property-meta entry-meta clearfix">
