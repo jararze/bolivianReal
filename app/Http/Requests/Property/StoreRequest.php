@@ -24,12 +24,12 @@ class StoreRequest extends FormRequest
             'service_type_id' => ['required', 'exists:service_types,id'],
             'currency' => ['required'],
             'chosen_currency' => ['required', 'boolean'],
-            'lowest_price' => ['required', 'numeric'],
+//            'lowest_price' => ['required', 'numeric'],
             'max_price' => ['required', 'numeric'],
             'bedrooms' => ['required', 'integer'],
             'bathrooms' => ['required', 'integer'],
-            'garage' => ['required', 'integer'],
-            'garage_size' => ['nullable', 'numeric'],
+//            'garage' => ['required', 'integer'],
+//            'garage_size' => ['nullable', 'numeric'],
             'short_description' => ['required', 'string'],
             'long_description' => ['required', 'string'],
             'thumbnail' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:5120', 'dimensions:min_width=600,min_height=400'],
@@ -139,8 +139,8 @@ class StoreRequest extends FormRequest
             'chosen_currency.required' => 'Debe seleccionar la moneda a mostrar',
             'chosen_currency.boolean' => 'El valor de moneda a mostrar no es válido',
 
-            'lowest_price.required' => 'El precio mínimo es requerido',
-            'lowest_price.numeric' => 'El precio mínimo debe ser un número',
+//            'lowest_price.required' => 'El precio mínimo es requerido',
+//            'lowest_price.numeric' => 'El precio mínimo debe ser un número',
 
             'max_price.required' => 'El precio máximo es requerido',
             'max_price.numeric' => 'El precio máximo debe ser un número',
@@ -151,10 +151,10 @@ class StoreRequest extends FormRequest
             'bathrooms.required' => 'El número de baños es requerido',
             'bathrooms.integer' => 'El número de baños debe ser un número entero',
 
-            'garage.required' => 'El número de espacios en el garaje es requerido',
-            'garage.integer' => 'El número de espacios en el garaje debe ser un número entero',
-
-            'garage_size.numeric' => 'La superficie del garaje debe ser un número',
+//            'garage.required' => 'El número de espacios en el garaje es requerido',
+//            'garage.integer' => 'El número de espacios en el garaje debe ser un número entero',
+//
+//            'garage_size.numeric' => 'La superficie del garaje debe ser un número',
 
             'short_description.required' => 'La descripción corta es requerida',
             'short_description.string' => 'La descripción corta debe ser texto',

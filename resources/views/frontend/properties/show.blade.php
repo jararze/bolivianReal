@@ -1606,11 +1606,11 @@
                             <div class="inner-wrapper clearfix">
                                 <figure class="agent-image">
                                     <a href="agent-single.html">
-                                        <img width="220" height="220" src="{{ asset('assets/front/images/agente.jpg') }}" class="img-circle wp-post-image" alt="Nathan James">
+                                        <img width="220" height="220" src="{{ asset(site_config('appearance_settings.logo.path', 'default-logo.png')) }}" class="img-circle wp-post-image" alt="Nathan James">
                                     </a>
                                 </figure>
                                 <h3 class="agent-name">
-                                    <a href="agent-single.html">Pablo Jordan</a>
+                                    <a href="agent-single.html">Bolivian Real Estate</a>
                                     <span>Agente Bolivian Real Estate</span>
                                 </h3>
                                 <div class="agent-social-profiles">
