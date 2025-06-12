@@ -383,7 +383,7 @@
                                 </a>
                             </div>
                             <div class="menu-item">
-                                <a class="menu-link" href="html/demo8/network/user-cards/team-crew.html">
+                                <a class="menu-link" href="{{ route('backend.properties.create') }}">
                                     <span class="menu-title"> Agregar </span>
                                 </a>
                             </div>

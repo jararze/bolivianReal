@@ -132,7 +132,7 @@
                                             <td>
                                                 <div class="flex flex-col gap-1.5">
                                                     <a class="leading-none font-medium text-sm text-gray-900 hover:text-primary"
-                                                       href="{{ route("backend.properties.edit", $package->id) }}">
+                                                       href="{{ route("backend.properties.edit", $package->slug) }}">
                                                         {{ $package->name }}
                                                     </a>
                                                 </div>
