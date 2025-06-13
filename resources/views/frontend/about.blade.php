@@ -425,11 +425,28 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
+                            <img src="{{ asset('assets/front/images/agent/Tita.jpg') }}" alt="Fundadora">
+                        </div>
+                        <h4>Tita Lily Bilbao</h4>
+                        <span class="team-member-position">Fundadora</span>
+                        <p>Fundadora de BRE</p>
+                        <div class="team-member-social">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                            <a href="#"><i class="fa fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="row">
+                <div class="col-md-3 col-sm-6">
+                    <div class="team-member">
+                        <div class="team-member-image">
                             <img src="{{ asset('assets/front/images/agent/Teresa.jpg') }}" alt="Director General">
                         </div>
                         <h4>Ma. Teresa Bilbao Rioja de Jordán</h4>
                         <span class="team-member-position">Director General</span>
-                        <p>Fundador de BRE, cuenta con más de 35 años de experiencia en el mercado inmobiliario paceño.</p>
+                        <p>Director General, cuenta con más de 35 años de experiencia en el mercado inmobiliario paceño.</p>
                         <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
@@ -457,7 +474,7 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="{{ asset('assets/front/images/agent/andrea.jpg') }}" alt="Asesor Inmobiliario">
+                            <img src="{{ asset('assets/front/images/agent/andrea.jpeg') }}" alt="Asesor Inmobiliario">
                         </div>
                         <h4>Andrea Jordán Bilbao Rioja</h4>
                         <span class="team-member-position">Asesor Inmobiliario Senior</span>
@@ -473,10 +490,10 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="{{ asset('assets/front/images/agent/robrto.jpg') }}" alt="Asesora Financiera">
+                            <img src="{{ asset('assets/front/images/agent/roberto.jpeg') }}" alt="Asesor Financiero">
                         </div>
                         <h4>Roberto Jordán Galdames</h4>
-                        <span class="team-member-position">Asesora Financiera</span>
+                        <span class="team-member-position">Asesor Financiero</span>
                         <p>Especialista en financiamiento inmobiliario, anticréticos y modelos de inversión en bienes raíces.</p>
                         <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
@@ -491,11 +508,11 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="{{ asset('assets/front/images/agent/aurora.jpg') }}" alt="Director General">
+                            <img src="{{ asset('assets/front/images/agent/aurora.jpeg') }}" alt="Asesor Inmobiliario">
                         </div>
                         <h4>Aurora Canaza</h4>
-                        <span class="team-member-position">Director General</span>
-                        <p>Fundador de BRE, cuenta con más de 35 años de experiencia en el mercado inmobiliario paceño.</p>
+                        <span class="team-member-position">Asesor Inmobiliario Senior</span>
+                        <p>Experto en propiedades comerciales y oficinas en las zonas más exclusivas de La Paz.</p>
                         <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
@@ -507,7 +524,7 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="{{ asset('assets/front/images/agent/patricia.jpg') }}" alt="Gerente de Operaciones">
+                            <img src="{{ asset('assets/front/images/agent/patricia.jpeg') }}" alt="Gerente de Operaciones">
                         </div>
                         <h4>Patricia Zelada</h4>
                         <span class="team-member-position">Gerente de Operaciones</span>
@@ -523,7 +540,7 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="{{ asset('assets/front/images/agent/viviana.jpg') }}" alt="Asesor Inmobiliario">
+                            <img src="{{ asset('assets/front/images/agent/viviana.jpeg') }}" alt="Asesor Inmobiliario">
                         </div>
                         <h4>Viviana Rada</h4>
                         <span class="team-member-position">Asesor Inmobiliario Senior</span>
