@@ -331,10 +331,10 @@
                         <div class="contact-social">
                             <h3 class="contact-heading">Síguenos</h3>
                             <div class="social-links">
-                                <a href="https://www.facebook.com/bolivianrealestate" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                                <a href="https://www.instagram.com/bolivianrealestate.srl" class="social-link"><i class="fab fa-instagram"></i></a>
-                                <a href="https://www.youtube.com/@bolivianrealestate-bienesr7310" class="social-link"><i class="fab fa-youtube"></i></a>
-                                <a href="https://www.tiktok.com/@bolivianrealestate" class="social-link"><i class="fab fa-tiktok"></i></a>
+                                <a href="https://www.facebook.com/bolivianrealestate" target="_blank" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="https://www.instagram.com/bolivianrealestate.srl" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="https://www.youtube.com/@bolivianrealestate-bienesr7310" target="_blank" class="social-link"><i class="fab fa-youtube"></i></a>
+                                <a href="https://www.tiktok.com/@bolivianrealestate" target="_blank" class="social-link"><i class="fab fa-tiktok"></i></a>
                                 <!-- <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a> -->
                             </div>
                         </div>

@@ -15,11 +15,11 @@
                         <section class="widget clearfix">
                             <h3 class="widget-title">ZONAS</h3>
                             <ul>
-                                <li><a href="#">Calacoto</a></li>
-                                <li><a href="#">Achumani</a></li>
-                                <li><a href="#">Zona Sur</a></li>
-                                <li><a href="#">Sopocachi</a></li>
-                                <li><a href="#">Centro</a></li>
+                                <li><a href="https://bolivianrealestate.com.bo/property/search?neighborhood_id=316">Calacoto</a></li>
+                                <li><a href="https://bolivianrealestate.com.bo/property/search?neighborhood_id=295">Achumani</a></li>
+                                <li><a href="https://bolivianrealestate.com.bo/property/search?neighborhood_id=307">Los Pinos</a></li>
+                                <li><a href="https://bolivianrealestate.com.bo/property/search?neighborhood_id=192">Sopocachi</a></li>
+                                <li><a href="https://bolivianrealestate.com.bo/property/search?neighborhood_id=360">Centro</a></li>
                             </ul>
                         </section>
                     </div>
@@ -27,11 +27,11 @@
                         <section class="widget clearfix">
                             <h3 class="widget-title">TIPOS DE INMUEBLES</h3>
                             <ul>
-                                <li><a href="#">Casas</a></li>
-                                <li><a href="#">Departamentos</a></li>
-                                <li><a href="#">Oficinas</a></li>
-                                <li><a href="#">Terrenos</a></li>
-                                <li><a href="#">Locales Comerciales</a></li>
+                                <li><a href="https://bolivianrealestate.com.bo/property/search?type=1">Casas</a></li>
+                                <li><a href="https://bolivianrealestate.com.bo/property/search?type=2">Departamentos</a></li>
+                                <li><a href="https://bolivianrealestate.com.bo/property/search?type=5">Oficinas</a></li>
+                                <li><a href="https://bolivianrealestate.com.bo/property/search?type=6">Terrenos</a></li>
+                                <li><a href="https://bolivianrealestate.com.bo/property/search?type=8">Locales Comerciales</a></li>
                             </ul>
                         </section>
                     </div>
@@ -39,9 +39,9 @@
                         <section class="widget clearfix">
                             <h3 class="widget-title">TIPO DE TRANSACCION</h3>
                             <ul>
-                                <li><a href="#">Venta</a> (6)</li>
-                                <li><a href="#">Alquiler</a> (6)</li>
-                                <li><a href="#">Anticrético</a></li>
+                                <li><a href="https://bolivianrealestate.com.bo/property/search?status=1">Venta</a></li>
+                                <li><a href="https://bolivianrealestate.com.bo/property/search?status=2">Alquiler</a></li>
+                                <li><a href="https://bolivianrealestate.com.bo/property/search?status=3">Anticrético</a></li>
                             </ul>
                         </section>
                     </div>
@@ -49,14 +49,14 @@
                         <section class="widget clearfix">
                             <h3 class="widget-title">CONECTATE CON NOSOTROS</h3>
                             <div class="social-networks clearfix">
-                                <a class="twitter" href="#twitter" target="_blank"><i class="fa fa-twitter"></i></a>
-                                <a class="facebook" href="#facebook" target="_blank"><i class="fa fa-facebook"></i></a>
-                                <a class="linkedin" href="#linkedin" target="_blank"><i class="fa fa-linkedin"></i></a>
-                                <a class="google-plus" href="#google-plus" target="_blank"><i class="fa fa-google-plus"></i></a>
-                                <a class="instagram" href="#instagram" target="_blank"><i class="fa fa-instagram"></i></a>
-                                <a class="youtube" href="#youtube" target="_blank"><i class="fa fa-youtube"></i></a>
-                                <a class="pinterest" href="#pinterest" target="_blank"><i class="fa fa-pinterest"></i></a>
-                                <a class="rss" href="#rss" target="_blank"><i class="fa fa-rss"></i></a>
+                                <!-- <a class="twitter" href="#twitter" target="_blank"><i class="fa fa-twitter"></i></a>-->
+                                <a class="facebook" href="https://www.facebook.com/bolivianrealestate" target="_blank"><i class="fa fa-facebook"></i></a>
+                                <a class="tiktok" href="https://www.tiktok.com/@bolivianrealestate" target="_blank"><i class="fa fa-tiktok"></i></a>
+                                <!-- <a class="google-plus" href="#google-plus" target="_blank"><i class="fa fa-google-plus"></i></a>-->
+                                <a class="instagram" href="https://www.instagram.com/bolivianrealestate.srl" target="_blank"><i class="fa fa-instagram"></i></a>
+                                <a class="youtube" href="https://www.youtube.com/@bolivianrealestate-bienesr7310" target="_blank"><i class="fa fa-youtube"></i></a>
+                                <!-- <a class="pinterest" href="#pinterest" target="_blank"><i class="fa fa-pinterest"></i></a>
+                                <a class="rss" href="#rss" target="_blank"><i class="fa fa-rss"></i></a>-->
                             </div>
                         </section>
                     </div>
