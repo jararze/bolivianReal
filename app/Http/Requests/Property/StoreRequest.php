@@ -14,34 +14,36 @@ class StoreRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
             'neighborhood_id' => ['required', 'exists:neighborhoods,id'],
-            // Puedes mantener 'neighborhood' como nullable si lo necesitas temporalmente durante la transición
-//            'neighborhood' => ['nullable', 'string', 'max:255'],
-//            'size' => ['required', 'numeric'],
-//            'size_max' => ['required', 'numeric'],
+            // Campos opcionales
+            'size' => ['nullable', 'numeric'],
+            'size_max' => ['nullable', 'numeric'],
             'city' => ['required', 'exists:cities,id'],
             'country' => ['required', 'string', 'max:255'],
             'propertytype_id' => ['required', 'exists:property_types,id'],
             'service_type_id' => ['required', 'exists:service_types,id'],
             'currency' => ['required'],
             'chosen_currency' => ['required', 'boolean'],
-//            'lowest_price' => ['required', 'numeric'],
+            'lowest_price' => ['nullable', 'numeric'],
             'max_price' => ['required', 'numeric'],
             'bedrooms' => ['required', 'integer'],
             'bathrooms' => ['required', 'integer'],
-//            'garage' => ['required', 'integer'],
-//            'garage_size' => ['nullable', 'numeric'],
+            'garage' => ['nullable', 'integer'],
+            'garage_size' => ['nullable', 'numeric'],
             'short_description' => ['required', 'string'],
             'long_description' => ['required', 'string'],
             'thumbnail' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:5120', 'dimensions:min_width=600,min_height=400'],
             'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048', 'dimensions:min_width=600,min_height=400'],
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric'],
-//            'features' => ['nullable', 'array'],
-//            'features.*' => ['exists:facilities,id'],
-//            'place_names' => ['nullable', 'array'],
-//            'place_names.*' => ['string', 'max:255'],
-//            'distances' => ['nullable', 'array'],
-//            'distances.*' => ['string', 'max:255'],
+
+            // AGREGAR ESTAS LÍNEAS PARA SERVICIOS:
+            'features' => ['nullable', 'array'],
+            'features.*' => ['nullable', 'exists:facilities,id'],
+            'place_names' => ['nullable', 'array'],
+            'place_names.*' => ['nullable', 'string', 'max:255'],
+            'distances' => ['nullable', 'array'],
+            'distances.*' => ['nullable', 'string', 'max:100'],
+
             'amenities' => ['nullable', 'array'],
             'amenities.*' => ['exists:amenities,id'],
             'video' => ['nullable', 'url'],
@@ -78,6 +80,29 @@ class StoreRequest extends FormRequest
         Log::channel('daily')->info('Datos antes de preparación:', [
             'raw_data' => $this->all()
         ]);
+
+        // Limpiar arrays de servicios vacíos
+        if ($this->has('features')) {
+            $features = array_filter($this->features ?? [], function($value) {
+                return !empty($value) && is_numeric($value);
+            });
+
+            $placeNames = [];
+            $distances = [];
+
+            foreach ($features as $index => $featureId) {
+                if (!empty($featureId)) {
+                    $placeNames[] = $this->place_names[$index] ?? '';
+                    $distances[] = $this->distances[$index] ?? '';
+                }
+            }
+
+            $this->merge([
+                'features' => array_values($features),
+                'place_names' => $placeNames,
+                'distances' => $distances,
+            ]);
+        }
 
         // Convertir strings 'true'/'false' a booleanos para campos boolean
         $booleanFields = ['currency', 'chosen_currency', 'featured', 'hot', 'status', 'is_project'];

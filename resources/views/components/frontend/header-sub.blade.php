@@ -76,9 +76,12 @@
             <div class="col-lg-9 zero-horizontal-padding hidden-xs hidden-sm" style="width: 83% !important;">
                 <div class="header-top clearfix" style="margin-bottom: 47px !important;">
                     <div class="social-networks header-social-nav">
-                        <a class="twitter" target="_blank" href="#"><i class="fa fa-twitter"></i></a>
+                        <a class="tiktok" target="_blank" href="https://www.tiktok.com/@bolivianrealestate"><i class="fa fa-tiktok"></i></a>
+                        <a class="facebook" target="_blank" href="https://www.facebook.com/bolivianrealestate"><i class="fa fa-facebook"></i></a>
+                        <a class="instagram" target="_blank" href="https://www.instagram.com/bolivianrealestate.srl"><i class="fa fa-instagram"></i></a>
+                        <!--<a class="twitter" target="_blank" href="#"><i class="fa fa-twitter"></i></a>
                         <a class="facebook" target="_blank" href="#"><i class="fa fa-facebook"></i></a>
-                        <a class="gplus" target="_blank" href="#"><i class="fa fa-google-plus"></i></a>
+                        <a class="gplus" target="_blank" href="#"><i class="fa fa-google-plus"></i></a>-->
                     </div>
                     <!-- .social-networks -->
                     <ul class="user-nav">

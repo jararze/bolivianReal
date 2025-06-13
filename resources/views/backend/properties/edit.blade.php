@@ -39,8 +39,6 @@
             } catch (error) {
                 console.error('Error initializing Trumbowyg:', error);
             }
-
-
         });
     </script>
 

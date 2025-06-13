@@ -129,9 +129,9 @@ class Property extends Model
         return $this->belongsTo(City::class, 'city', 'id');
     }
 
-    public function neighborhood()
+    public function neighborhoodRelation()
     {
-        return $this->belongsTo(Neighborhood::class);
+        return $this->belongsTo(Neighborhood::class, 'neighborhood_id');
     }
 
 

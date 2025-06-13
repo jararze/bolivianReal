@@ -1510,7 +1510,7 @@
                                     <li>
                                         <dl>
                                             <dt>Zona</dt>
-                                            <dd>{{ $property->neighborhood }}</dd>
+                                            <dd>{{ $property->neighborhoodRelation->name ?? 'Sin barrio' }}</dd>
                                         </dl>
                                     </li>
                                 </ul>

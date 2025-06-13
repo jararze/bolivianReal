@@ -549,19 +549,19 @@ class PropertyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Property $property): RedirectResponse
+    public function update(UpdateRequest $request, Property $property): RedirectResponse
     {
         try {
             Log::info('Iniciando update en PropertyController para la propiedad ' . $property->id);
 
-            // Obtener todos los datos del formulario
-            $data = $request->all();
-            Log::info('Datos recibidos:', ['data' => $data]);
+            // Obtener datos validados
+            $validated = $request->validated();
+            Log::info('Datos validados:', ['validated' => $validated]);
 
-            return DB::transaction(function () use ($request, $property, $data) {
+            return DB::transaction(function () use ($request, $property, $validated) {
                 try {
                     // 1. Filtrar solo los campos que pertenecen a la tabla properties
-                    $propertyData = array_intersect_key($data, array_flip([
+                    $propertyData = array_intersect_key($validated, array_flip([
                         'name', 'address', 'neighborhood_id', 'size', 'size_max',
                         'city', 'country', 'propertytype_id', 'service_type_id',
                         'currency', 'chosen_currency', 'lowest_price', 'max_price',
@@ -575,21 +575,8 @@ class PropertyController extends Controller
                     $property->update($propertyData);
                     Log::info('Datos básicos de la propiedad actualizados');
 
-                    // 3. Procesar las relaciones (facilities, amenities)
-                    if (isset($data['features']) && is_array($data['features'])) {
-                        $facilityData = [];
-                        foreach ($data['features'] as $index => $featureId) {
-                            $facilityData[$featureId] = [
-                                'name' => $data['place_names'][$index] ?? '',
-                                'distance' => $data['distances'][$index] ?? ''
-                            ];
-                        }
-                        $property->facilities()->sync($facilityData);
-                    }
-
-                    if (isset($data['amenities']) && is_array($data['amenities'])) {
-                        $property->amenities()->sync($data['amenities']);
-                    }
+                    // 3. Procesar las relaciones usando el método mejorado
+                    $this->processRelationsUpdate($property, $validated);
                     Log::info('Relaciones procesadas');
 
                     // 4. Procesar imágenes
@@ -617,6 +604,45 @@ class PropertyController extends Controller
 
             flash()->warning('Ocurrió un error al actualizar la propiedad: ' . $e->getMessage());
             return back()->withInput();
+        }
+    }
+
+    /**
+     * Procesar relaciones para la actualización (método nuevo)
+     */
+    private function processRelationsUpdate(Property $property, array $validated): void
+    {
+        // Sincronizar facilities si existen
+        if (!empty($validated['features']) && is_array($validated['features'])) {
+            $facilityData = [];
+
+            foreach ($validated['features'] as $index => $featureId) {
+                // Solo procesar si el featureId no está vacío y es numérico
+                if (!empty($featureId) && is_numeric($featureId) && $featureId > 0) {
+                    $facilityData[$featureId] = [
+                        'name' => $validated['place_names'][$index] ?? '',
+                        'distance' => $validated['distances'][$index] ?? ''
+                    ];
+                }
+            }
+
+            $property->facilities()->sync($facilityData);
+        } else {
+            // Si no hay features válidos, limpiar todas las relaciones
+            $property->facilities()->sync([]);
+        }
+
+        // Sincronizar amenities si existen
+        if (!empty($validated['amenities']) && is_array($validated['amenities'])) {
+            // Filtrar amenities válidos
+            $validAmenities = array_filter($validated['amenities'], function($amenityId) {
+                return !empty($amenityId) && is_numeric($amenityId) && $amenityId > 0;
+            });
+
+            $property->amenities()->sync($validAmenities);
+        } else {
+            // Si no hay amenities válidos, limpiar todas las relaciones
+            $property->amenities()->sync([]);
         }
     }
 
