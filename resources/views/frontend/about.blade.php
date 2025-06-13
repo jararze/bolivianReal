@@ -438,7 +438,6 @@
                     </div>
                 </div>
 
-            <div class="row">
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
@@ -486,7 +485,9 @@
                         </div>
                     </div>
                 </div>
-
+            </div>
+            
+            <div class="row">
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
@@ -502,9 +503,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
@@ -524,11 +523,11 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="{{ asset('assets/front/images/agent/patricia.jpeg') }}" alt="Gerente de Operaciones">
+                            <img src="{{ asset('assets/front/images/agent/patricia.jpeg') }}" alt="Asesor Inmobiliario Senior">
                         </div>
                         <h4>Patricia Zelada</h4>
-                        <span class="team-member-position">Gerente de Operaciones</span>
-                        <p>Especialista en gestión de propiedades de lujo y desarrollo de proyectos inmobiliarios.</p>
+                        <span class="team-member-position">Asesor Inmobiliario Senior</span>
+                        <p>Experto en propiedades comerciales y oficinas en las zonas más exclusivas de La Paz.</p>
                         <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
@@ -552,10 +551,7 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
-
 
         </div>
     </div>
