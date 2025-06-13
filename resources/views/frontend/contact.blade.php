@@ -271,7 +271,7 @@
                             <div class="contact-details-text">
                                 <strong>Oficina Central</strong>
                                 Calacoto, Av. Ballivián N° 1578 <br>
-                                Edif. Torre Cesur piso 2 Of. 508<br>
+                                Edif. Torre Cesur piso 5 Of. 508<br>
                                 La Paz, Bolivia
                             </div>
                         </div>
@@ -331,11 +331,11 @@
                         <div class="contact-social">
                             <h3 class="contact-heading">Síguenos</h3>
                             <div class="social-links">
-                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://www.facebook.com/bolivianrealestate" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="https://www.instagram.com/bolivianrealestate.srl" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="https://www.youtube.com/@bolivianrealestate-bienesr7310" class="social-link"><i class="fab fa-youtube"></i></a>
+                                <a href="https://www.tiktok.com/@bolivianrealestate" class="social-link"><i class="fab fa-tiktok"></i></a>
+                                <!-- <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a> -->
                             </div>
                         </div>
                     </div>

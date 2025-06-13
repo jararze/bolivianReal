@@ -337,7 +337,7 @@
                 <div class="col-md-12">
                     <div class="service-card">
                         <div class="service-image">
-                            <img src="https://images.unsplash.com/photo-1560518883-f480ccb62297?ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80" alt="Avalúo de inmuebles">
+                            <img src="{{ asset('assets/front/images/avaluo.jpg') }}"  style="width:750px; height: 80px" alt="Avalúo de inmuebles">
                             <div class="service-icon">
                                 <i class="fa fa-calculator"></i>
                             </div>
