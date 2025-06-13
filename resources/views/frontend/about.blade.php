@@ -425,7 +425,7 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="{{ asset('assets/front/images/agent/Tita.jpg') }}" alt="Fundadora">
+                            <img src="{{ asset('assets/front/images/agent/Tita.jpeg') }}" alt="Fundadora">
                         </div>
                         <h4>Tita Lily Bilbao</h4>
                         <span class="team-member-position">Fundadora</span>
