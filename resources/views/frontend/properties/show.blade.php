@@ -2218,14 +2218,14 @@
                                                     {{-- Método corregido de selección de imagen --}}
                                                     @if($similarProperty->images->first())
                                                         <img width="850" height="570"
-                                                             src="{{ asset($similarProperty->images->first()->name) }}"
+                                                             src="{{ asset('storage/' .$similarProperty->images->first()->name) }}"
                                                              class="img-responsive wp-post-image"
                                                              alt="{{ $similarProperty->name }}"
                                                              loading="lazy"
                                                              onerror="this.src='{{ asset('images/no-image.jpg') }}'">
                                                     @else
                                                         <img width="850" height="570"
-                                                             src="{{ asset('images/no-image.jpg') }}"
+                                                             src="{{ asset('storage/' .'images/no-image.jpg') }}"
                                                              class="img-responsive wp-post-image"
                                                              alt="No image available"
                                                              loading="lazy">
@@ -2301,9 +2301,9 @@
                                                             @endif
                                                         </div>
                                                         <a href="{{ route('frontend.properties.show', $similarProperty->slug) }}" class="property-status-link">
-                                        <span class="property-status-tag status-{{ Str::slug($similarProperty->serviceType->name ?? 'sale') }}">
-                                            {{ $similarProperty->serviceType->name ?? 'En Venta' }}
-                                        </span>
+                                                            <span class="property-status-tag status-{{ Str::slug($similarProperty->serviceType->name ?? 'sale') }}">
+                                                                {{ $similarProperty->serviceType->name ?? 'En Venta' }}
+                                                            </span>
                                                         </a>
                                                     </div>
                                                 </header>
