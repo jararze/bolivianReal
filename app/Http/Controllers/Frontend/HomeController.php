@@ -110,8 +110,8 @@ class HomeController extends Controller
             ->where('status', true);
 
         // Criterio 2: Misma ciudad
-        if ($property->city_id) {
-            $query1->where('city_id', $property->city_id);
+        if ($property->city) {
+            $query1->where('city', $property->city);
         }
 
         $similarByTypeAndPrice = $query1->take($limit)->get();
@@ -121,7 +121,7 @@ class HomeController extends Controller
             $remaining = $limit - $similarByTypeAndPrice->count();
 
             $similarByLocation = Property::with(['images', 'propertyType', 'serviceType', 'whatcity', 'neighborhoodRelation'])
-                ->where('city_id', $property->city_id)
+                ->where('city', $property->city)
                 ->where('id', '!=', $property->id)
                 ->whereNotIn('id', $similarByTypeAndPrice->pluck('id'))
                 ->where('status', true)
