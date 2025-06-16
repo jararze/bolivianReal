@@ -2295,7 +2295,8 @@
                                                             @if($similarProperty->max_price && $similarProperty->max_price > $similarProperty->lowest_price)
                                                                 <span class="price-range">- {{ number_format($similarProperty->max_price, 0) }}</span>
                                                             @endif
-                                                            @if($similarProperty->size)
+                                                            {{-- CORRECCIÓN: Verificar que size no sea 0 o null antes de dividir --}}
+                                                            @if($similarProperty->size && $similarProperty->size > 0)
                                                                 <span class="price-per-sqm">{{ number_format($similarProperty->lowest_price / $similarProperty->size, 0) }}/m²</span>
                                                             @endif
                                                         </div>
