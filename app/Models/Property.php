@@ -134,5 +134,10 @@ class Property extends Model
         return $this->belongsTo(Neighborhood::class, 'neighborhood_id');
     }
 
+    public function neighborhood()
+    {
+        return $this->belongsTo(Neighborhood::class, 'neighborhood_id');
+    }
+
 
 }
