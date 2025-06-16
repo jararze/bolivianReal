@@ -41,8 +41,13 @@ class HeaderSub extends Component
             ->where('status', true)
             ->get();
 
-        $neighborhoods = Neighborhood::select(['id', 'name', 'city_id'])
-            ->where('status', true)
+        $neighborhoods = Neighborhood::select(['neighborhoods.id', 'neighborhoods.name', 'neighborhoods.city_id'])
+            ->join('properties', 'neighborhoods.id', '=', 'properties.neighborhood_id')
+            ->where('neighborhoods.status', true)
+            ->where('properties.status', true) // Solo propiedades activas
+            ->whereNull('properties.deleted_at') // Excluir propiedades eliminadas (soft delete)
+            ->distinct()
+            ->orderBy('neighborhoods.name')
             ->get();
 
         return view('components.frontend.header-sub', compact(

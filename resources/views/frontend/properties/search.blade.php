@@ -427,7 +427,7 @@
 
                 <!-- Propiedades destacadas -->
                 <section class="widget widget-featured-properties">
-                    <h3 class="widget-title">Propiedades Destacadas</h3>
+                    <h3 class="advance-search-widget-title" style="line-height: 35px; padding-left: 5px; height: 35px">Propiedades Destacadas</h3>
                     <ul class="widget-featured-properties">
                         @forelse($featuredProperties as $property)
                             <li>

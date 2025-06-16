@@ -13,6 +13,7 @@ use App\Models\ServiceType;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Log;
+use Illuminate\Database\Eloquent\Collection;
 
 class HomeController extends Controller
 {
@@ -76,27 +77,147 @@ class HomeController extends Controller
         $property = Property::with([
             'images',
             'propertyType',
+            'serviceType',
             'agent',
             'amenities',
-            'facilities'
+            'facilities',
+            'whatcity',
+            'neighborhoodRelation'
         ])
             ->where('slug', $slug)
             ->where('status', true)
             ->firstOrFail();
 
-        // Propiedades similares basadas en tipo y precio
-        $similarProperties = Property::with(['images', 'propertyType'])
-            ->where('propertytype_id', $property->propertytype_id)
-            ->whereBetween('lowest_price', [
-                $property->lowest_price * 0.8,
-                $property->lowest_price * 1.2
-            ])
-            ->where('id', '!=', $property->id)
-            ->where('status', true)
-            ->take(3)
-            ->get();
+        // Propiedades similares con múltiples criterios
+        $similarProperties = $this->getSimilarProperties($property);
 
         return view('frontend.properties.show', compact('property', 'similarProperties'));
+    }
+
+    /**
+     * Obtiene propiedades similares basadas en múltiples criterios
+     */
+    private function getSimilarProperties(Property $property, int $limit = 6): Collection
+    {
+        // Criterio 1: Mismo tipo de propiedad y rango de precio similar
+        $query1 = Property::with(['images', 'propertyType', 'serviceType', 'whatcity', 'neighborhoodRelation'])
+            ->where('propertytype_id', $property->propertytype_id)
+            ->whereBetween('lowest_price', [
+                $property->lowest_price * 0.7,
+                $property->lowest_price * 1.3
+            ])
+            ->where('id', '!=', $property->id)
+            ->where('status', true);
+
+        // Criterio 2: Misma ciudad
+        if ($property->city_id) {
+            $query1->where('city_id', $property->city_id);
+        }
+
+        $similarByTypeAndPrice = $query1->take($limit)->get();
+
+        // Si no tenemos suficientes, buscar por ubicación
+        if ($similarByTypeAndPrice->count() < $limit) {
+            $remaining = $limit - $similarByTypeAndPrice->count();
+
+            $similarByLocation = Property::with(['images', 'propertyType', 'serviceType', 'whatcity', 'neighborhoodRelation'])
+                ->where('city_id', $property->city_id)
+                ->where('id', '!=', $property->id)
+                ->whereNotIn('id', $similarByTypeAndPrice->pluck('id'))
+                ->where('status', true)
+                ->take($remaining)
+                ->get();
+
+            $similarByTypeAndPrice = $similarByTypeAndPrice->merge($similarByLocation);
+        }
+
+        // Si aún no tenemos suficientes, buscar por tipo de servicio
+        if ($similarByTypeAndPrice->count() < $limit) {
+            $remaining = $limit - $similarByTypeAndPrice->count();
+
+            $similarByService = Property::with(['images', 'propertyType', 'serviceType', 'whatcity', 'neighborhoodRelation'])
+                ->where('servicetype_id', $property->servicetype_id)
+                ->where('propertytype_id', $property->propertytype_id)
+                ->where('id', '!=', $property->id)
+                ->whereNotIn('id', $similarByTypeAndPrice->pluck('id'))
+                ->where('status', true)
+                ->take($remaining)
+                ->get();
+
+            $similarByTypeAndPrice = $similarByTypeAndPrice->merge($similarByService);
+        }
+
+        // Si aún no hay suficientes, buscar solo por tipo de propiedad
+        if ($similarByTypeAndPrice->count() < $limit) {
+            $remaining = $limit - $similarByTypeAndPrice->count();
+
+            $similarByType = Property::with(['images', 'propertyType', 'serviceType', 'whatcity', 'neighborhoodRelation'])
+                ->where('propertytype_id', $property->propertytype_id)
+                ->where('id', '!=', $property->id)
+                ->whereNotIn('id', $similarByTypeAndPrice->pluck('id'))
+                ->where('status', true)
+                ->inRandomOrder()
+                ->take($remaining)
+                ->get();
+
+            $similarByTypeAndPrice = $similarByTypeAndPrice->merge($similarByType);
+        }
+
+        // Ordenar por relevancia y convertir a Collection de Eloquent
+        $sorted = $similarByTypeAndPrice->sortByDesc(function ($item) use ($property) {
+            $score = 0;
+
+            // Propiedades destacadas tienen mayor peso
+            if ($item->is_featured ?? false) {
+                $score += 50;
+            }
+
+            // Proximidad de precio
+            $priceDiff = abs($item->lowest_price - $property->lowest_price);
+            $maxPrice = max($item->lowest_price, $property->lowest_price);
+            if ($maxPrice > 0) {
+                $priceScore = 50 * (1 - ($priceDiff / $maxPrice));
+                $score += $priceScore;
+            }
+
+            // Mismo barrio/zona
+            if ($item->neighborhood_id === $property->neighborhood_id) {
+                $score += 30;
+            }
+
+            // Similar número de habitaciones
+            if ($item->bedrooms === $property->bedrooms) {
+                $score += 20;
+            }
+
+            return $score;
+        })->take($limit);
+
+        // Retornar como Collection de Eloquent
+        return new Collection($sorted->values()->all());
+    }
+
+    /**
+     * Método alternativo más simple si prefieres algo básico
+     */
+    private function getSimilarPropertiesSimple(Property $property, int $limit = 3): Collection
+    {
+        $properties = Property::with(['images', 'propertyType', 'serviceType', 'whatcity', 'neighborhoodRelation'])
+            ->where('status', true)
+            ->where('id', '!=', $property->id)
+            ->where(function ($query) use ($property) {
+                $query->where('propertytype_id', $property->propertytype_id)
+                    ->orWhere('city_id', $property->city_id)
+                    ->orWhereBetween('lowest_price', [
+                        $property->lowest_price * 0.8,
+                        $property->lowest_price * 1.2
+                    ]);
+            })
+            ->inRandomOrder()
+            ->take($limit)
+            ->get();
+
+        return $properties;
     }
 
 
@@ -115,12 +236,20 @@ class HomeController extends Controller
             $query->where('neighborhood_id', $request->neighborhood_id);
         }
 
-        // Filtro por tipo de propiedad
+        // Filtro por tipo de propiedad - CORREGIDO
+        if ($request->filled('propertytype_id') && $request->propertytype_id !== 'any') {
+            $query->where('propertytype_id', $request->propertytype_id);
+        }
+        // Mantener compatibilidad con el nombre anterior
         if ($request->filled('type') && $request->type !== 'any') {
             $query->where('propertytype_id', $request->type);
         }
 
-        // Filtro por estado (servicio)
+        // Filtro por estado (servicio) - CORREGIDO
+        if ($request->filled('service_type_id') && $request->service_type_id !== 'any') {
+            $query->where('service_type_id', $request->service_type_id); // Usar el nombre correcto de la columna
+        }
+        // Mantener compatibilidad con el nombre anterior
         if ($request->filled('status') && $request->status !== 'any') {
             $query->where('service_type_id', $request->status);
         }
@@ -317,6 +446,10 @@ class HomeController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
+        // Debug: agregar temporalmente para ver la consulta SQL
+        // \Log::info('Search Query SQL: ' . $query->toSql());
+        // \Log::info('Search Query Bindings: ', $query->getBindings());
+
         // Obtener propiedades destacadas para el sidebar
         $featuredProperties = Property::with(['images', 'propertyType', 'serviceType'])
             ->where('status', true)
@@ -324,9 +457,6 @@ class HomeController extends Controller
             ->inRandomOrder()
             ->take(2)
             ->get();
-
-        // Log para debug
-        // Log::info('Total properties found:', ['count' => $query->count()]);
 
         // Paginar resultados
         $properties = $query->paginate(12);
