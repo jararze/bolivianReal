@@ -459,7 +459,7 @@ class HomeController extends Controller
             ->get();
 
         // Paginar resultados
-        $properties = $query->paginate(12);
+        $properties = $query->paginate(12)->withQueryString();;
 
         // Obtener datos para el sidebar y filtros
         $cities = City::select(['id', 'name'])->get();
