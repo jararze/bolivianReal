@@ -78,9 +78,8 @@
                                             <ul class="slides">
                                                 @foreach($property->images->take(3) as $image)
                                                     <li>
-                                                        <a title="Feature Image" data-rel="gallery-{{ $property->id }}"
-                                                           class="swipebox"
-                                                           href="{{ asset('storage/' .  $image->name) }}">
+                                                        <a title="Feature Image"
+                                                           href="{{ route('frontend.properties.show', $property->slug) }}">
                                                             <img class="img-responsive"
                                                                  src="{{ asset('storage/' .  $image->name) }}"
                                                                  alt="{{ $property->name }}"

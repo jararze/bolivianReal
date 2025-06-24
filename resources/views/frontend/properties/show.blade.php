@@ -1489,7 +1489,7 @@
         .property-location {
             font-size: 12px;
             color: #666;
-            margin: 5px 0;
+            /*margin: 5px 0;*/
             display: flex;
             align-items: center;
             gap: 5px;
@@ -1885,13 +1885,16 @@
                 @if(count($property->images) == 0)
                     <img src="{{ asset('storage/' . $property->thumbnail) }}" alt="{{ $property->slug }}" style="height: 527px; width: 100%; oobject-fit: cover;">
                 @else
-                    <x-frontend.property-gallery :images="$property->images"/>
+                    <x-frontend.property-gallery
+                        :images="$property->images"
+                        :principal="['thumbnail' => $property->thumbnail, 'slug' => $property->slug]"
+                    />
                 @endif
             </div>
             <div class="col-lg-4 zero-horizontal-padding property-title-wrapper">
                 <div class="single-property-wrapper">
                     <header class="entry-header single-property-header">
-                        <h1 class="entry-title single-property-title">{{ $property->name }}</h1>
+                        <h2 class="entry-title single-property-title">Precio:</h2>
                         <span class="single-property-price price">{{ $property->currency }} {{ number_format($property->max_price, 2) }}</span>
                     </header>
                     <div class="property-meta entry-meta clearfix ">
@@ -1984,6 +1987,7 @@
                 <main id="main" class="site-main">
                     <article class="hentry clearfix">
                         <div class="entry-content clearfix">
+                            <h1 class="fancy-title single-property-title">{{ $property->name }}</h1>
                             <h4 class="fancy-title">Descripcion</h4>
                             <div class="property-content">
                                 {!! $property->long_description !!}
