@@ -83,11 +83,11 @@
                                             <input class="checkbox checkbox-sm" data-datatable-check="true"
                                                    type="checkbox"/>
                                         </th>
-                                        <th class="w-[200px]">
+                                        <th class="w-[170px]">
                                             <span class="sort asc"><span class="sort-label text-gray-700 font-normal">Nombre</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
-                                        <th class="w-[100px]">
+                                        <th class="w-[120px]">
                                             <span class="sort asc"><span class="sort-label text-gray-700 font-normal">Codigo</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
@@ -100,22 +100,19 @@
                                                     class="sort-label text-gray-700 font-normal">Precio</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
-                                        <th class="w-[100px]">
-                                            <span class="sort"><span class="sort-label text-gray-700 font-normal">Proyecto?</span><span
+                                        <th class="w-[150px]">
+                                            <span class="sort"><span class="sort-label text-gray-700 font-normal">Propiedad</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
                                         <th class="w-[100px]">
                                             <span class="sort"><span class="sort-label text-gray-700 font-normal">Tipo</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
-                                        <th class="w-[150px]">
+                                        <th class="w-[90px]">
                                             <span class="sort asc"><span class="sort-label text-gray-700 font-normal">Estatus</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
-                                        <th class="w-[100px]">
-                                            <span class="sort asc"><span class="sort-label text-gray-700 font-normal">Fecha</span><span
-                                                    class="sort-icon"></span></span>
-                                        </th>
+                                        
                                         <th class="w-[60px]">
                                         </th>
                                         <th class="w-[60px]">
@@ -155,11 +152,7 @@
                                                 {{ $package->max_price }}
                                             </td>
                                             <td>
-                                                @if($package->is_project == 0)
-                                                    <span class="badge badge-outline badge-danger">No</span>
-                                                @else
-                                                    <span class="badge badge-outline badge-success">Si</span>
-                                                @endif
+                                                {{ $package->propertyType->type_name }}
                                             </td>
                                             <td class="text-sm text-gray-800 font-normal">
                                                 {{ $package->serviceType->name }}
@@ -171,13 +164,7 @@
                                                     <span class="badge badge-outline badge-success">Activo</span>
                                                 @endif
                                             </td>
-                                            <td>
-                                                <div class="flex flex-col gap-1.5">
-                                                    <span class="text-sm text-gray-800 font-normal">
-                                                        {{ $package->created_at }}
-                                                    </span>
-                                                </div>
-                                            </td>
+
                                             <td>
                                                 <a class="btn btn-sm btn-icon btn-clear btn-light"
                                                    href="{{ route('backend.properties.edit', $package->slug) }}">

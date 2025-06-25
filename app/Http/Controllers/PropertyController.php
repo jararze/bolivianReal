@@ -245,65 +245,118 @@ class PropertyController extends Controller
 
     private function processRelations(Property $property, array $validated): void
     {
-        // Sincronizar facilities si existen
-        if (!empty($validated['features'])) {
-            $facilityData = collect($validated['features'])->mapWithKeys(function($featureId, $index) use ($validated) {
-                return [
-                    $featureId => [
-                        'name' => $validated['place_names'][$index] ?? '',
-                        'distance' => $validated['distances'][$index] ?? ''
-                    ]
-                ];
-            })->all();
+        try {
+            Log::info('Procesando relaciones para propiedad: ' . $property->id);
 
-            $property->facilities()->sync($facilityData);
-        }
+            // MEJORA: Sincronizar facilities con validación más robusta
+            if (!empty($validated['features']) && is_array($validated['features'])) {
+                $facilityData = [];
+                $validFeatures = 0;
 
-        // Sincronizar amenities si existen
-        if (!empty($validated['amenities'])) {
-            $property->amenities()->sync($validated['amenities']);
+                foreach ($validated['features'] as $index => $featureId) {
+                    // Solo procesar si el featureId es válido
+                    if (!empty($featureId) && is_numeric($featureId) && $featureId > 0) {
+                        $facilityData[$featureId] = [
+                            'name' => $validated['place_names'][$index] ?? '',
+                            'distance' => $validated['distances'][$index] ?? ''
+                        ];
+                        $validFeatures++;
+                    }
+                }
+
+                if ($validFeatures > 0) {
+                    Log::info('Sincronizando facilities', ['valid_features' => $validFeatures]);
+                    $property->facilities()->sync($facilityData);
+                }
+            }
+
+            // MEJORA: Sincronizar amenities con filtrado de valores válidos
+            if (!empty($validated['amenities']) && is_array($validated['amenities'])) {
+                $validAmenities = array_filter($validated['amenities'], function($amenityId) {
+                    return !empty($amenityId) && is_numeric($amenityId) && $amenityId > 0;
+                });
+
+                if (count($validAmenities) > 0) {
+                    Log::info('Sincronizando amenities', ['count' => count($validAmenities)]);
+                    $property->amenities()->sync($validAmenities);
+                }
+            }
+
+            Log::info('Relaciones procesadas exitosamente');
+        } catch (\Exception $e) {
+            Log::error('Error procesando relaciones:', [
+                'error' => $e->getMessage(),
+                'property_id' => $property->id
+            ]);
+            throw $e;
         }
     }
 
     private function processImages(Property $property, StoreRequest $request): void
     {
-        // Procesar thumbnail
-        if ($request->hasFile('thumbnail')) {
-            try {
-                $thumbnailPaths = $this->handleImage(
-                    $request->file('thumbnail'),
-                    'thumbnails',
-                    800,
-                    600,
-                    80,
-                    $property->code,
-                    true
-                );
-                $property->update([
-                    'thumbnail' => $thumbnailPaths['original'],
-                ]);
-            } catch (\Exception $e) {
-                Log::error('Error procesando thumbnail:', [
-                    'error' => $e->getMessage(),
-                    'property_id' => $property->id
-                ]);
-                throw new \Exception('Error procesando la imagen principal: ' . $e->getMessage());
-            }
-        }
+        try {
+            Log::info('Iniciando procesamiento de imágenes para propiedad: ' . $property->id);
 
-        // Procesar imágenes adicionales
-        if ($request->hasFile('images')) {
-            try {
-                $this->processPropertyImages($request->file('images'), $property);
-            } catch (\Exception $e) {
-                Log::error('Error procesando imágenes adicionales:', [
-                    'error' => $e->getMessage(),
-                    'property_id' => $property->id
-                ]);
-                throw new \Exception('Error procesando imágenes adicionales: ' . $e->getMessage());
+            // MEJORA: Procesar thumbnail con mejor manejo de errores
+            if ($request->hasFile('thumbnail')) {
+                try {
+                    Log::info('Procesando imagen principal');
+
+                    $thumbnailPaths = $this->handleImage(
+                        $request->file('thumbnail'),
+                        'thumbnails',
+                        800, 600, 80,
+                        $property->code,
+                        true
+                    );
+
+                    $property->update(['thumbnail' => $thumbnailPaths['original']]);
+                    Log::info('Imagen principal procesada exitosamente');
+                } catch (\Exception $e) {
+                    Log::error('Error procesando thumbnail:', [
+                        'error' => $e->getMessage(),
+                        'property_id' => $property->id
+                    ]);
+                    throw new \Exception('Error procesando la imagen principal: ' . $e->getMessage());
+                }
             }
+
+            // MEJORA: Procesar imágenes adicionales con validación mejorada
+            if ($request->hasFile('images')) {
+                try {
+                    Log::info('Procesando imágenes adicionales', ['count' => count($request->file('images'))]);
+
+                    // Validar límite de imágenes
+                    if (count($request->file('images')) > 20) {
+                        throw new ValidationException(validator([], []), [
+                            'images' => ['No puede subir más de 20 imágenes adicionales.']
+                        ]);
+                    }
+
+                    $this->processPropertyImages($request->file('images'), $property);
+                    Log::info('Imágenes adicionales procesadas exitosamente');
+                } catch (ValidationException $e) {
+                    throw $e;
+                } catch (\Exception $e) {
+                    Log::error('Error procesando imágenes adicionales:', [
+                        'error' => $e->getMessage(),
+                        'property_id' => $property->id
+                    ]);
+                    throw new \Exception('Error procesando imágenes adicionales: ' . $e->getMessage());
+                }
+            }
+
+            Log::info('Procesamiento de imágenes completado exitosamente');
+        } catch (\Exception $e) {
+            Log::error('Error general en processImages:', [
+                'error' => $e->getMessage(),
+                'property_id' => $property->id
+            ]);
+            throw $e;
         }
     }
+
+
     /**
      * Handle image upload, processing, and optimization
      *
@@ -455,7 +508,7 @@ class PropertyController extends Controller
     }
 
     /**
-     * Process and store multiple property images
+     * Process and store multiple property images (MEJORADO)
      * @throws \Exception
      */
     private function processPropertyImages(array $images, Property $property): void
@@ -464,8 +517,26 @@ class PropertyController extends Controller
         $errors = [];
 
         try {
+            Log::info('Procesando ' . count($images) . ' imágenes para la propiedad ' . $property->id);
+
             foreach ($images as $index => $image) {
                 try {
+                    Log::info('Procesando imagen ' . ($index + 1) . ': ' . $image->getClientOriginalName());
+
+                    // MEJORA: Validaciones más estrictas
+                    if (!$image->isValid()) {
+                        throw new \Exception('Archivo no válido');
+                    }
+
+                    if (!str_starts_with($image->getMimeType(), 'image/')) {
+                        throw new \Exception('El archivo no es una imagen válida');
+                    }
+
+                    // MEJORA: Validar tamaño de archivo (5MB máximo)
+                    if ($image->getSize() > 5242880) { // 5MB en bytes
+                        throw new \Exception('La imagen no puede ser mayor a 5MB');
+                    }
+
                     // Process each image with specific dimensions for property gallery
                     $paths = $this->handleImage(
                         $image,
@@ -480,14 +551,22 @@ class PropertyController extends Controller
                     $uploadedImages[] = new PropertyImage([
                         'name' => $paths['original'],
                     ]);
+
+                    Log::info('Imagen procesada exitosamente: ' . $paths['original']);
                 } catch (\Exception $e) {
-                    // Almacenar error específico para cada imagen
-                    $errors[] = "Error en la imagen " . ($index + 1) . ": " . $e->getMessage();
+                    // MEJORA: Almacenar error específico para cada imagen con más detalle
+                    $errorMsg = "Error en la imagen " . ($index + 1) . " (" . $image->getClientOriginalName() . "): " . $e->getMessage();
+                    $errors[] = $errorMsg;
+                    Log::error($errorMsg);
 
                     // Limpiar las imágenes que se subieron antes del error
                     foreach ($uploadedImages as $uploadedImage) {
-                        Storage::disk('public')->delete($uploadedImage->name);
+                        if (Storage::disk('public')->exists($uploadedImage->name)) {
+                            Storage::disk('public')->delete($uploadedImage->name);
+                        }
                     }
+
+                    break; // Salir del bucle si hay error
                 }
             }
 
@@ -497,17 +576,24 @@ class PropertyController extends Controller
                 ]);
             }
 
-            $property->images()->saveMany($uploadedImages);
+            // Guardar todas las imágenes en la base de datos
+            if (!empty($uploadedImages)) {
+                $property->images()->saveMany($uploadedImages);
+                Log::info('Se guardaron ' . count($uploadedImages) . ' imágenes en la base de datos');
+            }
 
         } catch (ValidationException $e) {
+            Log::error('Errores de validación en imágenes:', ['errors' => $e->errors()]);
             throw $e;
         } catch (\Exception $e) {
             // Limpiar cualquier imagen que se haya subido
             foreach ($uploadedImages as $image) {
-                Storage::disk('public')->delete($image->name);
-                Storage::disk('public')->delete($image->name_small);
+                if (Storage::disk('public')->exists($image->name)) {
+                    Storage::disk('public')->delete($image->name);
+                }
             }
 
+            Log::error('Error general procesando imágenes:', ['error' => $e->getMessage()]);
             throw new \Exception('Error procesando imágenes: ' . $e->getMessage());
         }
     }
@@ -647,66 +733,115 @@ class PropertyController extends Controller
     }
 
     /**
-     * Método específico para manejar las imágenes durante la actualización
+     * Método mejorado para manejar las imágenes durante la actualización
      */
     private function handleImagesUpdate(Property $property, Request $request): void
     {
-        // Eliminar thumbnail si se solicita
-        if ($request->has('remove_thumbnail') && $request->remove_thumbnail == '1') {
-            if ($property->thumbnail && Storage::disk('public')->exists($property->thumbnail)) {
-                Storage::disk('public')->delete($property->thumbnail);
-            }
-            $property->update(['thumbnail' => null]);
-        }
+        try {
+            Log::info('Iniciando actualización de imágenes para propiedad: ' . $property->id);
 
-        // Procesar nuevo thumbnail
-        if ($request->hasFile('thumbnail')) {
-            try {
+            // MEJORA: Eliminar thumbnail con mejor logging
+            if ($request->has('remove_thumbnail') && $request->remove_thumbnail == '1') {
+                Log::info('Eliminando thumbnail actual');
                 if ($property->thumbnail && Storage::disk('public')->exists($property->thumbnail)) {
                     Storage::disk('public')->delete($property->thumbnail);
+                    Log::info('Archivo de thumbnail eliminado: ' . $property->thumbnail);
                 }
-
-                $thumbnailPaths = $this->handleImage(
-                    $request->file('thumbnail'),
-                    'thumbnails',
-                    800, 600, 80,
-                    $property->code,
-                    true
-                );
-
-                $property->update(['thumbnail' => $thumbnailPaths['original']]);
-            } catch (\Exception $e) {
-                Log::error('Error procesando thumbnail en actualización:', [
-                    'error' => $e->getMessage(),
-                    'property_id' => $property->id
-                ]);
-                throw $e;
+                $property->update(['thumbnail' => null]);
             }
-        }
 
-        // Eliminar imágenes marcadas para eliminación
-        if ($request->has('delete_images') && is_array($request->delete_images)) {
-            foreach ($property->images as $index => $image) {
-                if (isset($request->delete_images[$index]) && $request->delete_images[$index] == '1') {
-                    if (Storage::disk('public')->exists($image->name)) {
-                        Storage::disk('public')->delete($image->name);
+            // MEJORA: Procesar nuevo thumbnail con rollback en caso de error
+            if ($request->hasFile('thumbnail')) {
+                try {
+                    Log::info('Procesando nuevo thumbnail');
+                    $oldThumbnail = $property->thumbnail;
+
+                    $thumbnailPaths = $this->handleImage(
+                        $request->file('thumbnail'),
+                        'thumbnails',
+                        800, 600, 80,
+                        $property->code,
+                        true
+                    );
+
+                    // Solo eliminar el anterior después de que el nuevo se procese exitosamente
+                    if ($oldThumbnail && Storage::disk('public')->exists($oldThumbnail)) {
+                        Storage::disk('public')->delete($oldThumbnail);
                     }
-                    $image->delete();
+
+                    $property->update(['thumbnail' => $thumbnailPaths['original']]);
+                    Log::info('Thumbnail actualizado exitosamente');
+                } catch (\Exception $e) {
+                    Log::error('Error procesando nuevo thumbnail:', [
+                        'error' => $e->getMessage(),
+                        'property_id' => $property->id
+                    ]);
+                    throw $e;
                 }
             }
-        }
 
-        // Procesar imágenes adicionales nuevas
-        if ($request->hasFile('images')) {
-            try {
-                $this->processPropertyImages($request->file('images'), $property);
-            } catch (\Exception $e) {
-                Log::error('Error procesando imágenes adicionales en actualización:', [
-                    'error' => $e->getMessage(),
-                    'property_id' => $property->id
-                ]);
-                throw $e;
+            // MEJORA: Eliminar imágenes existentes con mejor validación
+            if ($request->has('delete_images') && is_array($request->delete_images)) {
+                Log::info('Procesando eliminación de imágenes existentes', ['delete_images' => $request->delete_images]);
+
+                foreach ($request->delete_images as $imageId => $shouldDelete) {
+                    if ($shouldDelete == '1') {
+                        Log::info('Eliminando imagen con ID: ' . $imageId);
+
+                        $image = $property->images()->where('id', $imageId)->first();
+                        if ($image) {
+                            // Eliminar archivos físicos
+                            if (Storage::disk('public')->exists($image->name)) {
+                                Storage::disk('public')->delete($image->name);
+                                Log::info('Archivo físico eliminado: ' . $image->name);
+                            }
+
+                            // Eliminar registro de la base de datos
+                            $image->delete();
+                            Log::info('Registro de imagen eliminado de BD');
+                        } else {
+                            Log::warning('Imagen con ID ' . $imageId . ' no encontrada');
+                        }
+                    }
+                }
             }
+
+            // MEJORA: Procesar nuevas imágenes adicionales con límite
+            if ($request->hasFile('images')) {
+                try {
+                    Log::info('Procesando nuevas imágenes adicionales', ['count' => count($request->file('images'))]);
+
+                    // Validar límite total de imágenes
+                    $currentImageCount = $property->images()->count();
+                    $newImageCount = count($request->file('images'));
+
+                    if (($currentImageCount + $newImageCount) > 25) {
+                        throw new ValidationException(validator([], []), [
+                            'images' => ['No puede tener más de 25 imágenes en total. Actualmente tiene ' . $currentImageCount . ' imágenes.']
+                        ]);
+                    }
+
+                    $this->processPropertyImages($request->file('images'), $property);
+                    Log::info('Nuevas imágenes procesadas exitosamente');
+                } catch (ValidationException $e) {
+                    throw $e;
+                } catch (\Exception $e) {
+                    Log::error('Error procesando nuevas imágenes:', [
+                        'error' => $e->getMessage(),
+                        'property_id' => $property->id
+                    ]);
+                    throw $e;
+                }
+            }
+
+            Log::info('Actualización de imágenes completada exitosamente');
+        } catch (\Exception $e) {
+            Log::error('Error general en handleImagesUpdate:', [
+                'error' => $e->getMessage(),
+                'property_id' => $property->id,
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
         }
     }
 
