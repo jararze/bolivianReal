@@ -53,7 +53,8 @@ class PropertyController extends Controller
     {
         $properties = Property::with('images')->orderBy('created_at', 'DESC')->get();
         $propertiesTypes = PropertyType::orderBy('type_name', 'ASC')->get();
-        return view('backend.properties.index', compact('properties', 'propertiesTypes'));
+        $serviceTypes = ServiceType::orderBy('name', 'ASC')->get();
+        return view('backend.properties.index', compact('properties', 'propertiesTypes', 'serviceTypes'));
     }
 
     /**

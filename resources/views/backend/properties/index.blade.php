@@ -71,6 +71,14 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="relative">
+                                <select class="select select-sm w-48" id="serviceTypeFilter">
+                                    <option value="">Todos los servicios</option>
+                                    @foreach($serviceTypes as $service)
+                                        <option value="{{ $service->name }}">{{ $service->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <label class="switch switch-sm">
                                 <input class="order-2" name="check" type="checkbox" value="1" id="onlyActive"/>
                                 <span class="switch-label order-1">Solo activos</span>
@@ -162,7 +170,7 @@
                                             <td data-property-type="{{ $package->propertyType->type_name }}">
                                                 {{ $package->propertyType->type_name }}
                                             </td>
-                                            <td class="text-sm text-gray-800 font-normal">
+                                            <td data-service-type="{{ $package->serviceType->name }}" class="text-sm text-gray-800 font-normal">
                                                 {{ $package->serviceType->name }}
                                             </td>
                                             <td>
@@ -423,9 +431,14 @@
                 filterTable();
             });
 
+            document.getElementById('serviceTypeFilter').addEventListener('change', function () {
+                filterTable();
+            });
+
             function filterTable() {
                 const isActiveChecked = document.getElementById('onlyActive').checked;
                 const selectedPropertyType = document.getElementById('propertyTypeFilter').value;
+                const selectedServiceType = document.getElementById('serviceTypeFilter').value;
                 const rows = document.querySelectorAll('#teams_table tbody tr');
 
                 rows.forEach(row => {
@@ -443,6 +456,13 @@
                         const propertyTypeCell = row.querySelector('td[data-property-type]');
                         const propertyType = propertyTypeCell ? propertyTypeCell.getAttribute('data-property-type') : '';
                         if (propertyType !== selectedPropertyType) showRow = false;
+                    }
+
+                    // NUEVO: Filtro por tipo de servicio
+                    if (selectedServiceType && showRow) {
+                        const serviceTypeCell = row.querySelector('td[data-service-type]');
+                        const serviceType = serviceTypeCell ? serviceTypeCell.getAttribute('data-service-type') : '';
+                        if (serviceType !== selectedServiceType) showRow = false;
                     }
 
                     // Mostrar u ocultar la fila
