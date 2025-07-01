@@ -41,6 +41,7 @@
             </svg>
         </i>
 
+
         <div class="meta-inner-wrapper">
             <span class="meta-item-label">Amurallado</span>
             <span class="meta-item-value">Si</span>
