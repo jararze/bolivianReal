@@ -63,6 +63,14 @@
                                        placeholder="Buscar..."
                                        type="text"/>
                             </div>
+                            <div class="relative">
+                                <select class="select select-sm w-48" id="propertyTypeFilter">
+                                    <option value="">Todos los tipos</option>
+                                    @foreach($propertiesTypes as $type)
+                                        <option value="{{ $type->type_name }}">{{ $type->type_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <label class="switch switch-sm">
                                 <input class="order-2" name="check" type="checkbox" value="1" id="onlyActive"/>
                                 <span class="switch-label order-1">Solo activos</span>
@@ -112,7 +120,7 @@
                                             <span class="sort asc"><span class="sort-label text-gray-700 font-normal">Estatus</span><span
                                                     class="sort-icon"></span></span>
                                         </th>
-                                        
+
                                         <th class="w-[60px]">
                                         </th>
                                         <th class="w-[60px]">
@@ -151,7 +159,7 @@
                                             <td class="text-sm text-gray-800 font-normal">
                                                 {{ $package->max_price }}
                                             </td>
-                                            <td>
+                                            <td data-property-type="{{ $package->propertyType->type_name }}">
                                                 {{ $package->propertyType->type_name }}
                                             </td>
                                             <td class="text-sm text-gray-800 font-normal">
@@ -408,16 +416,60 @@
 
 
             document.getElementById('onlyActive').addEventListener('change', function () {
-                const isChecked = this.checked;
-                const rows = document.querySelectorAll('#teams_table tbody tr');
-                rows.forEach(row => {
-                    const statusBadge = row.querySelector('td:nth-child(5) .badge');
-                    if (statusBadge) {
-                        const isActive = statusBadge.classList.contains('badge-success');
-                        row.style.display = (isChecked && !isActive) ? 'none' : '';
-                    }
-                });
+                filterTable();
             });
+
+            document.getElementById('propertyTypeFilter').addEventListener('change', function () {
+                filterTable();
+            });
+
+            function filterTable() {
+                const isActiveChecked = document.getElementById('onlyActive').checked;
+                const selectedPropertyType = document.getElementById('propertyTypeFilter').value;
+                const rows = document.querySelectorAll('#teams_table tbody tr');
+
+                rows.forEach(row => {
+                    let showRow = true;
+
+                    // Filtro por estado activo
+                    const statusBadge = row.querySelector('td:nth-child(8) .badge');
+                    if (statusBadge && isActiveChecked) {
+                        const isActive = statusBadge.classList.contains('badge-success');
+                        if (!isActive) showRow = false;
+                    }
+
+                    // Filtro por tipo de propiedad
+                    if (selectedPropertyType && showRow) {
+                        const propertyTypeCell = row.querySelector('td[data-property-type]');
+                        const propertyType = propertyTypeCell ? propertyTypeCell.getAttribute('data-property-type') : '';
+                        if (propertyType !== selectedPropertyType) showRow = false;
+                    }
+
+                    // Mostrar u ocultar la fila
+                    row.style.display = showRow ? '' : 'none';
+                });
+
+                // Actualizar contador de resultados (opcional)
+                updateResultsCounter();
+            }
+
+            function updateResultsCounter() {
+                const totalRows = document.querySelectorAll('#teams_table tbody tr').length;
+                const visibleRows = document.querySelectorAll('#teams_table tbody tr[style=""]').length +
+                    document.querySelectorAll('#teams_table tbody tr:not([style])').length -
+                    document.querySelectorAll('#teams_table tbody tr[style*="none"]').length;
+
+                // Crear o actualizar elemento contador si no existe
+                let counterEl = document.getElementById('results-counter');
+                if (!counterEl) {
+                    counterEl = document.createElement('div');
+                    counterEl.id = 'results-counter';
+                    counterEl.className = 'text-sm text-gray-600 px-5 py-2';
+                    document.querySelector('#teams_table .card-body').prepend(counterEl);
+                }
+
+                counterEl.textContent = `Mostrando ${visibleRows} de ${totalRows} propiedades`;
+            }
 
 
             const deleteModal = document.querySelector('#deleteModal');
@@ -430,14 +482,13 @@
                     const title = this.getAttribute('data-title');
                     const id = this.getAttribute('data-id');
 
-                    // Update modal content
                     titlePlaceholder.textContent = title;
                     idPlaceholder.textContent = id;
-
-                    // Update form action
                     deleteForm.action = `/properties/${id}`;
                 });
             });
+
+            updateResultsCounter();
         });
     </script>
 

@@ -250,7 +250,7 @@
                         <div class="card-body grid gap-5 pt-7.5">
                             <div class="grid grid-cols-4 gap-6">
                                 <div>
-                                    <x-input-label for="bedrooms" :value="__('Numero habitaciones')" class="mb-2 text-gray-700"/>
+                                    <x-input-label for="bedrooms" :value="__('Numero habitaciones/ambientes')" class="mb-2 text-gray-700"/>
                                     <x-text-input id="bedrooms" name="bedrooms" type="number" :value="old('bedrooms')" class="w-full"/>
                                     <x-input-error class="mt-1" :messages="$errors->get('bedrooms')"/>
                                 </div>
@@ -265,7 +265,7 @@
                                     <x-input-error class="mt-1" :messages="$errors->get('garage')"/>
                                 </div>
                                 <div>
-                                    <x-input-label for="garage_size" :value="__('Superficie garaje en MT2')" class="mb-2 text-gray-700"/>
+                                    <x-input-label for="garage_size" :value="__('Baulera/s')" class="mb-2 text-gray-700"/>
                                     <x-text-input id="garage_size" name="garage_size" type="number" :value="old('garage_size')" class="w-full"/>
                                     <x-input-error class="mt-1" :messages="$errors->get('garage_size')"/>
                                 </div>
