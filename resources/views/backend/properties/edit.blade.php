@@ -16,6 +16,10 @@
     <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 @endpush
 
+@push('head')
+    <meta name="current-neighborhood" content="{{ $property->neighborhood_id ?? '' }}">
+@endpush
+
 <x-app-layout>
     <x-slot name="header">
         <h1 class="font-medium text-base text-gray-900">{{ __('Propiedades') }}</h1>
@@ -36,6 +40,8 @@
         <form action="{{ route('backend.properties.update', $property->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
+
+            <input type="hidden" name="reorder_images" value="1">
 
             @if(session('error') || $errors->any())
                 <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
@@ -177,7 +183,7 @@
                                         class="w-full"
                                         id="neighborhood_id"
                                         name="neighborhood_id"
-                                        data-selected="{{ old('neighborhood_id') }}"
+                                        data-selected="{{ old('neighborhood_id', $property->neighborhood_id) }}"
                                         :options="['' => 'Primero seleccione una ciudad']"
                                         :selected="old('neighborhood_id', $property->neighborhood_id)"/>
                                     <x-input-error class="mt-1" :messages="$errors->get('neighborhood_id')"/>
@@ -202,7 +208,8 @@
                                         class="w-full"
                                         id="city"
                                         name="city"
-                                        onchange="loadNeighborhoods(this.value)" :options="['' => 'Seleccione una ciudad'] + $cities->pluck('name', 'id')->toArray()"
+{{--                                        onchange="loadNeighborhoods(this.value)" --}}
+                                        :options="['' => 'Seleccione una ciudad'] + $cities->pluck('name', 'id')->toArray()"
                                         :selected="old('city', $property->city)" />
                                     <x-input-error class="mt-1" :messages="$errors->get('city')"/>
                                 </div>
@@ -351,6 +358,14 @@
                                                         </svg>
                                                         <p class="mt-1 text-sm text-gray-500">Click para subir<br>(PNG, JPG)</p>
                                                     </div>
+                                                @else
+                                                    <img id="thumbnail-preview" src="" alt="" class="max-h-full max-w-full hidden object-cover">
+                                                    <div id="thumbnail-placeholder" class="text-center">
+                                                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                                        </svg>
+                                                        <p class="mt-1 text-sm text-gray-500">Click para subir<br>(PNG, JPG)</p>
+                                                    </div>
                                                 @endif
                                             </div>
                                             <button type="button" id="remove-thumbnail" class="absolute top-2 right-2 {{ $property->thumbnail ? '' : 'hidden' }} bg-white rounded-full p-1 shadow-sm hover:bg-gray-100">
@@ -374,6 +389,7 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                                                 </svg>
                                                 <p class="mt-1 text-sm text-gray-500">Arrastra más imágenes aquí<br>o click para seleccionar</p>
+                                                <p class="mt-2 text-xs text-blue-600 font-medium">Después podrás reordenarlas arrastrándolas ⇅</p>
                                             </div>
                                         </div>
                                         @if($errors->has('images.*') || $errors->has('images'))
@@ -393,30 +409,94 @@
                                 </div>
                             </div>
 
-                            <!-- Grid de imágenes existentes -->
-                            @if($property->images->count() > 0)
+                            <!-- Grid de imágenes existentes CON DRAG & DROP -->
+                            @if($property->images_ordered->count() > 0)
                                 <div class="mt-6">
-                                    <h4 class="text-gray-700 text-sm font-medium mb-2">Imágenes Actuales</h4>
-                                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="existing-images">
-                                        @foreach($property->images as $image)
-                                            <div class="relative group image-container" data-image-id="{{ $image->id }}">
-                                                <img src="{{ asset('storage/' . $image->name) }}" alt="Imagen de propiedad" class="w-full h-32 object-cover rounded">
-                                                <button type="button" class="delete-existing-image absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" data-image-id="{{ $image->id }}" title="Eliminar imagen">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                                    </svg>
-                                                </button>
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="text-gray-700 text-sm font-medium">Imágenes Actuales</h4>
+                                        <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                            <span>{{ $property->images_ordered->count() }} imágenes</span>
+                                            <div class="flex items-center space-x-1">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                                </svg>
+                                                <span>Arrastra para reordenar</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="existing-images-sortable">
+                                        @foreach($property->images_ordered as $image)
+                                            <div class="relative group image-container sortable-item" data-image-id="{{ $image->id }}" data-image-name="{{ $image->name }}">
+                                                <!-- Badge de orden extraído del nombre -->
+                                                @php
+                                                    $orderNumber = 999;
+                                                    $filename = basename($image->name);
+                                                    if (preg_match('/^(\d{2})_/', $filename, $matches)) {
+                                                        $orderNumber = (int) $matches[1];
+                                                    }
+                                                @endphp
+
+                                                <div class="relative bg-white rounded-lg shadow-md overflow-hidden border-2 border-transparent hover:border-blue-300">
+                                                    <img src="{{ asset('storage/' . $image->name) }}" alt="Imagen de propiedad" class="w-full h-32 object-cover">
+
+                                                    <!-- Badge de orden -->
+                                                    <div class="absolute top-2 left-2 order-badge bg-gradient-to-r from-blue-500 to-blue-700 text-white text-xs font-bold px-2 py-1 rounded-full border-2 border-white shadow-md">
+                                                        #{{ $orderNumber < 999 ? $orderNumber : $loop->iteration }}
+                                                    </div>
+
+                                                    <!-- Botón eliminar -->
+                                                    <button type="button" class="delete-existing-image absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600" data-image-id="{{ $image->id }}" title="Eliminar imagen">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                        </svg>
+                                                    </button>
+
+                                                    <!-- Indicador de drag -->
+                                                    <div class="absolute bottom-1 right-1 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-50 rounded px-1">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+
                                                 <input type="hidden" name="delete_images[{{ $image->id }}]" value="0" class="delete-image-input">
+                                                <!-- Input hidden para el nuevo orden -->
+                                                <input type="hidden" name="image_orders[{{ $image->id }}]" value="{{ $orderNumber < 999 ? $orderNumber : $loop->iteration }}" class="image-order-input">
                                             </div>
                                         @endforeach
                                     </div>
                                 </div>
                             @endif
 
-                            <!-- Grid de vista previa de imágenes nuevas -->
+                            <!-- Grid de vista previa de nuevas imágenes CON DRAG & DROP -->
                             <div class="mt-6">
-                                <h4 class="text-gray-700 text-sm font-medium mb-2">Vista previa de nuevas imágenes</h4>
-                                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="preview-grid"></div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="text-gray-700 text-sm font-medium">Vista previa de nuevas imágenes</h4>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        <span id="new-image-count-display">0 imágenes</span>
+                                        <div class="flex items-center space-x-1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                            </svg>
+                                            <span>Arrastra para reordenar</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Grid sorteable para nuevas imágenes -->
+                                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 min-h-[120px]" id="sortable-preview-grid">
+                                    <!-- Las nuevas imágenes aparecerán aquí -->
+                                </div>
+
+                                <!-- Mensaje cuando no hay imágenes nuevas -->
+                                <div id="no-new-images-message" class="text-center py-8 text-gray-400">
+                                    <svg class="mx-auto h-16 w-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 011 1H5a2 2 0 01-2-2V6a2 2 0 012-2h6M14 6l4-4m0 0l4 4m-4-4v8"/>
+                                    </svg>
+                                    <p class="mt-2 text-sm">No hay nuevas imágenes seleccionadas</p>
+                                    <p class="text-xs">Las nuevas imágenes aparecerán aquí para que puedas reordenarlas</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -670,18 +750,148 @@
         </form>
     </div>
 
-    <!-- SCRIPT ÚNICO Y LIMPIO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <!-- SCRIPT ÚNICO Y LIMPIO CON COMPRESIÓN -->
     <script>
         // Evitar múltiples inicializaciones
         if (!window.editPropertyInitialized) {
             window.editPropertyInitialized = true;
 
             document.addEventListener('DOMContentLoaded', function() {
-                console.log('🚀 Iniciando PropertyEdit v2.0');
+                console.log('🚀 Iniciando PropertyEdit v3.0 con Compresión');
 
                 // ========== VARIABLES GLOBALES ==========
                 let selectedNewFiles = [];
                 let mapInstance = null;
+
+                // ========== FUNCIONES DE COMPRESIÓN ==========
+                function compressImage(file, maxSizeMB = 2, quality = 0.8) {
+                    return new Promise((resolve) => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const img = new Image();
+
+                        img.onload = function() {
+                            // Calcular nuevas dimensiones manteniendo aspect ratio
+                            let { width, height } = calculateDimensions(img.width, img.height, 1920, 1080);
+
+                            canvas.width = width;
+                            canvas.height = height;
+
+                            // Dibujar imagen redimensionada
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            // Convertir a blob con compresión
+                            canvas.toBlob((blob) => {
+                                console.log(`📷 Imagen comprimida: ${(file.size / 1024 / 1024).toFixed(2)}MB → ${(blob.size / 1024 / 1024).toFixed(2)}MB`);
+
+                                // Si aún es mayor a maxSizeMB, reducir más la calidad
+                                if (blob.size > maxSizeMB * 1024 * 1024 && quality > 0.3) {
+                                    const newFile = new File([blob], file.name, { type: file.type });
+                                    compressImage(newFile, maxSizeMB, quality - 0.1).then(resolve);
+                                } else {
+                                    // Crear archivo con el nombre original
+                                    const compressedFile = new File([blob], file.name, {
+                                        type: file.type,
+                                        lastModified: Date.now()
+                                    });
+                                    resolve(compressedFile);
+                                }
+                            }, file.type, quality);
+                        };
+
+                        img.src = URL.createObjectURL(file);
+                    });
+                }
+
+                function calculateDimensions(width, height, maxWidth = 1920, maxHeight = 1080) {
+                    if (width <= maxWidth && height <= maxHeight) {
+                        return { width, height };
+                    }
+
+                    const ratio = Math.min(maxWidth / width, maxHeight / height);
+                    return {
+                        width: Math.round(width * ratio),
+                        height: Math.round(height * ratio)
+                    };
+                }
+
+                async function processFiles(files) {
+                    const processedFiles = [];
+                    const MAX_SIZE_MB = 2;
+
+                    for (const file of files) {
+                        if (!file.type.startsWith('image/')) {
+                            alert(`${file.name} no es una imagen válida`);
+                            continue;
+                        }
+
+                        // Mostrar indicador de procesamiento
+                        showProcessingIndicator(file.name);
+
+                        try {
+                            if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+                                console.log(`🔄 Comprimiendo ${file.name}...`);
+                                const compressedFile = await compressImage(file, MAX_SIZE_MB);
+                                processedFiles.push(compressedFile);
+                                showCompressionResult(file, compressedFile);
+                            } else {
+                                console.log(`✅ ${file.name} ya está dentro del límite`);
+                                processedFiles.push(file);
+                            }
+                        } catch (error) {
+                            console.error(`❌ Error procesando ${file.name}:`, error);
+                            alert(`Error procesando ${file.name}`);
+                        } finally {
+                            hideProcessingIndicator();
+                        }
+                    }
+
+                    return processedFiles;
+                }
+
+                function showProcessingIndicator(fileName) {
+                    let indicator = document.getElementById('processing-indicator');
+                    if (!indicator) {
+                        indicator = document.createElement('div');
+                        indicator.id = 'processing-indicator';
+                        indicator.className = 'fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                        document.body.appendChild(indicator);
+                    }
+                    indicator.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <span>Comprimiendo ${fileName}...</span>
+                    </div>
+                `;
+                    indicator.style.display = 'block';
+                }
+
+                function hideProcessingIndicator() {
+                    const indicator = document.getElementById('processing-indicator');
+                    if (indicator) {
+                        indicator.style.display = 'none';
+                    }
+                }
+
+                function showCompressionResult(originalFile, compressedFile) {
+                    const originalSize = (originalFile.size / 1024 / 1024).toFixed(2);
+                    const compressedSize = (compressedFile.size / 1024 / 1024).toFixed(2);
+                    const savings = ((1 - compressedFile.size / originalFile.size) * 100).toFixed(1);
+
+                    // Mostrar notificación temporal
+                    const notification = document.createElement('div');
+                    notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                    notification.innerHTML = `
+                    📷 ${originalFile.name}<br>
+                    ${originalSize}MB → ${compressedSize}MB (-${savings}%)
+                `;
+                    document.body.appendChild(notification);
+
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 3000);
+                }
 
                 // ========== INICIALIZAR TRUMBOWYG ==========
                 if (typeof $ !== 'undefined' && $.fn.trumbowyg) {
@@ -705,8 +915,8 @@
                     }
                 }
 
-                // ========== FUNCIÓN: THUMBNAIL ==========
-                function initThumbnail() {
+                // ========== FUNCIÓN: THUMBNAIL CON COMPRESIÓN ==========
+                function initThumbnailWithCompression() {
                     const input = document.getElementById('thumbnail');
                     const preview = document.getElementById('thumbnail-preview');
                     const placeholder = document.getElementById('thumbnail-placeholder');
@@ -717,22 +927,36 @@
 
                     previewArea.addEventListener('click', () => input.click());
 
-                    input.addEventListener('change', function(e) {
+                    input.addEventListener('change', async function(e) {
                         if (e.target.files[0]) {
                             const file = e.target.files[0];
-                            preview.src = URL.createObjectURL(file);
-                            preview.classList.remove('hidden');
-                            placeholder.classList.add('hidden');
-                            removeBtn.classList.remove('hidden');
+
+                            // Procesar archivo (comprimir si es necesario)
+                            const processedFiles = await processFiles([file]);
+
+                            if (processedFiles.length > 0) {
+                                const processedFile = processedFiles[0];
+
+                                // Actualizar el input con el archivo procesado
+                                const dt = new DataTransfer();
+                                dt.items.add(processedFile);
+                                input.files = dt.files;
+
+                                // Mostrar preview
+                                preview.src = URL.createObjectURL(processedFile);
+                                preview.classList.remove('hidden');
+                                if (placeholder) placeholder.classList.add('hidden');
+                                if (removeBtn) removeBtn.classList.remove('hidden');
+                            }
                         }
                     });
 
-                    removeBtn.addEventListener('click', function(e) {
+                    removeBtn?.addEventListener('click', function(e) {
                         e.stopPropagation();
                         input.value = '';
                         preview.src = '';
                         preview.classList.add('hidden');
-                        placeholder.classList.remove('hidden');
+                        if (placeholder) placeholder.classList.remove('hidden');
                         this.classList.add('hidden');
 
                         let hiddenInput = document.querySelector('input[name="remove_thumbnail"]');
@@ -746,18 +970,125 @@
                     });
                 }
 
-                // ========== FUNCIÓN: IMÁGENES ADICIONALES ==========
-                function initAdditionalImages() {
+                // ========== FUNCIÓN: IMÁGENES ADICIONALES CON COMPRESIÓN ==========
+                function initAdditionalImagesWithDragDropEdit() {
                     const dropZone = document.getElementById('drop-zone');
                     const input = document.getElementById('additional-images');
-                    const previewGrid = document.getElementById('preview-grid');
+                    const previewGrid = document.getElementById('sortable-preview-grid');
+                    const noNewImagesMessage = document.getElementById('no-new-images-message');
+                    const newImageCountDisplay = document.getElementById('new-image-count-display');
+                    const existingImagesGrid = document.getElementById('existing-images-sortable');
 
                     if (!dropZone || !input || !previewGrid) return;
 
-                    // Click para abrir selector
+                    // Array para almacenar archivos nuevos con su orden
+                    let orderedNewFiles = [];
+
+                    // Sortables para ambos grids
+                    let existingSortable = null;
+                    let newSortable = null;
+
+                    // CSS para las animaciones de drag
+                    const style = document.createElement('style');
+                    style.textContent = `
+        .sortable-ghost {
+            opacity: 0.4;
+            transform: scale(0.95);
+        }
+        .sortable-chosen {
+            transform: scale(1.05);
+        }
+        .sortable-drag {
+            transform: rotate(5deg);
+        }
+        .sortable-item {
+            transition: all 0.2s ease;
+            cursor: grab;
+        }
+        .sortable-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .order-badge {
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+    `;
+                    document.head.appendChild(style);
+
+                    // Inicializar sortable para imágenes existentes
+                    function initExistingSortable() {
+                        if (existingSortable) {
+                            existingSortable.destroy();
+                        }
+
+                        if (existingImagesGrid) {
+                            existingSortable = new Sortable(existingImagesGrid, {
+                                animation: 150,
+                                ghostClass: 'sortable-ghost',
+                                chosenClass: 'sortable-chosen',
+                                dragClass: 'sortable-drag',
+                                onEnd: function(evt) {
+                                    // Actualizar el orden de las imágenes existentes
+                                    updateExistingImagesOrder();
+                                    console.log('📋 Orden de imágenes existentes actualizado');
+                                }
+                            });
+                        }
+                    }
+
+                    // Inicializar sortable para nuevas imágenes
+                    function initNewImagesSortable() {
+                        if (newSortable) {
+                            newSortable.destroy();
+                        }
+
+                        newSortable = new Sortable(previewGrid, {
+                            animation: 150,
+                            ghostClass: 'sortable-ghost',
+                            chosenClass: 'sortable-chosen',
+                            dragClass: 'sortable-drag',
+                            onEnd: function(evt) {
+                                // Reordenar el array de archivos nuevos según el nuevo orden
+                                const newOrderedFiles = [];
+                                const items = previewGrid.querySelectorAll('[data-file-index]');
+
+                                items.forEach(item => {
+                                    const fileIndex = parseInt(item.getAttribute('data-file-index'));
+                                    newOrderedFiles.push(orderedNewFiles[fileIndex]);
+                                });
+
+                                orderedNewFiles = newOrderedFiles;
+                                updateNewFileInput();
+                                updateNewPreviewNumbers();
+
+                                console.log('📋 Orden de nuevas imágenes actualizado:', orderedNewFiles.map((f, i) => `${i+1}. ${f.name}`));
+                            }
+                        });
+                    }
+
+                    // Actualizar orden de imágenes existentes
+                    function updateExistingImagesOrder() {
+                        const items = existingImagesGrid.querySelectorAll('.sortable-item');
+                        items.forEach((item, index) => {
+                            const badge = item.querySelector('.order-badge');
+                            const orderInput = item.querySelector('.image-order-input');
+                            const newOrder = index + 1;
+
+                            if (badge) {
+                                badge.textContent = `#${newOrder}`;
+                            }
+                            if (orderInput) {
+                                orderInput.value = newOrder;
+                            }
+                        });
+                    }
+
+                    // Event listeners para drop zone (nuevas imágenes)
                     dropZone.addEventListener('click', () => input.click());
 
-                    // Drag & Drop
                     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                         dropZone.addEventListener(eventName, e => {
                             e.preventDefault();
@@ -777,76 +1108,197 @@
                         });
                     });
 
-                    dropZone.addEventListener('drop', function(e) {
-                        console.log('📂 Drop detectado');
-                        handleFiles(Array.from(e.dataTransfer.files));
+                    dropZone.addEventListener('drop', async function(e) {
+                        console.log('📂 Drop detectado en edit');
+                        await handleNewFiles(Array.from(e.dataTransfer.files));
                     });
 
-                    input.addEventListener('change', function() {
-                        console.log('📎 Files seleccionados:', this.files.length);
-                        handleFiles(Array.from(this.files));
+                    input.addEventListener('change', async function() {
+                        console.log('📎 Files seleccionados en edit:', this.files.length);
+                        await handleNewFiles(Array.from(this.files));
                     });
 
-                    function handleFiles(files) {
-                        const imageFiles = files.filter(file => file.type.startsWith('image/'));
+                    // Manejar nuevos archivos
+                    async function handleNewFiles(files) {
+                        // Obtener el número actual de imágenes existentes para calcular el orden inicial
+                        const existingCount = existingImagesGrid ? existingImagesGrid.querySelectorAll('.sortable-item').length : 0;
 
-                        if (imageFiles.length === 0) {
-                            alert('Solo se permiten archivos de imagen');
-                            return;
-                        }
+                        // Procesar archivos (usar función de compresión existente)
+                        const processedFiles = await processFiles(files);
 
-                        // Agregar archivos únicos
-                        imageFiles.forEach(file => {
-                            const isDuplicate = selectedNewFiles.some(existing =>
-                                existing.name === file.name &&
-                                existing.size === file.size &&
-                                existing.lastModified === file.lastModified
+                        // Agregar archivos únicos al array ordenado
+                        processedFiles.forEach(file => {
+                            const isDuplicate = orderedNewFiles.some(existing =>
+                                existing.name === file.name && existing.size === file.size
                             );
 
                             if (!isDuplicate) {
-                                selectedNewFiles.push(file);
+                                orderedNewFiles.push(file);
                             }
                         });
 
-                        console.log('📊 Total archivos:', selectedNewFiles.length);
-                        updateFileInput();
-                        updatePreview();
+                        console.log('📊 Total archivos nuevos ordenados:', orderedNewFiles.length);
+                        updateNewFileInput();
+                        updateNewPreview();
+                        updateNewUI();
                     }
 
-                    function updateFileInput() {
+                    // Actualizar input de archivos nuevos con orden
+                    function updateNewFileInput() {
                         const dt = new DataTransfer();
-                        selectedNewFiles.forEach(file => dt.items.add(file));
+                        const existingCount = existingImagesGrid ? existingImagesGrid.querySelectorAll('.sortable-item').length : 0;
+
+                        orderedNewFiles.forEach((file, index) => {
+                            // Crear nuevo nombre con prefijo de orden basado en la posición total
+                            const totalOrder = existingCount + index + 1;
+                            const orderPrefix = String(totalOrder).padStart(2, '0') + '_';
+                            const newName = orderPrefix + file.name;
+
+                            // Crear nuevo archivo con el nombre ordenado
+                            const renamedFile = new File([file], newName, {
+                                type: file.type,
+                                lastModified: file.lastModified
+                            });
+
+                            dt.items.add(renamedFile);
+                        });
+
                         input.files = dt.files;
+                        console.log('📁 Input de nuevas imágenes actualizado con orden');
                     }
 
-                    function updatePreview() {
+                    // Actualizar preview de nuevas imágenes
+                    function updateNewPreview() {
                         previewGrid.innerHTML = '';
+                        const existingCount = existingImagesGrid ? existingImagesGrid.querySelectorAll('.sortable-item').length : 0;
 
-                        selectedNewFiles.forEach((file, index) => {
+                        orderedNewFiles.forEach((file, index) => {
                             const reader = new FileReader();
                             reader.onload = function(e) {
                                 const container = document.createElement('div');
-                                container.className = 'relative group';
+                                container.className = 'relative group sortable-item';
+                                container.setAttribute('data-file-index', index);
+
+                                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                                const orderNumber = existingCount + index + 1;
+
                                 container.innerHTML = `
-                                <img src="${e.target.result}" class="w-full h-32 object-cover rounded">
-                                <button type="button" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" onclick="removeNewImage(${index})">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </button>
-                            `;
+                    <div class="relative bg-white rounded-lg shadow-md overflow-hidden border-2 border-transparent hover:border-blue-300">
+                        <img src="${e.target.result}" class="w-full h-32 object-cover">
+
+                        <!-- Badge de orden -->
+                        <div class="absolute top-2 left-2 order-badge text-xs font-bold px-2 py-1 rounded-full">
+                            #${orderNumber}
+                        </div>
+
+                        <!-- Info de archivo -->
+                        <div class="absolute bottom-1 left-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                            ${fileSize}MB
+                        </div>
+
+                        <!-- Botón eliminar -->
+                        <button type="button" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600" onclick="removeNewOrderedImage(${index})">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Indicador de drag -->
+                        <div class="absolute bottom-1 right-1 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+
                                 previewGrid.appendChild(container);
                             };
                             reader.readAsDataURL(file);
                         });
+
+                        // Reinicializar Sortable después de actualizar el DOM
+                        setTimeout(() => {
+                            initNewImagesSortable();
+                        }, 100);
                     }
 
-                    // Función global para eliminar
-                    window.removeNewImage = function(index) {
-                        selectedNewFiles.splice(index, 1);
-                        updateFileInput();
-                        updatePreview();
+                    // Actualizar números de orden en preview de nuevas imágenes
+                    function updateNewPreviewNumbers() {
+                        const existingCount = existingImagesGrid ? existingImagesGrid.querySelectorAll('.sortable-item').length : 0;
+                        const items = previewGrid.querySelectorAll('[data-file-index]');
+
+                        items.forEach((item, index) => {
+                            const badge = item.querySelector('.order-badge');
+                            if (badge) {
+                                badge.textContent = `#${existingCount + index + 1}`;
+                            }
+                            item.setAttribute('data-file-index', index);
+                        });
+                    }
+
+                    // Actualizar UI de nuevas imágenes
+                    function updateNewUI() {
+                        const count = orderedNewFiles.length;
+                        newImageCountDisplay.textContent = `${count} ${count === 1 ? 'imagen' : 'imágenes'}`;
+
+                        if (count > 0) {
+                            noNewImagesMessage.style.display = 'none';
+                            previewGrid.style.display = 'grid';
+                        } else {
+                            noNewImagesMessage.style.display = 'block';
+                            previewGrid.style.display = 'none';
+                        }
+                    }
+
+                    // Función global para eliminar nueva imagen
+                    window.removeNewOrderedImage = function(index) {
+                        orderedNewFiles.splice(index, 1);
+                        updateNewFileInput();
+                        updateNewPreview();
+                        updateNewUI();
+                        console.log('🗑️ Nueva imagen eliminada, nuevo orden:', orderedNewFiles.map((f, i) => `${i+1}. ${f.name}`));
                     };
+
+                    // Inicializar sortables
+                    initExistingSortable();
+                    initNewImagesSortable();
+
+                    // Inicializar UI
+                    updateNewUI();
+                }
+
+                function initExistingImagesEdit() {
+                    document.querySelectorAll('.delete-existing-image').forEach(button => {
+                        button.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            const container = this.closest('.image-container');
+                            const hiddenInput = container.querySelector('.delete-image-input');
+
+                            if (confirm('¿Eliminar esta imagen?')) {
+                                hiddenInput.value = '1';
+                                container.style.opacity = '0.5';
+
+                                const overlay = document.createElement('div');
+                                overlay.className = 'absolute inset-0 bg-red-500 bg-opacity-50 flex items-center justify-center text-white font-bold rounded';
+                                overlay.textContent = 'ELIMINADA';
+                                container.appendChild(overlay);
+
+                                this.innerHTML = '↻';
+                                this.className = 'absolute top-2 right-2 bg-green-500 text-white rounded-full p-1 opacity-100';
+                                this.title = 'Restaurar';
+
+                                this.onclick = function() {
+                                    hiddenInput.value = '0';
+                                    container.style.opacity = '1';
+                                    overlay.remove();
+                                    this.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                                    this.className = 'delete-existing-image absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity';
+                                    this.title = 'Eliminar imagen';
+                                };
+                            }
+                        });
+                    });
                 }
 
                 // ========== FUNCIÓN: IMÁGENES EXISTENTES ==========
@@ -884,7 +1336,6 @@
                 }
 
                 // ========== FUNCIÓN: MAPA ==========
-                // ========== FUNCIÓN: MAPA (CORREGIDA) ==========
                 function initMap() {
                     if (typeof L === 'undefined') {
                         console.log('❌ Leaflet no disponible');
@@ -910,14 +1361,12 @@
                         draggable: true
                     }).addTo(mapInstance);
 
-                    // ========== EVENTO CLICK EN MAPA (CORREGIDO) ==========
+                    // ========== EVENTO CLICK EN MAPA ==========
                     mapInstance.on('click', function(e) {
                         console.log('🗺️ Click en mapa detectado:', e.latlng);
 
-                        // Mover el marcador a la nueva posición
                         marker.setLatLng(e.latlng);
 
-                        // Actualizar los campos de input
                         const latInput = document.getElementById('latitude');
                         const lngInput = document.getElementById('longitude');
 
@@ -925,12 +1374,10 @@
                             latInput.value = e.latlng.lat.toFixed(6);
                             lngInput.value = e.latlng.lng.toFixed(6);
                             console.log('✅ Coordenadas actualizadas:', e.latlng.lat.toFixed(6), e.latlng.lng.toFixed(6));
-                        } else {
-                            console.log('❌ Campos de latitud/longitud no encontrados');
                         }
                     });
 
-                    // ========== EVENTO DRAG DEL MARCADOR (CORREGIDO) ==========
+                    // ========== EVENTO DRAG DEL MARCADOR ==========
                     marker.on('dragend', function(e) {
                         const position = marker.getLatLng();
                         console.log('🔄 Marcador arrastrado a:', position);
@@ -964,7 +1411,6 @@
                                         mapInstance.setView(latlng, 16);
                                         marker.setLatLng(latlng);
 
-                                        // Actualizar campos
                                         const latInput = document.getElementById('latitude');
                                         const lngInput = document.getElementById('longitude');
 
@@ -1042,6 +1488,8 @@
                         return;
                     }
 
+                    console.log('🔄 Cargando barrios para ciudad:', cityId, 'Preseleccionar:', selectedNeighborhoodId);
+
                     neighborhoodSelect.innerHTML = '<option value="">Cargando barrios...</option>';
 
                     if (!cityId) {
@@ -1053,26 +1501,79 @@
                         .then(response => response.json())
                         .then(data => {
                             neighborhoodSelect.innerHTML = '<option value="">Seleccione un barrio</option>';
+
+                            let foundSelected = false;
+
                             data.forEach(neighborhood => {
                                 const option = document.createElement('option');
                                 option.value = neighborhood.id;
                                 option.textContent = neighborhood.name;
 
-                                // Marcar como seleccionado si coincide con el valor anterior
+                                // Comparar como strings para evitar problemas de tipos
                                 if (selectedNeighborhoodId && neighborhood.id == selectedNeighborhoodId) {
                                     option.selected = true;
+                                    foundSelected = true;
+                                    console.log('✅ Barrio preseleccionado:', neighborhood.name, '(ID:', neighborhood.id, ')');
                                 }
 
                                 neighborhoodSelect.appendChild(option);
                             });
 
-                            console.log('✅ Barrios cargados para ciudad:', cityId, 'Seleccionado:', selectedNeighborhoodId);
+                            if (selectedNeighborhoodId && !foundSelected) {
+                                console.log('⚠️ No se encontró el barrio con ID:', selectedNeighborhoodId);
+                            }
+
+                            console.log('✅ Barrios cargados para ciudad:', cityId, 'Total:', data.length);
                         })
                         .catch(error => {
                             console.error('❌ Error cargando barrios:', error);
                             neighborhoodSelect.innerHTML = '<option value="">Error cargando barrios</option>';
                         });
                 };
+
+                function initNeighborhoodsAutoloadEdit() {
+                    const citySelect = document.getElementById('city');
+                    const neighborhoodSelect = document.getElementById('neighborhood_id');
+
+                    if (!citySelect || !neighborhoodSelect) {
+                        console.log('⚠️ Selects de ciudad o barrio no encontrados');
+                        return;
+                    }
+
+                    const selectedCityId = citySelect.value;
+
+                    // MEJOR: Obtener el neighborhood_id desde múltiples fuentes
+                    let selectedNeighborhoodId = null;
+
+                    // 1. Desde data-selected (más confiable para edit)
+                    const dataSelected = neighborhoodSelect.getAttribute('data-selected');
+                    if (dataSelected && dataSelected !== '' && dataSelected !== 'null') {
+                        selectedNeighborhoodId = dataSelected;
+                        console.log('📍 Neighborhood desde data-selected:', selectedNeighborhoodId);
+                    }
+
+                    // 2. Desde meta tag (por si acaso)
+                    const metaNeighborhood = document.querySelector('meta[name="current-neighborhood"]');
+                    if (!selectedNeighborhoodId && metaNeighborhood) {
+                        const metaValue = metaNeighborhood.getAttribute('content');
+                        if (metaValue && metaValue !== '' && metaValue !== 'null') {
+                            selectedNeighborhoodId = metaValue;
+                            console.log('📍 Neighborhood desde meta tag:', selectedNeighborhoodId);
+                        }
+                    }
+
+                    console.log('🏙️ EDIT - Inicialización:');
+                    console.log('   - Ciudad ID:', selectedCityId);
+                    console.log('   - Barrio ID:', selectedNeighborhoodId);
+
+                    // Si hay ciudad seleccionada, cargar barrios con preselección
+                    if (selectedCityId && selectedCityId !== '') {
+                        console.log('🔄 Cargando barrios automáticamente...');
+                        loadNeighborhoods(selectedCityId, selectedNeighborhoodId);
+                    } else {
+                        console.log('⚠️ No hay ciudad seleccionada, no se cargan barrios');
+                    }
+                }
 
                 // ========== INICIALIZACIÓN AUTOMÁTICA DE BARRIOS ==========
                 function initNeighborhoodsAutoload() {
@@ -1084,16 +1585,58 @@
                         return;
                     }
 
-                    // Verificar si ya hay una ciudad seleccionada al cargar la página
                     const selectedCityId = citySelect.value;
-                    const selectedNeighborhoodId = neighborhoodSelect.getAttribute('data-selected') ||
-                        neighborhoodSelect.querySelector('option[selected]')?.value;
+                    let selectedNeighborhoodId = null;
 
-                    console.log('🏙️ Ciudad inicial:', selectedCityId, 'Barrio inicial:', selectedNeighborhoodId);
+                    // 1. Desde data-selected (incluye old y valor actual)
+                    const dataSelected = neighborhoodSelect.getAttribute('data-selected');
+                    if (dataSelected && dataSelected !== '') {
+                        selectedNeighborhoodId = dataSelected;
+                    }
 
+                    // 2. Desde option marcado como selected
+                    if (!selectedNeighborhoodId) {
+                        const selectedOption = neighborhoodSelect.querySelector('option[selected]');
+                        if (selectedOption) {
+                            selectedNeighborhoodId = selectedOption.value;
+                        }
+                    }
+
+                    // 3. Desde el valor actual del select
+                    if (!selectedNeighborhoodId && neighborhoodSelect.value) {
+                        selectedNeighborhoodId = neighborhoodSelect.value;
+                    }
+
+                    console.log('🏙️ EDIT - Ciudad inicial:', selectedCityId, 'Barrio inicial:', selectedNeighborhoodId);
+
+                    // Si hay ciudad seleccionada, cargar barrios
                     if (selectedCityId) {
-                        // Cargar barrios automáticamente si hay ciudad seleccionada
                         loadNeighborhoods(selectedCityId, selectedNeighborhoodId);
+                    }
+                }
+
+                function initCityChangeHandlerEdit() {
+                    const citySelect = document.getElementById('city');
+
+                    if (citySelect) {
+                        // REMOVER cualquier event listener anterior
+                        citySelect.removeAttribute('onchange');
+
+                        citySelect.addEventListener('change', function() {
+                            const selectedCityId = this.value;
+                            console.log('🏙️ Ciudad cambiada manualmente a:', selectedCityId);
+
+                            if (selectedCityId && selectedCityId !== '') {
+                                // Al cambiar ciudad manualmente, NO preseleccionar ningún barrio
+                                loadNeighborhoods(selectedCityId, null);
+                            } else {
+                                // Si no hay ciudad, limpiar barrios
+                                const neighborhoodSelect = document.getElementById('neighborhood_id');
+                                if (neighborhoodSelect) {
+                                    neighborhoodSelect.innerHTML = '<option value="">Primero seleccione una ciudad</option>';
+                                }
+                            }
+                        });
                     }
                 }
 
@@ -1112,18 +1655,13 @@
                 };
 
                 // ========== INICIALIZAR TODO ==========
-                initThumbnail();
-                initAdditionalImages();
-                initExistingImages();
+                initThumbnailWithCompression();
+                initAdditionalImagesWithDragDropEdit();
+                initExistingImagesEdit();
                 initMap();
                 initServices();
-                initNeighborhoodsAutoload();
-
-                // Cargar barrios si hay ciudad seleccionada
-                const citySelect = document.getElementById('city');
-                if (citySelect && citySelect.value) {
-                    loadNeighborhoods(citySelect.value);
-                }
+                initNeighborhoodsAutoloadEdit();
+                initCityChangeHandlerEdit();
 
                 // Inicializar campos de proyecto
                 const isProjectSelect = document.getElementById('is_project');
@@ -1131,8 +1669,28 @@
                     toggleProjectFields(isProjectSelect.value);
                 }
 
-                console.log('✅ PropertyEdit v2.0 completamente inicializado');
+                console.log('✅ PropertyEdit v3.0 con Compresión completamente inicializado');
+
+
             });
         }
+
+        function debugNeighborhoodInfo() {
+            const citySelect = document.getElementById('city');
+            const neighborhoodSelect = document.getElementById('neighborhood_id');
+            const metaTag = document.querySelector('meta[name="current-neighborhood"]');
+
+            console.log('🐛 DEBUG NEIGHBORHOOD INFO:');
+            console.log('   - Ciudad value:', citySelect?.value);
+            console.log('   - Barrio data-selected:', neighborhoodSelect?.getAttribute('data-selected'));
+            console.log('   - Barrio current value:', neighborhoodSelect?.value);
+            console.log('   - Meta content:', metaTag?.getAttribute('content'));
+            console.log('   - Barrio options count:', neighborhoodSelect?.options?.length);
+        }
+
+        // Llamar debug al inicio (temporal)
+        setTimeout(() => {
+            debugNeighborhoodInfo();
+        }, 1000);
     </script>
 </x-app-layout>

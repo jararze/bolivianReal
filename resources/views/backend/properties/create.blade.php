@@ -369,6 +369,7 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                                                 </svg>
                                                 <p class="mt-1 text-sm text-gray-500">Arrastra las imágenes aquí<br>o click para seleccionar</p>
+                                                <p class="mt-2 text-xs text-blue-600 font-medium">Después podrás reordenarlas arrastrándolas ⇅</p>
                                             </div>
                                         </div>
                                         @if($errors->has('images.*') || $errors->has('images'))
@@ -388,10 +389,34 @@
                                 </div>
                             </div>
 
-                            <!-- Grid de vista previa de imágenes adicionales -->
+                            <!-- Grid de vista previa de imágenes adicionales CON DRAG & DROP -->
                             <div class="mt-6">
-                                <h4 class="text-gray-700 text-sm font-medium mb-2">Vista previa de imágenes</h4>
-                                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="preview-grid"></div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="text-gray-700 text-sm font-medium">Vista previa de imágenes</h4>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        <span id="image-count-display">0 imágenes</span>
+                                        <div class="flex items-center space-x-1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                                            </svg>
+                                            <span>Arrastra para reordenar</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Grid sorteable -->
+                                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 min-h-[120px]" id="sortable-preview-grid">
+                                    <!-- Las imágenes aparecerán aquí -->
+                                </div>
+
+                                <!-- Mensaje cuando no hay imágenes -->
+                                <div id="no-images-message" class="text-center py-8 text-gray-400">
+                                    <svg class="mx-auto h-16 w-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 011 1H5a2 2 0 01-2-2V6a2 2 0 012-2h6M14 6l4-4m0 0l4 4m-4-4v8"/>
+                                    </svg>
+                                    <p class="mt-2 text-sm">No hay imágenes seleccionadas</p>
+                                    <p class="text-xs">Las imágenes aparecerán aquí para que puedas reordenarlas</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -612,6 +637,8 @@
         </form>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
     <!-- SCRIPT ÚNICO Y LIMPIO -->
     <script>
         // Evitar múltiples inicializaciones
@@ -619,11 +646,140 @@
             window.createPropertyInitialized = true;
 
             document.addEventListener('DOMContentLoaded', function() {
-                console.log('🚀 Iniciando PropertyCreate v2.0');
+                console.log('🚀 Iniciando PropertyCreate v3.0 con Compresión');
 
                 // ========== VARIABLES GLOBALES ==========
                 let selectedNewFiles = [];
                 let mapInstance = null;
+
+                // ========== FUNCIONES DE COMPRESIÓN ==========
+                function compressImage(file, maxSizeMB = 2, quality = 0.8) {
+                    return new Promise((resolve) => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const img = new Image();
+
+                        img.onload = function() {
+                            // Calcular nuevas dimensiones manteniendo aspect ratio
+                            let { width, height } = calculateDimensions(img.width, img.height, 1920, 1080);
+
+                            canvas.width = width;
+                            canvas.height = height;
+
+                            // Dibujar imagen redimensionada
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            // Convertir a blob con compresión
+                            canvas.toBlob((blob) => {
+                                console.log(`📷 Imagen comprimida: ${(file.size / 1024 / 1024).toFixed(2)}MB → ${(blob.size / 1024 / 1024).toFixed(2)}MB`);
+
+                                // Si aún es mayor a maxSizeMB, reducir más la calidad
+                                if (blob.size > maxSizeMB * 1024 * 1024 && quality > 0.3) {
+                                    const newFile = new File([blob], file.name, { type: file.type });
+                                    compressImage(newFile, maxSizeMB, quality - 0.1).then(resolve);
+                                } else {
+                                    // Crear archivo con el nombre original
+                                    const compressedFile = new File([blob], file.name, {
+                                        type: file.type,
+                                        lastModified: Date.now()
+                                    });
+                                    resolve(compressedFile);
+                                }
+                            }, file.type, quality);
+                        };
+
+                        img.src = URL.createObjectURL(file);
+                    });
+                }
+
+                function calculateDimensions(width, height, maxWidth = 1920, maxHeight = 1080) {
+                    if (width <= maxWidth && height <= maxHeight) {
+                        return { width, height };
+                    }
+
+                    const ratio = Math.min(maxWidth / width, maxHeight / height);
+                    return {
+                        width: Math.round(width * ratio),
+                        height: Math.round(height * ratio)
+                    };
+                }
+
+                async function processFiles(files) {
+                    const processedFiles = [];
+                    const MAX_SIZE_MB = 2;
+
+                    for (const file of files) {
+                        if (!file.type.startsWith('image/')) {
+                            alert(`${file.name} no es una imagen válida`);
+                            continue;
+                        }
+
+                        // Mostrar indicador de procesamiento
+                        showProcessingIndicator(file.name);
+
+                        try {
+                            if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+                                console.log(`🔄 Comprimiendo ${file.name}...`);
+                                const compressedFile = await compressImage(file, MAX_SIZE_MB);
+                                processedFiles.push(compressedFile);
+                                showCompressionResult(file, compressedFile);
+                            } else {
+                                console.log(`✅ ${file.name} ya está dentro del límite`);
+                                processedFiles.push(file);
+                            }
+                        } catch (error) {
+                            console.error(`❌ Error procesando ${file.name}:`, error);
+                            alert(`Error procesando ${file.name}`);
+                        } finally {
+                            hideProcessingIndicator();
+                        }
+                    }
+
+                    return processedFiles;
+                }
+
+                function showProcessingIndicator(fileName) {
+                    let indicator = document.getElementById('processing-indicator');
+                    if (!indicator) {
+                        indicator = document.createElement('div');
+                        indicator.id = 'processing-indicator';
+                        indicator.className = 'fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                        document.body.appendChild(indicator);
+                    }
+                    indicator.innerHTML = `
+                        <div class="flex items-center space-x-2">
+                            <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                            <span>Comprimiendo ${fileName}...</span>
+                        </div>
+                    `;
+                    indicator.style.display = 'block';
+                }
+
+                function hideProcessingIndicator() {
+                    const indicator = document.getElementById('processing-indicator');
+                    if (indicator) {
+                        indicator.style.display = 'none';
+                    }
+                }
+
+                function showCompressionResult(originalFile, compressedFile) {
+                    const originalSize = (originalFile.size / 1024 / 1024).toFixed(2);
+                    const compressedSize = (compressedFile.size / 1024 / 1024).toFixed(2);
+                    const savings = ((1 - compressedFile.size / originalFile.size) * 100).toFixed(1);
+
+                    // Mostrar notificación temporal
+                    const notification = document.createElement('div');
+                    notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                    notification.innerHTML = `
+                        📷 ${originalFile.name}<br>
+                        ${originalSize}MB → ${compressedSize}MB (-${savings}%)
+                    `;
+                    document.body.appendChild(notification);
+
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 3000);
+                }
 
                 // ========== INICIALIZAR TRUMBOWYG ==========
                 if (typeof $ !== 'undefined' && $.fn.trumbowyg) {
@@ -647,8 +803,8 @@
                     }
                 }
 
-                // ========== FUNCIÓN: THUMBNAIL ==========
-                function initThumbnail() {
+                // ========== FUNCIÓN: THUMBNAIL CON COMPRESIÓN ==========
+                function initThumbnailWithCompression() {
                     const input = document.getElementById('thumbnail');
                     const preview = document.getElementById('thumbnail-preview');
                     const placeholder = document.getElementById('thumbnail-placeholder');
@@ -659,28 +815,42 @@
 
                     previewArea.addEventListener('click', () => input.click());
 
-                    input.addEventListener('change', function(e) {
+                    input.addEventListener('change', async function(e) {
                         if (e.target.files[0]) {
                             const file = e.target.files[0];
-                            preview.src = URL.createObjectURL(file);
-                            preview.classList.remove('hidden');
-                            placeholder.classList.add('hidden');
-                            removeBtn.classList.remove('hidden');
+
+                            // Procesar archivo (comprimir si es necesario)
+                            const processedFiles = await processFiles([file]);
+
+                            if (processedFiles.length > 0) {
+                                const processedFile = processedFiles[0];
+
+                                // Actualizar el input con el archivo procesado
+                                const dt = new DataTransfer();
+                                dt.items.add(processedFile);
+                                input.files = dt.files;
+
+                                // Mostrar preview
+                                preview.src = URL.createObjectURL(processedFile);
+                                preview.classList.remove('hidden');
+                                if (placeholder) placeholder.classList.add('hidden');
+                                if (removeBtn) removeBtn.classList.remove('hidden');
+                            }
                         }
                     });
 
-                    removeBtn.addEventListener('click', function(e) {
+                    removeBtn?.addEventListener('click', function(e) {
                         e.stopPropagation();
                         input.value = '';
                         preview.src = '';
                         preview.classList.add('hidden');
-                        placeholder.classList.remove('hidden');
+                        if (placeholder) placeholder.classList.remove('hidden');
                         this.classList.add('hidden');
                     });
                 }
 
-                // ========== FUNCIÓN: IMÁGENES ADICIONALES ==========
-                function initAdditionalImages() {
+                // ========== FUNCIÓN: IMÁGENES ADICIONALES CON COMPRESIÓN ==========
+                function initAdditionalImagesWithCompression() {
                     const dropZone = document.getElementById('drop-zone');
                     const input = document.getElementById('additional-images');
                     const previewGrid = document.getElementById('preview-grid');
@@ -710,30 +880,25 @@
                         });
                     });
 
-                    dropZone.addEventListener('drop', function(e) {
+                    dropZone.addEventListener('drop', async function(e) {
                         console.log('📂 Drop detectado');
-                        handleFiles(Array.from(e.dataTransfer.files));
+                        await handleFiles(Array.from(e.dataTransfer.files));
                     });
 
-                    input.addEventListener('change', function() {
+                    input.addEventListener('change', async function() {
                         console.log('📎 Files seleccionados:', this.files.length);
-                        handleFiles(Array.from(this.files));
+                        await handleFiles(Array.from(this.files));
                     });
 
-                    function handleFiles(files) {
-                        const imageFiles = files.filter(file => file.type.startsWith('image/'));
-
-                        if (imageFiles.length === 0) {
-                            alert('Solo se permiten archivos de imagen');
-                            return;
-                        }
+                    async function handleFiles(files) {
+                        // Procesar archivos (comprimir si es necesario)
+                        const processedFiles = await processFiles(files);
 
                         // Agregar archivos únicos
-                        imageFiles.forEach(file => {
+                        processedFiles.forEach(file => {
                             const isDuplicate = selectedNewFiles.some(existing =>
                                 existing.name === file.name &&
-                                existing.size === file.size &&
-                                existing.lastModified === file.lastModified
+                                existing.size === file.size
                             );
 
                             if (!isDuplicate) {
@@ -760,14 +925,18 @@
                             reader.onload = function(e) {
                                 const container = document.createElement('div');
                                 container.className = 'relative group';
+                                const fileSize = (file.size / 1024 / 1024).toFixed(2);
                                 container.innerHTML = `
-                                <img src="${e.target.result}" class="w-full h-32 object-cover rounded">
-                                <button type="button" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" onclick="removeNewImage(${index})">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </button>
-                            `;
+                                    <img src="${e.target.result}" class="w-full h-32 object-cover rounded">
+                                    <div class="absolute bottom-1 left-1 bg-black bg-opacity-60 text-white text-xs px-1 rounded">
+                                        ${fileSize}MB
+                                    </div>
+                                    <button type="button" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity" onclick="removeNewImage(${index})">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </button>
+                                `;
                                 previewGrid.appendChild(container);
                             };
                             reader.readAsDataURL(file);
@@ -782,7 +951,250 @@
                     };
                 }
 
-                // ========== FUNCIÓN: MAPA (CORREGIDA PARA CREATE - SIN REDECLARACIÓN) ==========
+                function initAdditionalImagesWithDragDrop() {
+                    const dropZone = document.getElementById('drop-zone');
+                    const input = document.getElementById('additional-images');
+                    const previewGrid = document.getElementById('sortable-preview-grid');
+                    const noImagesMessage = document.getElementById('no-images-message');
+                    const imageCountDisplay = document.getElementById('image-count-display');
+
+                    if (!dropZone || !input || !previewGrid) return;
+
+                    // Array para almacenar archivos con su orden
+                    let orderedFiles = [];
+
+                    // Inicializar Sortable.js para drag & drop
+                    let sortable = null;
+
+                    function initSortable() {
+                        if (sortable) {
+                            sortable.destroy();
+                        }
+
+                        sortable = new Sortable(previewGrid, {
+                            animation: 150,
+                            ghostClass: 'sortable-ghost',
+                            chosenClass: 'sortable-chosen',
+                            dragClass: 'sortable-drag',
+                            onEnd: function(evt) {
+                                // Reordenar el array de archivos según el nuevo orden
+                                const newOrderedFiles = [];
+                                const items = previewGrid.querySelectorAll('[data-file-index]');
+
+                                items.forEach(item => {
+                                    const fileIndex = parseInt(item.getAttribute('data-file-index'));
+                                    newOrderedFiles.push(orderedFiles[fileIndex]);
+                                });
+
+                                orderedFiles = newOrderedFiles;
+                                updateFileInput();
+                                updatePreviewNumbers();
+
+                                console.log('📋 Orden actualizado:', orderedFiles.map((f, i) => `${i+1}. ${f.name}`));
+                            }
+                        });
+                    }
+
+                    // CSS para las animaciones de drag
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        .sortable-ghost {
+                            opacity: 0.4;
+                            transform: scale(0.95);
+                        }
+                        .sortable-chosen {
+                            transform: scale(1.05);
+                        }
+                        .sortable-drag {
+                            transform: rotate(5deg);
+                        }
+                        .dragging-active {
+                            cursor: grabbing !important;
+                        }
+                        .image-preview-item {
+                            transition: all 0.2s ease;
+                            cursor: grab;
+                        }
+                        .image-preview-item:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                        }
+                        .order-badge {
+                            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+                            color: white;
+                            border: 2px solid white;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                        }
+                    `;
+                    document.head.appendChild(style);
+
+                    // Event listeners para drop zone
+                    dropZone.addEventListener('click', () => input.click());
+
+                    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                        dropZone.addEventListener(eventName, e => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        });
+                    });
+
+                    ['dragenter', 'dragover'].forEach(eventName => {
+                        dropZone.addEventListener(eventName, () => {
+                            dropZone.classList.add('border-blue-500', 'bg-blue-50');
+                        });
+                    });
+
+                    ['dragleave', 'drop'].forEach(eventName => {
+                        dropZone.addEventListener(eventName, () => {
+                            dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+                        });
+                    });
+
+                    dropZone.addEventListener('drop', async function(e) {
+                        console.log('📂 Drop detectado');
+                        await handleFiles(Array.from(e.dataTransfer.files));
+                    });
+
+                    input.addEventListener('change', async function() {
+                        console.log('📎 Files seleccionados:', this.files.length);
+                        await handleFiles(Array.from(this.files));
+                    });
+
+                    async function handleFiles(files) {
+                        // Procesar archivos (usar tu función de compresión existente)
+                        const processedFiles = await processFiles(files);
+
+                        // Agregar archivos únicos al array ordenado
+                        processedFiles.forEach(file => {
+                            const isDuplicate = orderedFiles.some(existing =>
+                                existing.name === file.name && existing.size === file.size
+                            );
+
+                            if (!isDuplicate) {
+                                orderedFiles.push(file);
+                            }
+                        });
+
+                        console.log('📊 Total archivos ordenados:', orderedFiles.length);
+                        updateFileInput();
+                        updatePreview();
+                        updateUI();
+                    }
+
+                    function updateFileInput() {
+                        // Crear archivos con nombres que incluyan el orden
+                        const dt = new DataTransfer();
+
+                        orderedFiles.forEach((file, index) => {
+                            // Crear nuevo nombre con prefijo de orden
+                            const orderPrefix = String(index + 1).padStart(2, '0') + '_';
+                            const newName = orderPrefix + file.name;
+
+                            // Crear nuevo archivo con el nombre ordenado
+                            const renamedFile = new File([file], newName, {
+                                type: file.type,
+                                lastModified: file.lastModified
+                            });
+
+                            dt.items.add(renamedFile);
+                        });
+
+                        input.files = dt.files;
+                        console.log('📁 Input actualizado con archivos ordenados');
+                    }
+
+                    function updatePreview() {
+                        previewGrid.innerHTML = '';
+
+                        orderedFiles.forEach((file, index) => {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const container = document.createElement('div');
+                                container.className = 'relative group image-preview-item';
+                                container.setAttribute('data-file-index', index);
+
+                                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                                const orderNumber = index + 1;
+
+                                container.innerHTML = `
+                    <div class="relative bg-white rounded-lg shadow-md overflow-hidden border-2 border-transparent hover:border-blue-300">
+                        <img src="${e.target.result}" class="w-full h-32 object-cover">
+
+                        <!-- Badge de orden -->
+                        <div class="absolute top-2 left-2 order-badge text-xs font-bold px-2 py-1 rounded-full">
+                            #${orderNumber}
+                        </div>
+
+                        <!-- Info de archivo -->
+                        <div class="absolute bottom-1 left-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                            ${fileSize}MB
+                        </div>
+
+                        <!-- Botón eliminar -->
+                        <button type="button" class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600" onclick="removeOrderedImage(${index})">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Indicador de drag -->
+                        <div class="absolute bottom-1 right-1 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+
+                                previewGrid.appendChild(container);
+                            };
+                            reader.readAsDataURL(file);
+                        });
+
+                        // Reinicializar Sortable después de actualizar el DOM
+                        setTimeout(() => {
+                            initSortable();
+                        }, 100);
+                    }
+
+                    function updatePreviewNumbers() {
+                        const items = previewGrid.querySelectorAll('[data-file-index]');
+                        items.forEach((item, index) => {
+                            const badge = item.querySelector('.order-badge');
+                            if (badge) {
+                                badge.textContent = `#${index + 1}`;
+                            }
+                            item.setAttribute('data-file-index', index);
+                        });
+                    }
+
+                    function updateUI() {
+                        const count = orderedFiles.length;
+                        imageCountDisplay.textContent = `${count} ${count === 1 ? 'imagen' : 'imágenes'}`;
+
+                        if (count > 0) {
+                            noImagesMessage.style.display = 'none';
+                            previewGrid.style.display = 'grid';
+                        } else {
+                            noImagesMessage.style.display = 'block';
+                            previewGrid.style.display = 'none';
+                        }
+                    }
+
+                    // Función global para eliminar imagen
+                    window.removeOrderedImage = function(index) {
+                        orderedFiles.splice(index, 1);
+                        updateFileInput();
+                        updatePreview();
+                        updateUI();
+                        console.log('🗑️ Imagen eliminada, nuevo orden:', orderedFiles.map((f, i) => `${i+1}. ${f.name}`));
+                    };
+
+                    // Inicializar UI
+                    updateUI();
+                }
+
+                // ========== FUNCIÓN: MAPA ==========
                 function initMap() {
                     if (typeof L === 'undefined') {
                         console.log('❌ Leaflet no disponible');
@@ -812,14 +1224,14 @@
                         draggable: true
                     }).addTo(mapInstance);
 
-                    // ========== EVENTO CLICK EN MAPA (CORREGIDO) ==========
+                    // ========== EVENTO CLICK EN MAPA ==========
                     mapInstance.on('click', function(e) {
                         console.log('🗺️ Click en mapa detectado:', e.latlng);
 
                         // Mover el marcador a la nueva posición
                         marker.setLatLng(e.latlng);
 
-                        // Actualizar los campos de input (USAR VARIABLES YA DECLARADAS)
+                        // Actualizar los campos de input
                         if (latInput && lngInput) {
                             latInput.value = e.latlng.lat.toFixed(6);
                             lngInput.value = e.latlng.lng.toFixed(6);
@@ -829,7 +1241,7 @@
                         }
                     });
 
-                    // ========== EVENTO DRAG DEL MARCADOR (CORREGIDO) ==========
+                    // ========== EVENTO DRAG DEL MARCADOR ==========
                     marker.on('dragend', function(e) {
                         const position = marker.getLatLng();
                         console.log('🔄 Marcador arrastrado a:', position);
@@ -861,7 +1273,7 @@
                                         mapInstance.setView(latlng, 16);
                                         marker.setLatLng(latlng);
 
-                                        // Actualizar campos (usar variables ya declaradas)
+                                        // Actualizar campos
                                         if (latInput && lngInput) {
                                             latInput.value = latlng.lat.toFixed(6);
                                             lngInput.value = latlng.lng.toFixed(6);
@@ -1007,8 +1419,9 @@
                 };
 
                 // ========== INICIALIZAR TODO ==========
-                initThumbnail();
-                initAdditionalImages();
+                initThumbnailWithCompression();
+                // initAdditionalImagesWithCompression();
+                initAdditionalImagesWithDragDrop();
                 initMap();
                 initServices();
                 initNeighborhoodsAutoload();
@@ -1019,7 +1432,7 @@
                     toggleProjectFields(isProjectSelect.value);
                 }
 
-                console.log('✅ PropertyCreate v2.0 completamente inicializado');
+                console.log('✅ PropertyCreate v3.0 con Compresión completamente inicializado');
             });
         }
     </script>

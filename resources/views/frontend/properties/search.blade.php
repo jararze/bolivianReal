@@ -73,15 +73,34 @@
                             </div>
                             <div class="gallery-slider-two flexslider">
                                 <ul class="slides">
-                                    @if($property->images->count() >= 3)
+                                    @if($property->images_ordered->count() >= 3)
                                         <div class="gallery-slider-two flexslider">
                                             <ul class="slides">
-                                                @foreach($property->images->take(3) as $image)
+                                                {{-- SIEMPRE MOSTRAR THUMBNAIL PRIMERO --}}
+                                                @if($property->thumbnail)
                                                     <li>
                                                         <a title="Feature Image"
                                                            href="{{ route('frontend.properties.show', $property->slug) }}">
                                                             <img class="img-responsive"
-                                                                 src="{{ asset('storage/' .  $image->name) }}"
+                                                                 src="{{ asset('storage/' . $property->thumbnail) }}"
+                                                                 alt="{{ $property->name }}"
+                                                                 style="height: 325px;"
+                                                            >
+                                                        </a>
+                                                    </li>
+                                                @endif
+
+                                                {{-- LUEGO LAS IMÁGENES ORDENADAS (TOMAR 2 MÁS SI YA MOSTRÉ THUMBNAIL) --}}
+                                                @php
+                                                    $imagesToShow = $property->thumbnail ? 2 : 3;
+                                                @endphp
+
+                                                @foreach($property->images_ordered->take($imagesToShow) as $image)
+                                                    <li>
+                                                        <a title="Image {{ $loop->iteration + ($property->thumbnail ? 1 : 0) }}"
+                                                           href="{{ route('frontend.properties.show', $property->slug) }}">
+                                                            <img class="img-responsive"
+                                                                 src="{{ asset('storage/' . $image->name) }}"
                                                                  alt="{{ $property->name }}"
                                                                  style="height: 325px;"
                                                             >
@@ -94,7 +113,7 @@
                                         <li>
                                             <a href="{{ route('frontend.properties.show', $property->slug) }}">
                                                 <img class="img-responsive"
-                                                     src="{{ $property->thumbnail ? asset('storage/' .  $property->thumbnail) : asset('assets/front/images/property/property-12-660x600.jpg') }}"
+                                                     src="{{ $property->thumbnail ? asset('storage/' . $property->thumbnail) : asset('assets/front/images/property/property-12-660x600.jpg') }}"
                                                      alt="{{ $property->name }}"
                                                      style="height: 400px;"
                                                 >

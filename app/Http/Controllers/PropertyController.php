@@ -115,68 +115,49 @@ class PropertyController extends Controller
     public function store(StoreRequest $request): RedirectResponse
     {
         try {
-            Log::info('Iniciando store en PropertyController');
+            Log::info('🚀 Iniciando store en PropertyController');
 
             $validated = $request->validated();
-            Log::info('Datos validados:', ['validated' => $validated]);
+            Log::info('✅ Datos validados:', ['validated' => $validated]);
 
-            // Preparar los datos para la base de datos
             $propertyData = $this->preparePropertyData($validated);
-            Log::info('Datos preparados para DB:', ['propertyData' => $propertyData]);
+            Log::info('📋 Datos preparados para DB:', ['propertyData' => $propertyData]);
 
             return DB::transaction(function () use ($request, $propertyData) {
                 try {
-                    // Create property
                     $property = Property::create($propertyData);
-                    Log::info('Propiedad creada:', ['property' => $property->toArray()]);
+                    Log::info('🏠 Propiedad creada:', ['property' => $property->toArray()]);
 
-                    // Procesar relaciones
                     $this->processRelations($property, $request->validated());
-                    Log::info('Relaciones procesadas');
+                    Log::info('🔗 Relaciones procesadas');
 
-                    // Procesar imágenes
-                    try {
-                        $this->processImages($property, $request);
-                        Log::info('Imágenes procesadas');
-                    } catch (ValidationException $e) {
-                        Log::error('Error de validación en imágenes:', ['errors' => $e->errors()]);
-                        throw $e;
-                    } catch (\Exception $e) {
-                        Log::error('Error procesando imágenes:', ['message' => $e->getMessage()]);
-                        // Eliminar la propiedad si hubo un error con las imágenes
-                        $property->delete();
-                        throw new \Exception('Error procesando imágenes: ' . $e->getMessage());
-                    }
+                    // ========== USAR EL NUEVO MÉTODO CON COMPRESIÓN ==========
+                    $this->processImagesWithCompression($property, $request);
+                    Log::info('🖼️ Imágenes procesadas con compresión');
 
                     flash()->success('Propiedad creada satisfactoriamente.');
-                    Log::info('Proceso completado con éxito');
+                    Log::info('🎉 Proceso completado con éxito');
 
                     return redirect()->route(
                         $request->action === 'save' ? 'backend.properties.index' : 'backend.properties.create'
                     );
                 } catch (ValidationException $e) {
                     DB::rollBack();
-                    Log::error('Excepción de validación en transacción:', ['errors' => $e->errors()]);
-                    return back()
-                        ->withErrors($e->errors())
-                        ->withInput();
+                    Log::error('❌ Excepción de validación en transacción:', ['errors' => $e->errors()]);
+                    return back()->withErrors($e->errors())->withInput();
                 } catch (\Exception $e) {
                     DB::rollBack();
-                    Log::error('Excepción en transacción:', ['message' => $e->getMessage()]);
-                    return back()
-                        ->withError($e->getMessage())
-                        ->withInput();
+                    Log::error('❌ Excepción en transacción:', ['message' => $e->getMessage()]);
+                    return back()->withError($e->getMessage())->withInput();
                 }
             });
 
         } catch (ValidationException $e) {
-            Log::error('Excepción de validación:', ['errors' => $e->errors()]);
+            Log::error('❌ Excepción de validación:', ['errors' => $e->errors()]);
             flash()->error('Por favor corrige los errores en el formulario.');
-            return back()
-                ->withErrors($e->errors())
-                ->withInput();
+            return back()->withErrors($e->errors())->withInput();
         } catch (QueryException $e) {
-            Log::error('Error de base de datos creando propiedad:', [
+            Log::error('❌ Error de base de datos:', [
                 'error' => $e->getMessage(),
                 'code' => $e->getCode(),
                 'user_id' => auth()->id()
@@ -184,9 +165,8 @@ class PropertyController extends Controller
 
             flash()->warning('Error al guardar en la base de datos. Por favor, intente nuevamente.');
             return back()->withInput();
-
         } catch (\Exception $e) {
-            Log::error('Error creando propiedad:', [
+            Log::error('❌ Error creando propiedad:', [
                 'error' => $e->getMessage(),
                 'stack' => $e->getTraceAsString(),
                 'user_id' => auth()->id()
@@ -640,11 +620,11 @@ class PropertyController extends Controller
     public function update(UpdateRequest $request, Property $property): RedirectResponse
     {
         try {
-            Log::info('Iniciando update en PropertyController para la propiedad ' . $property->id);
+            Log::info('🚀 Iniciando update CON COMPRESIÓN en PropertyController para la propiedad ' . $property->id);
 
             // Obtener datos validados
             $validated = $request->validated();
-            Log::info('Datos validados:', ['validated' => $validated]);
+            Log::info('✅ Datos validados:', ['validated' => $validated]);
 
             return DB::transaction(function () use ($request, $property, $validated) {
                 try {
@@ -661,22 +641,22 @@ class PropertyController extends Controller
 
                     // 2. Actualizar los datos básicos de la propiedad
                     $property->update($propertyData);
-                    Log::info('Datos básicos de la propiedad actualizados');
+                    Log::info('📝 Datos básicos de la propiedad actualizados');
 
-                    // 3. Procesar las relaciones usando el método mejorado
+                    // 3. Procesar las relaciones
                     $this->processRelationsUpdate($property, $validated);
-                    Log::info('Relaciones procesadas');
+                    Log::info('🔗 Relaciones procesadas');
 
-                    // 4. Procesar imágenes
-                    $this->handleImagesUpdate($property, $request);
+                    // 4. ========== USAR EL NUEVO MÉTODO CON COMPRESIÓN ==========
+                    $this->handleImagesUpdateWithCompression($property, $request);
 
                     flash()->success('Propiedad actualizada satisfactoriamente.');
-                    Log::info('Proceso de actualización completado con éxito');
+                    Log::info('🎉 Proceso de actualización completado con éxito');
 
                     return redirect()->route('backend.properties.index');
                 } catch (\Exception $e) {
                     DB::rollBack();
-                    Log::error('Error en la actualización:', [
+                    Log::error('❌ Error en la actualización:', [
                         'error' => $e->getMessage(),
                         'trace' => $e->getTraceAsString()
                     ]);
@@ -685,7 +665,7 @@ class PropertyController extends Controller
             });
 
         } catch (\Exception $e) {
-            Log::error('Error actualizando propiedad:', [
+            Log::error('❌ Error actualizando propiedad:', [
                 'error' => $e->getMessage(),
                 'stack' => $e->getTraceAsString()
             ]);
@@ -867,4 +847,684 @@ class PropertyController extends Controller
 
         return redirect()->route('backend.properties.index');
     }
+
+
+
+
+
+    /**
+     * Handle image upload with intelligent compression
+     * Versión mejorada que comprime automáticamente si excede 2MB
+     */
+    private function handleImageWithCompression(
+        UploadedFile $file,
+        string $type,
+        int $maxWidth = 1200,
+        int $maxHeight = 1200,
+        int $quality = 85,
+        string $propertyCode = '',
+        bool $createSmallVersion = false
+    ): array {
+        $paths = [];
+        $maxSizeMB = 2; // 2MB máximo
+        $maxSizeBytes = $maxSizeMB * 1024 * 1024;
+
+        try {
+            Log::info("📷 Procesando imagen: {$file->getClientOriginalName()}", [
+                'size_original' => $this->formatBytes($file->getSize()),
+                'max_allowed' => $this->formatBytes($maxSizeBytes)
+            ]);
+
+            // Create image instance
+            $image = Image::read($file);
+
+            // Generate paths
+            $basePath = "properties/{$propertyCode}/{$type}";
+            $filename = uniqid('img_').'.'.$file->getClientOriginalExtension();
+            $fullPath = storage_path("app/public/{$basePath}/{$filename}");
+
+            // Ensure directory exists
+            if (!file_exists(dirname($fullPath))) {
+                mkdir(dirname($fullPath), 0755, true);
+            }
+
+            // ========== COMPRESIÓN INTELIGENTE ==========
+            $originalImage = clone $image;
+
+            // Redimensionar si es necesario (mantener tu lógica)
+            $originalImage->scaleDown(width: $maxWidth, height: $maxHeight);
+
+            // Agregar watermark (mantener tu lógica)
+            $this->addWatermark($originalImage);
+
+            // ========== NUEVA LÓGICA DE COMPRESIÓN ==========
+            $finalQuality = $this->calculateOptimalQuality($file, $originalImage, $quality, $maxSizeBytes);
+
+            // Guardar imagen principal
+            $originalImage->encodeByExtension('jpg', $finalQuality)->save($fullPath);
+            $paths['original'] = "{$basePath}/{$filename}";
+
+            $finalSize = filesize($fullPath);
+            Log::info("✅ Imagen principal guardada", [
+                'path' => $paths['original'],
+                'quality_used' => $finalQuality,
+                'size_final' => $this->formatBytes($finalSize),
+                'compression_ratio' => round((1 - $finalSize / $file->getSize()) * 100, 1) . '%'
+            ]);
+
+            // ========== VERSIÓN PEQUEÑA (SI SE SOLICITA) ==========
+            if ($createSmallVersion) {
+                $smallFilename = uniqid('img_') . '_small.' . $file->getClientOriginalExtension();
+                $smallPath = storage_path("app/public/{$basePath}/{$smallFilename}");
+
+                $smallImage = clone $image;
+                $smallImage->scaleDown(width: 400, height: 300);
+                $this->addWatermark($smallImage);
+
+                // Para versión pequeña, usar calidad más baja
+                $smallQuality = max(60, $finalQuality - 15);
+                $smallImage->encodeByExtension('jpg', $smallQuality)->save($smallPath);
+
+                $paths['small'] = "{$basePath}/{$smallFilename}";
+
+                Log::info("✅ Versión pequeña guardada", [
+                    'path' => $paths['small'],
+                    'quality_used' => $smallQuality,
+                    'size_final' => $this->formatBytes(filesize($smallPath))
+                ]);
+            }
+
+            return $paths;
+
+        } catch (\Exception $e) {
+            Log::error('❌ Error processing image:', [
+                'error' => $e->getMessage(),
+                'file' => $file->getClientOriginalName()
+            ]);
+            throw new \Exception("Error processing image: {$e->getMessage()}");
+        }
+    }
+
+    /**
+     * Calcular calidad óptima para mantener el archivo bajo el límite de tamaño
+     */
+    private function calculateOptimalQuality($originalFile, $processedImage, int $initialQuality, int $maxSizeBytes): int
+    {
+        $tempPath = storage_path('app/temp_quality_test.jpg');
+        $quality = $initialQuality;
+        $attempts = 0;
+        $maxAttempts = 5;
+
+        try {
+            // Si el archivo original ya es pequeño, usar calidad inicial
+            if ($originalFile->getSize() <= $maxSizeBytes) {
+                Log::info("📦 Archivo original dentro del límite, usando calidad inicial: {$quality}%");
+                return $quality;
+            }
+
+            Log::info("🔄 Calculando calidad óptima...");
+
+            do {
+                $attempts++;
+
+                // Guardar temporalmente con la calidad actual
+                $testImage = clone $processedImage;
+                $testImage->encodeByExtension('jpg', $quality)->save($tempPath);
+
+                $testSize = filesize($tempPath);
+
+                Log::info("🎯 Prueba {$attempts}: Calidad {$quality}%, Tamaño: {$this->formatBytes($testSize)}");
+
+                // Si está dentro del límite o llegamos al límite de intentos
+                if ($testSize <= $maxSizeBytes || $attempts >= $maxAttempts || $quality <= 30) {
+                    break;
+                }
+
+                // Reducir calidad para siguiente intento
+                $quality = max(30, $quality - 15);
+
+            } while ($quality > 30);
+
+            // Limpiar archivo temporal
+            if (file_exists($tempPath)) {
+                unlink($tempPath);
+            }
+
+            Log::info("✅ Calidad óptima calculada: {$quality}%");
+            return $quality;
+
+        } catch (\Exception $e) {
+            // Limpiar archivo temporal en caso de error
+            if (file_exists($tempPath)) {
+                unlink($tempPath);
+            }
+
+            Log::warning("⚠️ Error calculando calidad óptima, usando calidad por defecto: {$initialQuality}%");
+            return $initialQuality;
+        }
+    }
+
+    /**
+     * Formatear bytes a formato legible
+     */
+    private function formatBytes(int $bytes): string
+    {
+        if ($bytes >= 1024 * 1024) {
+            return round($bytes / (1024 * 1024), 2) . ' MB';
+        } elseif ($bytes >= 1024) {
+            return round($bytes / 1024, 2) . ' KB';
+        }
+
+        return $bytes . ' B';
+    }
+
+    /**
+     * Versión mejorada de processImages que usa compresión inteligente
+     */
+    private function processImagesWithCompression(Property $property, StoreRequest $request): void
+    {
+        try {
+            Log::info('🚀 Iniciando procesamiento de imágenes con compresión para propiedad: ' . $property->id);
+
+            // ========== PROCESAR THUMBNAIL ==========
+            if ($request->hasFile('thumbnail')) {
+                try {
+                    Log::info('📸 Procesando imagen principal con compresión');
+
+                    $thumbnailPaths = $this->handleImageWithCompression(
+                        $request->file('thumbnail'),
+                        'thumbnails',
+                        800, 600, 85, // Calidad inicial más alta
+                        $property->code,
+                        true
+                    );
+
+                    $property->update(['thumbnail' => $thumbnailPaths['original']]);
+                    Log::info('✅ Imagen principal procesada exitosamente');
+                } catch (\Exception $e) {
+                    Log::error('❌ Error procesando thumbnail:', [
+                        'error' => $e->getMessage(),
+                        'property_id' => $property->id
+                    ]);
+                    throw new \Exception('Error procesando la imagen principal: ' . $e->getMessage());
+                }
+            }
+
+            // ========== PROCESAR IMÁGENES ADICIONALES ==========
+            if ($request->hasFile('images')) {
+                try {
+                    Log::info('🖼️ Procesando imágenes adicionales con compresión', [
+                        'count' => count($request->file('images'))
+                    ]);
+
+                    // Validar límite de imágenes
+                    if (count($request->file('images')) > 20) {
+                        throw new ValidationException(validator([], []), [
+                            'images' => ['No puede subir más de 20 imágenes adicionales.']
+                        ]);
+                    }
+
+                    $this->processPropertyImagesWithCompression($request->file('images'), $property);
+                    Log::info('✅ Imágenes adicionales procesadas exitosamente');
+                } catch (ValidationException $e) {
+                    throw $e;
+                } catch (\Exception $e) {
+                    Log::error('❌ Error procesando imágenes adicionales:', [
+                        'error' => $e->getMessage(),
+                        'property_id' => $property->id
+                    ]);
+                    throw new \Exception('Error procesando imágenes adicionales: ' . $e->getMessage());
+                }
+            }
+
+            Log::info('🎉 Procesamiento de imágenes completado exitosamente');
+        } catch (\Exception $e) {
+            Log::error('❌ Error general en processImagesWithCompression:', [
+                'error' => $e->getMessage(),
+                'property_id' => $property->id
+            ]);
+            throw $e;
+        }
+    }
+
+
+    /**
+     * Procesar múltiples imágenes con compresión inteligente y orden preservado
+     * CORREGIDO: Sin tocar la base de datos, solo orden en nombres de archivo
+     */
+    private function processPropertyImagesWithCompression(array $images, Property $property): void
+    {
+        $uploadedImages = [];
+        $errors = [];
+
+        try {
+            Log::info("🔄 Procesando {count} imágenes con compresión y orden en nombre", ['count' => count($images)]);
+
+            foreach ($images as $index => $image) {
+                try {
+                    $originalName = $image->getClientOriginalName();
+                    Log::info("📷 Procesando imagen " . ($index + 1) . ": {$originalName}");
+
+                    // Validaciones (mantener tu lógica existente)
+                    if (!$image->isValid()) {
+                        throw new \Exception('Archivo no válido');
+                    }
+
+                    if (!str_starts_with($image->getMimeType(), 'image/')) {
+                        throw new \Exception('El archivo no es una imagen válida');
+                    }
+
+                    if ($image->getSize() > 10485760) { // 10MB inicial (se comprimirá a 2MB)
+                        throw new \Exception('La imagen no puede ser mayor a 10MB');
+                    }
+
+                    // ========== EXTRAER ORDEN DEL NOMBRE ==========
+                    $orderNumber = $this->extractOrderFromFilename($originalName);
+
+                    // ========== USAR COMPRESIÓN INTELIGENTE CON ORDEN ==========
+                    $paths = $this->handleImageWithCompressionAndOrder(
+                        $image,
+                        'images',
+                        1200,    // max width para galería
+                        800,     // max height para galería
+                        85,      // calidad inicial
+                        $property->code,
+                        $orderNumber,
+                        true
+                    );
+
+                    // ========== SOLO GUARDAR EL PATH - SIN ORDER_NUMBER ==========
+                    $uploadedImages[] = new PropertyImage([
+                        'name' => $paths['original'],
+                        // NO incluir order_number - solo usar el nombre del archivo
+                    ]);
+
+                    Log::info("✅ Imagen procesada exitosamente: {$paths['original']} (Orden en nombre: {$orderNumber})");
+
+                } catch (\Exception $e) {
+                    $errorMsg = "Error en la imagen " . ($index + 1) . " ({$originalName}): " . $e->getMessage();
+                    $errors[] = $errorMsg;
+                    Log::error("❌ " . $errorMsg);
+
+                    // Limpiar imágenes subidas antes del error
+                    foreach ($uploadedImages as $uploadedImage) {
+                        if (Storage::disk('public')->exists($uploadedImage->name)) {
+                            Storage::disk('public')->delete($uploadedImage->name);
+                        }
+                    }
+                    break;
+                }
+            }
+
+            if (!empty($errors)) {
+                throw new ValidationException(validator([], []), [
+                    'images' => $errors
+                ]);
+            }
+
+            // Guardar todas las imágenes en la base de datos (SOLO name y property_id)
+            if (!empty($uploadedImages)) {
+                $property->images()->saveMany($uploadedImages);
+                Log::info("💾 Se guardaron " . count($uploadedImages) . " imágenes con orden preservado en nombres de archivo");
+            }
+
+        } catch (ValidationException $e) {
+            Log::error('❌ Errores de validación en imágenes:', ['errors' => $e->errors()]);
+            throw $e;
+        } catch (\Exception $e) {
+            // Limpiar cualquier imagen que se haya subido
+            foreach ($uploadedImages as $image) {
+                if (Storage::disk('public')->exists($image->name)) {
+                    Storage::disk('public')->delete($image->name);
+                }
+            }
+
+            Log::error('❌ Error general procesando imágenes:', ['error' => $e->getMessage()]);
+            throw new \Exception('Error procesando imágenes: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Extraer número de orden del nombre del archivo
+     */
+    private function extractOrderFromFilename(string $filename): int
+    {
+        // Buscar patrón como "01_", "02_", etc. al inicio del nombre
+        if (preg_match('/^(\d{2})_/', $filename, $matches)) {
+            return (int) $matches[1];
+        }
+
+        // Si no encuentra patrón, devolver 999 para que vaya al final
+        return 999;
+    }
+
+
+    /**
+     * Handle image upload with compression and order preservation
+     */
+    private function handleImageWithCompressionAndOrder(
+        UploadedFile $file,
+        string $type,
+        int $maxWidth = 1200,
+        int $maxHeight = 1200,
+        int $quality = 85,
+        string $propertyCode = '',
+        int $orderNumber = 1,
+        bool $createSmallVersion = false
+    ): array {
+        $paths = [];
+        $maxSizeMB = 2; // 2MB máximo
+        $maxSizeBytes = $maxSizeMB * 1024 * 1024;
+
+        try {
+            // Limpiar el nombre original del archivo (quitar el prefijo de orden)
+            $originalName = $file->getClientOriginalName();
+            $cleanName = preg_replace('/^\d{2}_/', '', $originalName);
+
+            Log::info("📷 Procesando imagen con orden en nombre: {$originalName} -> Orden: {$orderNumber}", [
+                'clean_name' => $cleanName,
+                'size_original' => $this->formatBytes($file->getSize()),
+            ]);
+
+            // Create image instance
+            $image = Image::read($file);
+
+            // Generate paths con el orden en el nombre del archivo
+            $basePath = "properties/{$propertyCode}/{$type}";
+            $orderPrefix = str_pad($orderNumber, 2, '0', STR_PAD_LEFT);
+            $extension = pathinfo($cleanName, PATHINFO_EXTENSION) ?: 'jpg';
+            $nameWithoutExt = pathinfo($cleanName, PATHINFO_FILENAME);
+
+            // Crear nombre final: 01_imagen_original.jpg
+            $filename = $orderPrefix . '_' . Str::slug($nameWithoutExt) . '_' . uniqid() . '.' . $extension;
+            $fullPath = storage_path("app/public/{$basePath}/{$filename}");
+
+            // Ensure directory exists
+            if (!file_exists(dirname($fullPath))) {
+                mkdir(dirname($fullPath), 0755, true);
+            }
+
+            // ========== COMPRESIÓN INTELIGENTE ==========
+            $originalImage = clone $image;
+
+            // Redimensionar si es necesario
+            $originalImage->scaleDown(width: $maxWidth, height: $maxHeight);
+
+            // Agregar watermark
+            $this->addWatermark($originalImage);
+
+            // Calcular calidad óptima
+            $finalQuality = $this->calculateOptimalQuality($file, $originalImage, $quality, $maxSizeBytes);
+
+            // Guardar imagen principal
+            $originalImage->encodeByExtension('jpg', $finalQuality)->save($fullPath);
+            $paths['original'] = "{$basePath}/{$filename}";
+
+            $finalSize = filesize($fullPath);
+            Log::info("✅ Imagen principal guardada con orden en nombre", [
+                'path' => $paths['original'],
+                'order_in_filename' => $orderNumber,
+                'quality_used' => $finalQuality,
+                'size_final' => $this->formatBytes($finalSize),
+                'compression_ratio' => round((1 - $finalSize / $file->getSize()) * 100, 1) . '%'
+            ]);
+
+            // ========== VERSIÓN PEQUEÑA (SI SE SOLICITA) ==========
+            if ($createSmallVersion) {
+                $smallFilename = $orderPrefix . '_' . Str::slug($nameWithoutExt) . '_' . uniqid() . '_small.' . $extension;
+                $smallPath = storage_path("app/public/{$basePath}/{$smallFilename}");
+
+                $smallImage = clone $image;
+                $smallImage->scaleDown(width: 400, height: 300);
+                $this->addWatermark($smallImage);
+
+                // Para versión pequeña, usar calidad más baja
+                $smallQuality = max(60, $finalQuality - 15);
+                $smallImage->encodeByExtension('jpg', $smallQuality)->save($smallPath);
+
+                $paths['small'] = "{$basePath}/{$smallFilename}";
+
+                Log::info("✅ Versión pequeña guardada con orden en nombre", [
+                    'path' => $paths['small'],
+                    'order_in_filename' => $orderNumber,
+                    'quality_used' => $smallQuality,
+                    'size_final' => $this->formatBytes(filesize($smallPath))
+                ]);
+            }
+
+            return $paths;
+
+        } catch (\Exception $e) {
+            Log::error('❌ Error processing image with order in filename:', [
+                'error' => $e->getMessage(),
+                'file' => $file->getClientOriginalName(),
+                'order' => $orderNumber
+            ]);
+            throw new \Exception("Error processing image: {$e->getMessage()}");
+        }
+    }
+
+
+    /**
+     * Método mejorado para manejar las imágenes durante la actualización CON COMPRESIÓN
+     */
+    private function handleImagesUpdateWithCompression(Property $property, Request $request): void
+    {
+        try {
+            Log::info('🚀 Iniciando actualización de imágenes CON COMPRESIÓN Y REORDENAMIENTO para propiedad: ' . $property->id);
+
+            // ========== ELIMINAR THUMBNAIL ==========
+            if ($request->has('remove_thumbnail') && $request->remove_thumbnail == '1') {
+                Log::info('🗑️ Eliminando thumbnail actual');
+                if ($property->thumbnail && Storage::disk('public')->exists($property->thumbnail)) {
+                    Storage::disk('public')->delete($property->thumbnail);
+                    Log::info('✅ Archivo de thumbnail eliminado: ' . $property->thumbnail);
+                }
+                $property->update(['thumbnail' => null]);
+            }
+
+            // ========== PROCESAR NUEVO THUMBNAIL CON COMPRESIÓN ==========
+            if ($request->hasFile('thumbnail')) {
+                try {
+                    Log::info('📸 Procesando nuevo thumbnail con compresión');
+                    $oldThumbnail = $property->thumbnail;
+
+                    $thumbnailPaths = $this->handleImageWithCompression(
+                        $request->file('thumbnail'),
+                        'thumbnails',
+                        800, 600, 85, // Calidad inicial más alta
+                        $property->code,
+                        true
+                    );
+
+                    // Solo eliminar el anterior después de que el nuevo se procese exitosamente
+                    if ($oldThumbnail && Storage::disk('public')->exists($oldThumbnail)) {
+                        Storage::disk('public')->delete($oldThumbnail);
+                        Log::info('🗑️ Thumbnail anterior eliminado: ' . $oldThumbnail);
+                    }
+
+                    $property->update(['thumbnail' => $thumbnailPaths['original']]);
+                    Log::info('✅ Thumbnail actualizado exitosamente con compresión');
+                } catch (\Exception $e) {
+                    Log::error('❌ Error procesando nuevo thumbnail:', [
+                        'error' => $e->getMessage(),
+                        'property_id' => $property->id
+                    ]);
+                    throw $e;
+                }
+            }
+
+            // ========== REORDENAR IMÁGENES EXISTENTES ==========
+            if ($request->has('image_orders') && is_array($request->image_orders)) {
+                Log::info('🔄 Procesando reordenamiento de imágenes existentes');
+                $this->reorderExistingImages($property, $request->image_orders);
+            }
+
+            // ========== ELIMINAR IMÁGENES EXISTENTES ==========
+            if ($request->has('delete_images') && is_array($request->delete_images)) {
+                Log::info('🗑️ Procesando eliminación de imágenes existentes', [
+                    'delete_images' => array_filter($request->delete_images, fn($val) => $val == '1')
+                ]);
+
+                foreach ($request->delete_images as $imageId => $shouldDelete) {
+                    if ($shouldDelete == '1') {
+                        Log::info('🗑️ Eliminando imagen con ID: ' . $imageId);
+
+                        $image = $property->images()->where('id', $imageId)->first();
+                        if ($image) {
+                            // Eliminar archivos físicos
+                            if (Storage::disk('public')->exists($image->name)) {
+                                Storage::disk('public')->delete($image->name);
+                                Log::info('✅ Archivo físico eliminado: ' . $image->name);
+                            }
+
+                            // Eliminar registro de la base de datos
+                            $image->delete();
+                            Log::info('✅ Registro de imagen eliminado de BD');
+                        } else {
+                            Log::warning('⚠️ Imagen con ID ' . $imageId . ' no encontrada');
+                        }
+                    }
+                }
+            }
+
+            // ========== PROCESAR NUEVAS IMÁGENES ADICIONALES CON COMPRESIÓN ==========
+            if ($request->hasFile('images')) {
+                try {
+                    Log::info('🖼️ Procesando nuevas imágenes adicionales con compresión', [
+                        'count' => count($request->file('images'))
+                    ]);
+
+                    // Validar límite total de imágenes
+                    $currentImageCount = $property->images()->count();
+                    $newImageCount = count($request->file('images'));
+
+                    if (($currentImageCount + $newImageCount) > 25) {
+                        throw new ValidationException(validator([], []), [
+                            'images' => ['No puede tener más de 25 imágenes en total. Actualmente tiene ' . $currentImageCount . ' imágenes.']
+                        ]);
+                    }
+
+                    $this->processPropertyImagesWithCompression($request->file('images'), $property);
+                    Log::info('✅ Nuevas imágenes procesadas exitosamente con compresión');
+                } catch (ValidationException $e) {
+                    throw $e;
+                } catch (\Exception $e) {
+                    Log::error('❌ Error procesando nuevas imágenes:', [
+                        'error' => $e->getMessage(),
+                        'property_id' => $property->id
+                    ]);
+                    throw $e;
+                }
+            }
+
+            Log::info('🎉 Actualización de imágenes completada exitosamente con compresión y reordenamiento');
+        } catch (\Exception $e) {
+            Log::error('❌ Error general en handleImagesUpdateWithCompression:', [
+                'error' => $e->getMessage(),
+                'property_id' => $property->id,
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
+    }
+
+    private function reorderExistingImages(Property $property, array $imageOrders): void
+    {
+        try {
+            Log::info('🔄 Iniciando reordenamiento de imágenes existentes');
+
+            foreach ($imageOrders as $imageId => $newOrder) {
+                $image = $property->images()->where('id', $imageId)->first();
+
+                if (!$image) {
+                    Log::warning("⚠️ Imagen con ID {$imageId} no encontrada para reordenar");
+                    continue;
+                }
+
+                $currentPath = $image->name;
+                $currentFilename = basename($currentPath);
+                $directory = dirname($currentPath);
+
+                // Extraer el orden actual del nombre
+                $currentOrder = $this->extractOrderFromImageName($currentPath);
+
+                if ($currentOrder == $newOrder) {
+                    Log::info("✅ Imagen {$imageId} ya tiene el orden correcto: {$newOrder}");
+                    continue;
+                }
+
+                // Crear nuevo nombre con el nuevo orden
+                $newFilename = $this->generateNewOrderedFilename($currentFilename, $newOrder);
+                $newPath = $directory . '/' . $newFilename;
+
+                // Verificar que los archivos existan antes de renombrar
+                $currentFullPath = storage_path('app/public/' . $currentPath);
+                $newFullPath = storage_path('app/public/' . $newPath);
+
+                if (!file_exists($currentFullPath)) {
+                    Log::warning("⚠️ Archivo físico no encontrado: {$currentFullPath}");
+                    continue;
+                }
+
+                // Renombrar archivo físico
+                if (rename($currentFullPath, $newFullPath)) {
+                    // Actualizar en la base de datos
+                    $image->update(['name' => $newPath]);
+
+                    Log::info("✅ Imagen reordenada exitosamente:", [
+                        'image_id' => $imageId,
+                        'old_order' => $currentOrder,
+                        'new_order' => $newOrder,
+                        'old_path' => $currentPath,
+                        'new_path' => $newPath
+                    ]);
+                } else {
+                    Log::error("❌ Error renombrando archivo físico:", [
+                        'from' => $currentFullPath,
+                        'to' => $newFullPath
+                    ]);
+                }
+            }
+
+            Log::info('🎉 Reordenamiento de imágenes completado');
+        } catch (\Exception $e) {
+            Log::error('❌ Error en reordenamiento de imágenes:', [
+                'error' => $e->getMessage(),
+                'property_id' => $property->id
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
+     * Generar nuevo nombre de archivo con el orden especificado
+     */
+    private function generateNewOrderedFilename(string $currentFilename, int $newOrder): string
+    {
+        // Remover el prefijo de orden actual si existe
+        $cleanFilename = preg_replace('/^\d{2}_/', '', $currentFilename);
+
+        // Agregar nuevo prefijo de orden
+        $orderPrefix = str_pad($newOrder, 2, '0', STR_PAD_LEFT);
+
+        return $orderPrefix . '_' . $cleanFilename;
+    }
+
+    /**
+     * Extraer orden del nombre de archivo guardado (método mejorado)
+     */
+    private function extractOrderFromImageName(string $imagePath): int
+    {
+        $filename = basename($imagePath);
+
+        // Buscar patrón como "01_", "02_", etc. al inicio del nombre
+        if (preg_match('/^(\d{2})_/', $filename, $matches)) {
+            return (int) $matches[1];
+        }
+
+        // Si no encuentra patrón, devolver 999 para que vaya al final
+        return 999;
+    }
+
 }

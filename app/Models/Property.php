@@ -81,6 +81,53 @@ class Property extends Model
         ];
     }
 
+    /**
+     * Obtener imágenes ordenadas por el número en el nombre del archivo
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getOrderedImages()
+    {
+        // Obtener todas las imágenes de la propiedad
+        $images = $this->images()->get();
+
+        // Ordenar por el número en el nombre del archivo
+        return $images->sort(function($a, $b) {
+            $orderA = $this->extractOrderFromImageName($a->name);
+            $orderB = $this->extractOrderFromImageName($b->name);
+
+            return $orderA <=> $orderB;
+        });
+    }
+
+    /**
+     * Extraer orden del nombre de archivo guardado
+     *
+     * @param string $imagePath
+     * @return int
+     */
+    private function extractOrderFromImageName(string $imagePath): int
+    {
+        $filename = basename($imagePath);
+
+        // Buscar patrón como "01_", "02_", etc. al inicio del nombre
+        if (preg_match('/^(\d{2})_/', $filename, $matches)) {
+            return (int) $matches[1];
+        }
+
+        // Si no encuentra patrón, devolver 999 para que vaya al final
+        return 999;
+    }
+
+    /**
+     * Accessor para obtener imágenes ordenadas automáticamente
+     * Opcional: si quieres que siempre devuelva las imágenes ordenadas
+     */
+    public function getImagesOrderedAttribute()
+    {
+        return $this->getOrderedImages();
+    }
+
 
     public function propertyType()
     {

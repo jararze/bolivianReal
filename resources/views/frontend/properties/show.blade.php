@@ -1886,7 +1886,7 @@
                     <img src="{{ asset('storage/' . $property->thumbnail) }}" alt="{{ $property->slug }}" style="height: 527px; width: 100%; oobject-fit: cover;">
                 @else
                     <x-frontend.property-gallery
-                        :images="$property->images"
+                        :images="$property->images_ordered"
                         :principal="['thumbnail' => $property->thumbnail, 'slug' => $property->slug]"
                     />
                 @endif
