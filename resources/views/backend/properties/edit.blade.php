@@ -173,7 +173,13 @@
                             <div class="grid grid-cols-3 gap-6">
                                 <div>
                                     <x-input-label for="neighborhood_id" :value="__('Zona')" class="mb-2 text-gray-700"/>
-                                    <x-select-input class="w-full" id="neighborhood_id" name="neighborhood_id" :options="['' => 'Primero seleccione una ciudad']" selected="{{ old('neighborhood_id', $property->neighborhood_id) }}"/>
+                                    <x-select-input
+                                        class="w-full"
+                                        id="neighborhood_id"
+                                        name="neighborhood_id"
+                                        data-selected="{{ old('neighborhood_id') }}"
+                                        :options="['' => 'Primero seleccione una ciudad']"
+                                        :selected="old('neighborhood_id', $property->neighborhood_id)"/>
                                     <x-input-error class="mt-1" :messages="$errors->get('neighborhood_id')"/>
                                 </div>
                                 <div>
@@ -192,7 +198,12 @@
                             <div class="grid grid-cols-2 gap-6">
                                 <div>
                                     <x-input-label for="city" :value="__('Ciudad')" class="mb-2 text-gray-700"/>
-                                    <x-select-input class="w-full" id="city" name="city" onchange="loadNeighborhoods(this.value)" :options="['' => 'Seleccione una ciudad'] + $cities->pluck('name', 'id')->toArray()" :selected="old('city', $property->city)"/>
+                                    <x-select-input
+                                        class="w-full"
+                                        id="city"
+                                        name="city"
+                                        onchange="loadNeighborhoods(this.value)" :options="['' => 'Seleccione una ciudad'] + $cities->pluck('name', 'id')->toArray()"
+                                        :selected="old('city', $property->city)" />
                                     <x-input-error class="mt-1" :messages="$errors->get('city')"/>
                                 </div>
                                 <div>
@@ -223,7 +234,12 @@
                                 </div>
                                 <div>
                                     <x-input-label for="currency" :value="__('Moneda')" class="mb-2 text-gray-700"/>
-                                    <x-select-input class="w-full" id="currency" name="currency" :options="['Bs' => 'Bolivianos', '$us' => 'Dolares']" :selected="old('currency', $property->currency)"/>
+                                    <x-select-input
+                                        class="w-full"
+                                        id="currency"
+                                        name="currency"
+                                        :options="['Bs' => 'Bolivianos', '$us' => 'Dolares']"
+                                        :selected="old('currency', $property->currency)" />
                                     <x-input-error class="mt-1" :messages="$errors->get('currency')"/>
                                 </div>
 {{--                                <div>--}}
@@ -1018,8 +1034,14 @@
                 }
 
                 // ========== FUNCIÓN: BARRIOS ==========
-                window.loadNeighborhoods = function(cityId) {
+                window.loadNeighborhoods = function(cityId, selectedNeighborhoodId = null) {
                     const neighborhoodSelect = document.getElementById('neighborhood_id');
+
+                    if (!neighborhoodSelect) {
+                        console.error('❌ Select de barrios no encontrado');
+                        return;
+                    }
+
                     neighborhoodSelect.innerHTML = '<option value="">Cargando barrios...</option>';
 
                     if (!cityId) {
@@ -1035,17 +1057,45 @@
                                 const option = document.createElement('option');
                                 option.value = neighborhood.id;
                                 option.textContent = neighborhood.name;
-                                if (neighborhood.id == {{ $property->neighborhood_id ?? 'null' }}) {
+
+                                // Marcar como seleccionado si coincide con el valor anterior
+                                if (selectedNeighborhoodId && neighborhood.id == selectedNeighborhoodId) {
                                     option.selected = true;
                                 }
+
                                 neighborhoodSelect.appendChild(option);
                             });
+
+                            console.log('✅ Barrios cargados para ciudad:', cityId, 'Seleccionado:', selectedNeighborhoodId);
                         })
                         .catch(error => {
-                            console.error('Error cargando barrios:', error);
+                            console.error('❌ Error cargando barrios:', error);
                             neighborhoodSelect.innerHTML = '<option value="">Error cargando barrios</option>';
                         });
                 };
+
+                // ========== INICIALIZACIÓN AUTOMÁTICA DE BARRIOS ==========
+                function initNeighborhoodsAutoload() {
+                    const citySelect = document.getElementById('city');
+                    const neighborhoodSelect = document.getElementById('neighborhood_id');
+
+                    if (!citySelect || !neighborhoodSelect) {
+                        console.log('⚠️ Selects de ciudad o barrio no encontrados');
+                        return;
+                    }
+
+                    // Verificar si ya hay una ciudad seleccionada al cargar la página
+                    const selectedCityId = citySelect.value;
+                    const selectedNeighborhoodId = neighborhoodSelect.getAttribute('data-selected') ||
+                        neighborhoodSelect.querySelector('option[selected]')?.value;
+
+                    console.log('🏙️ Ciudad inicial:', selectedCityId, 'Barrio inicial:', selectedNeighborhoodId);
+
+                    if (selectedCityId) {
+                        // Cargar barrios automáticamente si hay ciudad seleccionada
+                        loadNeighborhoods(selectedCityId, selectedNeighborhoodId);
+                    }
+                }
 
                 // ========== FUNCIÓN: CAMPOS DE PROYECTO ==========
                 window.toggleProjectFields = function(value) {
@@ -1067,6 +1117,7 @@
                 initExistingImages();
                 initMap();
                 initServices();
+                initNeighborhoodsAutoload();
 
                 // Cargar barrios si hay ciudad seleccionada
                 const citySelect = document.getElementById('city');

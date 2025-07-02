@@ -21,7 +21,7 @@ class StoreRequest extends FormRequest
             'country' => ['required', 'string', 'max:255'],
             'propertytype_id' => ['required', 'exists:property_types,id'],
             'service_type_id' => ['required', 'exists:service_types,id'],
-            'currency' => ['required', 'in:Bs,$us'],
+            'currency' => ['required', 'string', 'in:Bs,$us'],
             'chosen_currency' => ['nullable', 'boolean'],
             'lowest_price' => ['nullable', 'numeric'],
             'max_price' => ['required', 'numeric'],
@@ -32,7 +32,7 @@ class StoreRequest extends FormRequest
             'short_description' => ['required', 'string'],
             'long_description' => ['required', 'string'],
             'thumbnail' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:5120', 'dimensions:min_width=600,min_height=400'],
-            'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048', 'dimensions:min_width=600,min_height=400'],
+            'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:5120', 'dimensions:min_width=600,min_height=400'],
             'latitude' => ['required', 'numeric'],
             'longitude' => ['required', 'numeric'],
 
