@@ -204,7 +204,7 @@
                             <h3 class="card-title">Precios</h3>
                         </div>
                         <div class="card-body grid gap-5 pt-7.5">
-                            <div class="grid grid-cols-4 gap-6">
+                            <div class="grid grid-cols-3 gap-6">
                                 <div>
                                     <x-input-label for="propertytype_id" :value="__('¿Tipo Propiedad?')" class="mb-2 text-gray-700"/>
                                     <x-select-input class="w-full" id="propertytype_id" name="propertytype_id" :options="['' => 'Seleccione un tipo de propiedad'] + $propertyTypes->pluck('type_name', 'id')->toArray()" selected="{{ old('propertytype_id') }}"/>
@@ -217,14 +217,20 @@
                                 </div>
                                 <div>
                                     <x-input-label for="currency" :value="__('Moneda')" class="mb-2 text-gray-700"/>
-                                    <x-select-input class="w-full" id="currency" name="currency" :options="['Bs' => 'Bolivianos', '$us' => 'Dólares']" selected="{{ old('currency', 'Bs') }}"/>
+                                    <x-select-input
+                                        class="w-full"
+                                        id="currency"
+                                        name="currency"
+                                        :options="['Bs' => 'Bolivianos', '$us' => 'Dolares']"
+                                        :selected="old('currency', 'Bs')"
+                                    />
                                     <x-input-error class="mt-1" :messages="$errors->get('currency')"/>
                                 </div>
-                                <div>
-                                    <x-input-label for="chosen_currency" :value="__('¿Precio a mostrar?')" class="mb-2 text-gray-700"/>
-                                    <x-select-input class="w-full" id="chosen_currency" name="chosen_currency" :options="['1' => 'Bolivianos', '0' => 'Dolares']" selected="1"/>
-                                    <x-input-error class="mt-1" :messages="$errors->get('chosen_currency')"/>
-                                </div>
+{{--                                <div>--}}
+{{--                                    <x-input-label for="chosen_currency" :value="__('¿Precio a mostrar?')" class="mb-2 text-gray-700"/>--}}
+{{--                                    <x-select-input class="w-full" id="chosen_currency" name="chosen_currency" :options="['1' => 'Bolivianos', '0' => 'Dolares']" selected="1"/>--}}
+{{--                                    <x-input-error class="mt-1" :messages="$errors->get('chosen_currency')"/>--}}
+{{--                                </div>--}}
                             </div>
 
                             <div class="grid grid-cols-2 gap-6">

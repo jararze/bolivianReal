@@ -21,8 +21,8 @@ class StoreRequest extends FormRequest
             'country' => ['required', 'string', 'max:255'],
             'propertytype_id' => ['required', 'exists:property_types,id'],
             'service_type_id' => ['required', 'exists:service_types,id'],
-            'currency' => ['required'],
-            'chosen_currency' => ['required', 'boolean'],
+            'currency' => ['required', 'in:Bs,$us'],
+            'chosen_currency' => ['nullable', 'boolean'],
             'lowest_price' => ['nullable', 'numeric'],
             'max_price' => ['required', 'numeric'],
             'bedrooms' => ['required', 'integer'],
@@ -105,7 +105,7 @@ class StoreRequest extends FormRequest
         }
 
         // Convertir strings 'true'/'false' a booleanos para campos boolean
-        $booleanFields = ['currency', 'chosen_currency', 'featured', 'hot', 'status', 'is_project'];
+        $booleanFields = ['featured', 'hot', 'status', 'is_project'];
 
         foreach ($booleanFields as $field) {
             if ($this->has($field)) {
@@ -161,8 +161,8 @@ class StoreRequest extends FormRequest
             'currency.required' => 'La moneda es requerida',
             'currency.in' => 'La moneda seleccionada no es válida. Debe ser Bs o $us.',
 
-            'chosen_currency.required' => 'Debe seleccionar la moneda a mostrar',
-            'chosen_currency.boolean' => 'El valor de moneda a mostrar no es válido',
+//            'chosen_currency.required' => 'Debe seleccionar la moneda a mostrar',
+//            'chosen_currency.boolean' => 'El valor de moneda a mostrar no es válido',
 
 //            'lowest_price.required' => 'El precio mínimo es requerido',
 //            'lowest_price.numeric' => 'El precio mínimo debe ser un número',

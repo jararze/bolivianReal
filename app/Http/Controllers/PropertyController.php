@@ -223,7 +223,7 @@ class PropertyController extends Controller
                 'bedrooms', 'bathrooms', 'garage', 'garage_size',
                 'short_description', 'long_description', 'latitude', 'longitude',
                 'video', 'featured', 'hot', 'agent_id', 'status', 'is_project',
-                'units', 'project_id', 'service_type_id'
+                'units', 'project_id', 'service_type_id','currency'
             ];
 
             $propertyData = array_intersect_key($validated, array_flip($propertyFields));
