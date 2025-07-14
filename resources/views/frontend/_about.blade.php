@@ -430,11 +430,11 @@
                         <h4>Tita Lily Bilbao</h4>
                         <span class="team-member-position">Fundadora</span>
                         <p>Fundadora de BRE</p>
-<!--                         <div class="team-member-social">
+                        <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
                             <a href="#"><i class="fa fa-envelope"></i></a>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
 
@@ -446,11 +446,11 @@
                         <h4>Ma. Teresa Bilbao Rioja de Jordán</h4>
                         <span class="team-member-position">Director General</span>
                         <p>Director General, cuenta con más de 35 años de experiencia en el mercado inmobiliario paceño.</p>
-<!--                         <div class="team-member-social">
+                        <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
                             <a href="#"><i class="fa fa-envelope"></i></a>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
 
@@ -462,11 +462,11 @@
                         <h4>Pablo Jordán Bilbao Rioja</h4>
                         <span class="team-member-position">Gerente de Operaciones</span>
                         <p>Especialista en gestión de propiedades de lujo y desarrollo de proyectos inmobiliarios.</p>
-<!--                         <div class="team-member-social">
+                        <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
                             <a href="#"><i class="fa fa-envelope"></i></a>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
 
@@ -478,11 +478,11 @@
                         <h4>Andrea Jordán Bilbao Rioja</h4>
                         <span class="team-member-position">Asesor Inmobiliario Senior</span>
                         <p>Experto en propiedades comerciales y oficinas en las zonas más exclusivas de La Paz.</p>
-<!--                         <div class="team-member-social">
+                        <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
                             <a href="#"><i class="fa fa-envelope"></i></a>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -491,16 +491,16 @@
                 <div class="col-md-3 col-sm-6">
                     <div class="team-member">
                         <div class="team-member-image">
-                            <img src="{{ asset('assets/front/images/agent/roberto.jpeg') }}" alt="Jefe de Comercialización y Proyectos">
+                            <img src="{{ asset('assets/front/images/agent/roberto.jpeg') }}" alt="Asesor Financiero">
                         </div>
-                        <h4>Roberto A. Jordán Galdames</h4>
-                        <span class="team-member-position">Jefe de Comercialización y Proyectos</span>
-                        <p>Arquitecto y Master en Project Management, con una experiencia de más de 15 años en el Asesoramiento Inmobiliario, Avalúos Comerciales, Reparación y Refacción de Inmuebles.</p>
-<!--                         <div class="team-member-social">
+                        <h4>Roberto Jordán Galdames</h4>
+                        <span class="team-member-position">Asesor Financiero</span>
+                        <p>Especialista en financiamiento inmobiliario, anticréticos y modelos de inversión en bienes raíces.</p>
+                        <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
                             <a href="#"><i class="fa fa-envelope"></i></a>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
 
@@ -512,11 +512,11 @@
                         <h4>Aurora Canaza</h4>
                         <span class="team-member-position">Asesor Inmobiliario Senior</span>
                         <p>Experto en propiedades comerciales y oficinas en las zonas más exclusivas de La Paz.</p>
-<!--                         <div class="team-member-social">
+                        <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
                             <a href="#"><i class="fa fa-envelope"></i></a>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
 
@@ -528,11 +528,11 @@
                         <h4>Patricia Zelada</h4>
                         <span class="team-member-position">Asesor Inmobiliario Senior</span>
                         <p>Experto en propiedades comerciales y oficinas en las zonas más exclusivas de La Paz.</p>
-<!--                         <div class="team-member-social">
+                        <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
                             <a href="#"><i class="fa fa-envelope"></i></a>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
 
@@ -544,11 +544,11 @@
                         <h4>Viviana Rada</h4>
                         <span class="team-member-position">Asesor Inmobiliario Senior</span>
                         <p>Experto en propiedades comerciales y oficinas en las zonas más exclusivas de La Paz.</p>
-<!--                         <div class="team-member-social">
+                        <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
                             <a href="#"><i class="fa fa-envelope"></i></a>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
