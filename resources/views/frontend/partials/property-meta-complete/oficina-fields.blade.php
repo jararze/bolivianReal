@@ -46,7 +46,7 @@
         </svg>
     </i>
     <div class="meta-inner-wrapper">
-        <span class="meta-item-label">Banos</span>
+        <span class="meta-item-label">Baños</span>
         <span class="meta-item-value">{{ $property->bathrooms }}</span>
     </div>
 </div>
@@ -74,7 +74,7 @@
     </i>
     <div class="meta-inner-wrapper">
         <span class="meta-item-label">Baulera</span>
-        <span class="meta-item-value">{{ $property->garage_size }}</span>
+        <span class="meta-item-value">{{ round($property->garage_size, 0) }}</span>
     </div>
 </div>
 <div class="meta-item">

@@ -20,7 +20,7 @@
         </svg>
     </i>
     <div class="meta-inner-wrapper">
-        <span class="meta-item-label">Servicios basicos</span>
+        <span class="meta-item-label">Servicios b&aacute;sicos</span>
         <span class="meta-item-value">{{ $property->bedrooms = 1 ? 'Si' : 'No'  }}</span>
     </div>
 </div>

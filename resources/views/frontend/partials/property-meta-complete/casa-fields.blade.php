@@ -46,7 +46,7 @@
         </svg>
     </i>
     <div class="meta-inner-wrapper">
-        <span class="meta-item-label">Banos</span>
+        <span class="meta-item-label">Baños</span>
         <span class="meta-item-value">{{ $property->bathrooms }}</span>
     </div>
 </div>
