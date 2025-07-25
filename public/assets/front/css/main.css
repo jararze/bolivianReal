@@ -4034,7 +4034,7 @@ div.dsidx-results-widget .dsidx-expanded li {
   text-align: center;
 }
 .site-logo img {
-  max-width: 100%;
+  /*max-width: 100%;*/
 }
 .logo-inner-wrapper {
   display: table-cell;

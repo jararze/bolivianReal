@@ -211,40 +211,40 @@
 {{--        </div>--}}
 {{--    </div>--}}
 
-    <section class="video-section" style="margin: 0 0 20px 0px">
-        <div class="video-title-wrapper">
-            <h2 class="title text-center mb-0">
-                Conoce más sobre nosotros
-            </h2>
-        </div>
+{{--    <section class="video-section" style="margin: 0 0 20px 0px">--}}
+{{--        <div class="video-title-wrapper">--}}
+{{--            <h2 class="title text-center mb-0">--}}
+{{--                Conoce más sobre nosotros--}}
+{{--            </h2>--}}
+{{--        </div>--}}
 
-        <div class="full-width-video-wrapper">
-            <div class="video-container">
-                @php
-                    $videoUrl = site_config('home_info.video_url');
-                @endphp
-                @if($videoUrl)
-                    <iframe
-                        src="{{ $videoUrl }}"
-                        title="Video Corporativo"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-                @else
-                    {{-- Video por defecto o mensaje --}}
-                    <iframe
-                        src="https://www.youtube.com/embed/xBUtsWEU39I?si=nFadO4VcgPfW0GnB"
-                        title="Video Corporativo"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-                @endif
-            </div>
-        </div>
+{{--        <div class="full-width-video-wrapper">--}}
+{{--            <div class="video-container">--}}
+{{--                @php--}}
+{{--                    $videoUrl = site_config('home_info.video_url');--}}
+{{--                @endphp--}}
+{{--                @if($videoUrl)--}}
+{{--                    <iframe--}}
+{{--                        src="{{ $videoUrl }}"--}}
+{{--                        title="Video Corporativo"--}}
+{{--                        frameborder="0"--}}
+{{--                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"--}}
+{{--                        allowfullscreen>--}}
+{{--                    </iframe>--}}
+{{--                @else--}}
+{{--                    --}}{{-- Video por defecto o mensaje --}}
+{{--                    <iframe--}}
+{{--                        src="https://www.youtube.com/embed/xBUtsWEU39I?si=nFadO4VcgPfW0GnB"--}}
+{{--                        title="Video Corporativo"--}}
+{{--                        frameborder="0"--}}
+{{--                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"--}}
+{{--                        allowfullscreen>--}}
+{{--                    </iframe>--}}
+{{--                @endif--}}
+{{--            </div>--}}
+{{--        </div>--}}
 
-    </section>
+{{--    </section>--}}
 
     <div class="featured-properties meta-item-half featured-properties-two">
         <div class="container">

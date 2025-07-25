@@ -3,10 +3,12 @@
         <div class="row">
             <div class="col-lg-3 footer-logo">
                 <a href="#">
-                    <img src="{{ asset('assets/front/images/logoBlack.png') }}" alt="Bolivian Real Estate" />
+                    <img src="{{ asset('assets/media/logo/logo_transparenteBolivian2.png') }}" alt="Bolivian Real Estate" style="height: 108px" />
                 </a>
                 <p class="copyright-text">
-                    ©Copyright 2025 Todos los derechos reservados <a href="#">Teknicos</a>
+                    Calacoto, Av. Ballivián N° 1578
+                    Edif. Torre Cesur piso 5 Of. 508
+                    La Paz, Bolivia
                 </p>
             </div>
             <div class="col-lg-9 footer-widget-area">
