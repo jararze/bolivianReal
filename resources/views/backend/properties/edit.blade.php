@@ -1693,4 +1693,43 @@
             debugNeighborhoodInfo();
         }, 1000);
     </script>
+
+    // Agrega este script al final de tu vista
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const propertyTypeSelect = document.getElementById('propertytype_id');
+            const bedroomsLabel = document.querySelector('label[for="bedrooms"]');
+            const bathroomsLabel = document.querySelector('label[for="bathrooms"]');
+
+            // Textos originales
+            const originalLabels = {
+                bedrooms: 'Numero habitaciones/ambientes',
+                bathrooms: 'Numero de banos'
+            };
+
+            // Textos para terreno
+            const terrainLabels = {
+                bedrooms: 'Servicios básicos (1=Sí, 0=No)',
+                bathrooms: 'Terreno cerrado (1=Sí, 0=No)'
+            };
+
+            function updateLabels() {
+                const selectedText = propertyTypeSelect.options[propertyTypeSelect.selectedIndex].text.toLowerCase();
+
+                if (selectedText.includes('terreno')) {
+                    bedroomsLabel.textContent = terrainLabels.bedrooms;
+                    bathroomsLabel.textContent = terrainLabels.bathrooms;
+                } else {
+                    bedroomsLabel.textContent = originalLabels.bedrooms;
+                    bathroomsLabel.textContent = originalLabels.bathrooms;
+                }
+            }
+
+            // Ejecutar al cambiar el select
+            propertyTypeSelect.addEventListener('change', updateLabels);
+
+            // Ejecutar al cargar la página (por si ya hay un valor seleccionado)
+            updateLabels();
+        });
+    </script>
 </x-app-layout>

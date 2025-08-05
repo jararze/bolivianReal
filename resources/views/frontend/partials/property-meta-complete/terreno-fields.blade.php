@@ -21,7 +21,7 @@
     </i>
     <div class="meta-inner-wrapper">
         <span class="meta-item-label">Servicios b&aacute;sicos</span>
-        <span class="meta-item-value">{{ $property->bedrooms = 1 ? 'Si' : 'No'  }}</span>
+        <span class="meta-item-value">{{ $property->bedrooms > 0 ? 'Si' : 'No'  }}</span>
     </div>
 </div>
 <div class="meta-item">
@@ -32,10 +32,9 @@
                   d="M21 48.001h-19c-1.104 0-2-.896-2-2v-31c0-1.104.896-2 2-2h19c1.106 0 2 .896 2 2v31c0 1.104-.895 2-2 2zm0-37.001h-19c-1.104 0-2-.895-2-1.999v-7.001c0-1.104.896-2 2-2h19c1.106 0 2 .896 2 2v7.001c0 1.104-.895 1.999-2 1.999zm25 37.001h-19c-1.104 0-2-.896-2-2v-31c0-1.104.896-2 2-2h19c1.104 0 2 .896 2 2v31c0 1.104-.896 2-2 2zm0-37.001h-19c-1.104 0-2-.895-2-1.999v-7.001c0-1.104.896-2 2-2h19c1.104 0 2 .896 2 2v7.001c0 1.104-.896 1.999-2 1.999z"/>
         </svg>
     </i>
-
     <div class="meta-inner-wrapper">
         <span class="meta-item-label">Amurallado</span>
-        <span class="meta-item-value">{{ $property->bathrooms = 1 ? 'Si' : 'No'  }}</span>
+        <span class="meta-item-value">{{ $property->bathrooms > 0 ? 'Si' : 'No'  }}</span>
     </div>
 </div>
 {{--<div class="meta-item">--}}

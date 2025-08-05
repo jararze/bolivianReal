@@ -3,6 +3,34 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/ui/trumbowyg.min.css" />
+
+    <style>
+        .temp-file {
+            position: relative;
+        }
+
+        .temp-file::before {
+            content: '📂';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #3b82f6;
+            color: white;
+            font-size: 12px;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .temp-file img {
+            border: 2px solid #3b82f6 !important;
+        }
+    </style>
+
 @endpush
 
 @push('scripts')
@@ -387,6 +415,41 @@
                                         @endif
                                     </div>
                                 </div>
+                                @if(session('temp_files'))
+                                    <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4" role="alert">
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            <div class="flex-1">
+                                                <p class="font-medium">Archivos recuperados</p>
+                                                <p class="text-sm">Se han restaurado las imágenes que subiste anteriormente.</p>
+
+                                                @php
+                                                    $tempFiles = session('temp_files', []);
+                                                    $thumbnailCount = isset($tempFiles['thumbnail']) ? 1 : 0;
+                                                    $imagesCount = isset($tempFiles['images']) ? count($tempFiles['images']) : 0;
+                                                    $totalFiles = $thumbnailCount + $imagesCount;
+                                                @endphp
+
+                                                <p class="text-xs mt-1">
+                                                    {{ $totalFiles }} archivo{{ $totalFiles !== 1 ? 's' : '' }} recuperado{{ $totalFiles !== 1 ? 's' : '' }}
+                                                    @if($thumbnailCount > 0)
+                                                        ({{ $thumbnailCount }} imagen principal)
+                                                    @endif
+                                                    @if($imagesCount > 0)
+                                                        ({{ $imagesCount }} imagen{{ $imagesCount !== 1 ? 'es' : '' }} adicional{{ $imagesCount !== 1 ? 'es' : '' }})
+                                                    @endif
+                                                </p>
+                                            </div>
+                                            <button onclick="clearAllTempFiles()" class="ml-4 text-blue-600 hover:text-blue-800 text-sm underline">
+                                                Limpiar archivos
+                                            </button>
+                                        </div>
+                                    </div>
+                                @endif
+
+
                             </div>
 
                             <!-- Grid de vista previa de imágenes adicionales CON DRAG & DROP -->
@@ -1435,5 +1498,42 @@
                 console.log('✅ PropertyCreate v3.0 con Compresión completamente inicializado');
             });
         }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const propertyTypeSelect = document.getElementById('propertytype_id');
+            const bedroomsLabel = document.querySelector('label[for="bedrooms"]');
+            const bathroomsLabel = document.querySelector('label[for="bathrooms"]');
+
+            // Textos originales
+            const originalLabels = {
+                bedrooms: 'Numero habitaciones/ambientes',
+                bathrooms: 'Numero de banos'
+            };
+
+            // Textos para terreno
+            const terrainLabels = {
+                bedrooms: 'Servicios básicos (1=Sí, 0=No)',
+                bathrooms: 'Terreno cerrado (1=Sí, 0=No)'
+            };
+
+            function updateLabels() {
+                const selectedText = propertyTypeSelect.options[propertyTypeSelect.selectedIndex].text.toLowerCase();
+
+                if (selectedText.includes('terreno')) {
+                    bedroomsLabel.textContent = terrainLabels.bedrooms;
+                    bathroomsLabel.textContent = terrainLabels.bathrooms;
+                } else {
+                    bedroomsLabel.textContent = originalLabels.bedrooms;
+                    bathroomsLabel.textContent = originalLabels.bathrooms;
+                }
+            }
+
+            // Ejecutar al cambiar el select
+            propertyTypeSelect.addEventListener('change', updateLabels);
+
+            // Ejecutar al cargar la página (por si ya hay un valor seleccionado)
+            updateLabels();
+        });
     </script>
 </x-app-layout>

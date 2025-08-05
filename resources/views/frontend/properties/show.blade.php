@@ -2217,7 +2217,7 @@
                                     </i>
                                     <div class="meta-inner-wrapper">
                                         <span class="meta-item-label">Servicios b&aacute;sicos</span>
-                                        <span class="meta-item-value">{{ $property->bedrooms = 1 ? 'Si' : 'No'  }}</span>
+                                        <span class="meta-item-value">{{ $property->bedrooms > 0 ? 'Si' : 'No'  }}</span>
                                     </div>
                                 </div>
                                 <div class="meta-item">
@@ -2228,7 +2228,7 @@
                                     </i>
                                     <div class="meta-inner-wrapper">
                                         <span class="meta-item-label">Amurallado</span>
-                                        <span class="meta-item-value">{{ $property->bathrooms = 1 ? 'Si' : 'No' }}</span>
+                                        <span class="meta-item-value">{{ $property->bathrooms > 0 ? 'Si' : 'No' }}</span>
                                     </div>
                                 </div>
 {{--                                <div class="meta-item">--}}
@@ -2498,7 +2498,7 @@
                             <div class="inner-wrapper clearfix">
                                 <figure class="agent-image">
                                     <a href="#">
-                                        <img width="220" height="220" style="object-fit: fill" src="{{ asset(site_config('appearance_settings.logo.path', 'default-logo.png')) }}" class="img-circle wp-post-image" alt="Nathan James">
+                                        <img width="220" height="220" style="object-fit: none" src="{{ asset(site_config('appearance_settings.logo.path', 'default-logo.png')) }}" class="img-circle wp-post-image" alt="Nathan James">
                                     </a>
                                 </figure>
                                 <h3 class="agent-name">
