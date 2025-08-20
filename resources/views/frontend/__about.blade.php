@@ -460,8 +460,8 @@
                             <img src="{{ asset('assets/front/images/agent/pablo.jpg') }}" alt="Gerente de Operaciones">
                         </div>
                         <h4>Pablo Jordán Bilbao Rioja</h4>
-                        <span class="team-member-position">Asesor Inmobiliario Senior</span>
-                        <p>Agente inmobiliario con maestría en administración y gestión de empresas,  experto en inversiones y gestión financiera con 5 años de experiencia en el mercado inmobiliario.</p>
+                        <span class="team-member-position">Gerente de Operaciones</span>
+                        <p>Especialista en gestión de propiedades de lujo y desarrollo de proyectos inmobiliarios.</p>
 <!--                         <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>
@@ -511,7 +511,7 @@
                         </div>
                         <h4>Aurora Canaza</h4>
                         <span class="team-member-position">Asesor Inmobiliario Senior</span>
-                        <p>Lic. en Administración de Empresas, con una experiencia de más de 11 años en el área de Bienes Raíces.</p>
+                        <p>Experto en propiedades comerciales y oficinas en las zonas más exclusivas de La Paz.</p>
 <!--                         <div class="team-member-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-linkedin"></i></a>

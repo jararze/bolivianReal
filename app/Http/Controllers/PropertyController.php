@@ -830,15 +830,15 @@ class PropertyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Property $package): RedirectResponse
+    public function destroy(Property $property): RedirectResponse
     {
         try {
-            DB::transaction(function () use ($package) {
-                $package->delete();
+            DB::transaction(function () use ($property) {
+                $property->delete();
             });
-            flash()->success('Paquete borrado satisfactoriamente.');
+            flash()->success('Propiedad satisfactoriamente.');
         } catch (ModelNotFoundException $e) {
-            flash()->warning('El paquete no existe.');
+            flash()->warning('La Propiedad no existe.');
         } catch (QueryException $e) {
             flash()->warning('Error de base de datos al borrar el paquete: '.$e->getMessage());
         } catch (\Exception $e) {

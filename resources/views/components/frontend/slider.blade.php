@@ -1,18 +1,92 @@
-<div class="homepage-slider slider-variation-one flexslider" style="position: relative; height: 650px; width: 100%; background-image: url('{{ asset('assets/media/slider3.jpg') }}'); background-size: none; background-position: center; background-color: #494c53; background-repeat: no-repeat;">
+<div class="homepage-slider slider-variation-one flexslider" style="position: relative; height: 500px; width: 100%; background-image: url('{{ asset('assets/media/slider3.jpg') }}'); background-size: none; background-position: center; background-color: #494c53; background-repeat: no-repeat;">
 0
     <!-- Overlay -->
     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.3);"></div>
 
     <!-- Texto -->
-    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-        <div style="text-align: center; padding: 0 20px;">
-            <h1 style="font-size: 4rem; font-weight: 700; color: white; margin-bottom: 15px; line-height: 1.1; text-shadow: 2px 2px 8px rgba(0,0,0,0.7); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; letter-spacing: -1px;">
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6));">
+
+        <div style="text-align: center; padding: 0 40px; max-width: 800px;">
+
+            <h1 style="
+
+            font-size: clamp(2.5rem, 6vw, 5rem);
+
+            font-weight: 300;
+
+            color: #ffffff;
+
+            margin-bottom: 20px;
+
+            line-height: 1.2;
+
+            text-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 2px 10px rgba(0,0,0,0.5);
+
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+
+            background: linear-gradient(45deg, #ffffff, #f0f0f0);
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+            background-clip: text;
+
+            animation: fadeInUp 1.2s ease-out;
+
+        ">
+
                 El lugar de tus sueños
+
             </h1>
-            <p style="font-size: 1.6rem; color: white; font-weight: 300; text-shadow: 1px 1px 4px rgba(0,0,0,0.6); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; opacity: 0.95;">
-                al alcance de tus sueños
+
+            <p style="
+
+            font-size: clamp(1.2rem, 3vw, 2rem);
+
+            color: #f8f8f8;
+
+            font-weight: 200;
+
+            text-shadow: 0 2px 15px rgba(0,0,0,0.7);
+
+            font-family: 'Georgia', 'Times New Roman', serif;
+
+            opacity: 0.9;
+
+            letter-spacing: 1px;
+
+            font-style: italic;
+
+            margin-top: 10px;
+
+            animation: fadeInUp 1.5s ease-out;
+
+        ">
+
+                al alcance de tus manos
+
             </p>
+
+            <div style="
+
+            width: 80px;
+
+            height: 2px;
+
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+
+            margin: 30px auto 0;
+
+            animation: fadeIn 2s ease-out;
+
+        "></div>
+
         </div>
+
     </div>
 </div>
 {{--    <img src="{{ asset("assets/media/slider2.jpg") }}"--}}

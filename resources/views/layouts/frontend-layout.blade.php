@@ -36,8 +36,7 @@
         }
 
         .site-header .container-fluid {
-            background: linear-gradient(135deg, #494c53 0%, #3a3d43 100%) !important;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.9) !important;
             transition: all 0.3s ease;
         }
 
@@ -53,7 +52,7 @@
         /* Mejoras para el menú principal */
         .main-menu {
             align-items: center !important;
-            height: 100px;
+            height: 80px;
         }
 
         .main-menu li {
@@ -490,6 +489,27 @@
         .advance-search.main-advance-search {
             animation: fadeInUp 0.6s ease-out;
         }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
     </style>
 
 

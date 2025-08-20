@@ -26,14 +26,14 @@
 
 <header class="site-header header header-variation-two">
     <!-- MENÚ PRINCIPAL CON FONDO AL 100% PERO CONTENIDO ALINEADO A CONTAINER -->
-    <div class="container-fluid" style="background: linear-gradient(135deg, #494c53 0%, #3a3d43 100%); box-shadow: 0 2px 15px rgba(0,0,0,0.1);">
+    <div class="container-fluid" style="background: rgba(0, 0, 0, 0.9);">
         <div class="container">
             <div class="row">
-                <div class="col-12" style="display: flex; align-items: center; justify-content: space-between; min-height: 100px;">
+                <div class="col-12" style="display: flex; align-items: center; justify-content: space-between; min-height: 80px;">
 
                     <!-- LOGO -->
-                    <div class="col-lg-3 zero-horizontal-padding" style="width: 17% !important;">
-                        <div id="site-logo" class="site-logo" style="min-height: 100px !important; padding-bottom: 10px !important; height: 100px !important;">
+                    <div class="col-lg-3 zero-horizontal-padding" style="width: 14% !important;">
+                        <div id="site-logo" class="site-logo" style="min-height: 80px !important; padding-bottom: 10px !important; height: 80px !important;">
                             <div class="logo-inner-wrapper" style="display: block !important;">
                                 <a href="{{ route('frontend.home') }}" style="transition: transform 0.3s ease;"
                                    onmouseover="this.style.transform='scale(1.05)'"
@@ -43,7 +43,7 @@
 {{--                                         style="height: 90px; vertical-align: top; max-width: 100%; object-fit: contain;"/>--}}
                                     <img src="{{ asset('assets/media/logo/logo_transparenteBolivian2.png') }}"
                                          alt="{{ site_config('appearance_settings.site_name', 'Logo') }}"
-                                         style="height: 90px; vertical-align: top; mmax-width: 100%; object-fit: contain;"/>
+                                         style="height: 68px; vertical-align: top; mmax-width: 100%; object-fit: contain;"/>
                                 </a>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
 
                     <!-- NAVEGACIÓN -->
                     <nav id="site-main-nav" class="site-main-nav" style="flex: 1; margin-left: 20px;">
-                        <ul class="main-menu clearfix" style="display: flex; justify-content: center; margin: 0; padding: 0; list-style: none; align-items: center;">
+                        <ul class="main-menu clearfix" style="display: flex; justify-content: center; margin: 0; padding: 0; list-style: none; align-items: center; font-size: 12px">
                             <li class="{{ Route::currentRouteName() == 'frontend.home' ? 'current-menu-item' : '' }}" style="margin: 0 2px;">
                                 <a href="{{ route('frontend.home') }}"
                                    style="padding: 15px 25px; color: #fff; display: block; border-radius: 8px; transition: all 0.3s ease; text-decoration: none; position: relative; {{ Route::currentRouteName() == 'frontend.home' ? 'background: rgba(0, 123, 255, 0.2);' : '' }}"
