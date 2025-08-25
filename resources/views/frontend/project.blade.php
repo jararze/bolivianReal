@@ -35,7 +35,7 @@
 <!-- Navbar -->
 <nav class="navbar">
     <div class="navbar-container">
-        <a href="#" class="navbar-logo">
+        <a href="/" class="navbar-logo">
             <img src="{{ asset('assets/front/images/logoBlack.png') }}" alt="Logo" />
         </a>
 

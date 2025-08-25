@@ -107,7 +107,7 @@
             // Info window para el área
             const contentString = `
             <div class="map-info-window" style="width: 250px; padding: 10px;">
-                <h5 style="margin-top: 0; color: #0DBAE8;">Zona aproximada</h5>
+                <h5 style="margin-top: 0; color: white;">Zona aproximada</h5>
                 <p style="margin-bottom: 5px;">{{ $property->neighborhood }}, {{ $property->whatcity?->name ?? 'Sin ciudad' }}</p>
                 <p><strong>{{ $property->currency }} {{ number_format($property->lowest_price, 2) }}</strong></p>
                 <p style="font-size: 12px; color: #777;">Contacte con el agente para obtener la ubicación exacta.</p>
@@ -224,7 +224,7 @@
         }
 
         .location-icon i {
-            color: #0DBAE8;
+            color: white;
             font-size: 24px;
         }
 
@@ -260,12 +260,12 @@
             left: 0;
             width: 50px;
             height: 3px;
-            background: #0DBAE8;
+            background: #032b3b;
             transition: width 0.3s ease;
         }
 
         .single-property-title:hover {
-            color: #0DBAE8;
+            color: white;
         }
 
         .single-property-title:hover:after {
@@ -276,7 +276,7 @@
         .single-property-price {
             margin-top: 10px;
             font-weight: 700;
-            color: #0DBAE8;
+            color: white;
             display: inline-block;
             padding: 8px 15px;
             background-color: rgba(13, 186, 232, 0.1);
@@ -375,7 +375,7 @@
             left: 0;
             width: 50px;
             height: 3px;
-            background: #0DBAE8;
+            background: #032b3b;
             transition: width 0.3s ease;
         }
 
@@ -406,7 +406,7 @@
             content: '✓';
             position: absolute;
             left: 10px;
-            color: #0DBAE8;
+            color: white;
             font-weight: bold;
         }
 
@@ -549,7 +549,7 @@
 
         .agent-content-wrapper {
             padding: 25px 15px;
-            background: linear-gradient(135deg, #00BCD4 0%, #03A9F4 100%);
+            background: linear-gradient(135deg, #374151 0%, #1F2937 100%);
             position: relative;
         }
 
@@ -783,7 +783,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 20px;
-            background: linear-gradient(135deg, #00BCD4 0%, #03A9F4 100%);
+            background: linear-gradient(135deg, #374151 0%, #1F2937 100%);
             color: white;
         }
 
@@ -896,7 +896,7 @@
         }
 
         .entry-title a:hover {
-            color: #0DBAE8;
+            color: white;
             text-decoration: none;
         }
 
@@ -910,14 +910,14 @@
         .price {
             font-size: 20px;
             font-weight: 700;
-            color: #0DBAE8;
+            color: white;
             margin-right: 10px;
         }
 
         .property-status-tag {
             display: inline-block;
             padding: 4px 12px;
-            background-color: #0DBAE8;
+            background-color: white;
             color: white;
             border-radius: 20px;
             font-size: 12px;
@@ -1034,7 +1034,7 @@
 
         .owl-carousel .owl-nav button.owl-prev:hover,
         .owl-carousel .owl-nav button.owl-next:hover {
-            background-color: #0DBAE8;
+            background-color: white;
             color: white;
             transform: scale(1.1);
         }
@@ -1061,7 +1061,7 @@
 
         .owl-dots .owl-dot.active span,
         .owl-dots .owl-dot:hover span {
-            background-color: #0DBAE8;
+            background-color: white;
             transform: scale(1.2);
         }
 
@@ -1109,7 +1109,7 @@
             left: 0;
             width: 50px;
             height: 3px;
-            background: #0DBAE8;
+            background: #032b3b;
             transition: width 0.3s ease;
         }
 
@@ -1137,13 +1137,13 @@
         }
 
         .lidd_mc_input input[type="text"]:focus {
-            border-color: #0DBAE8;
+            border-color: white;
             box-shadow: 0 0 0 3px rgba(13, 186, 232, 0.15);
             outline: none;
         }
 
         #lidd_mc_submit {
-            background-color: #0DBAE8;
+            background-color: white;
             color: white;
             border: none;
             padding: 12px 25px;
@@ -1307,7 +1307,7 @@
         .property-video .placeholder-thumb:hover .fa-play-circle-o {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1.1);
-            color: #0DBAE8;
+            color: white;
         }
 
         /* Destacar las flechas del carousel para propiedades similares */
@@ -1325,7 +1325,7 @@
 
         .similar-properties-carousel-nav .carousel-prev-item:hover,
         .similar-properties-carousel-nav .carousel-next-item:hover {
-            background-color: #0DBAE8;
+            background-color: white;
             transform: scale(1.1);
         }
 
@@ -1336,7 +1336,7 @@
             right: 30px;
             width: 60px;
             height: 60px;
-            background-color: #0DBAE8;
+            background-color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -1496,7 +1496,7 @@
         }
 
         .property-location i {
-            color: #0DBAE8;
+            color: white;
             font-size: 11px;
         }
 
@@ -1601,12 +1601,12 @@
 
         .btn-outline {
             background: transparent;
-            color: #0DBAE8;
+            color: white;
             border: 1px solid #0DBAE8;
         }
 
         .btn-outline:hover {
-            background: #0DBAE8;
+            background: #032b3b;
             color: white;
             transform: translateY(-2px);
         }
@@ -2498,7 +2498,7 @@
                             <div class="inner-wrapper clearfix">
                                 <figure class="agent-image">
                                     <a href="#">
-                                        <img width="220" height="220" style="object-fit: none" src="{{ asset(site_config('appearance_settings.logo.path', 'default-logo.png')) }}" class="img-circle wp-post-image" alt="Nathan James">
+                                        <img width="220" height="220" style="object-fit: contain; background-color: white" src="{{ asset(site_config('appearance_settings.logo.path', 'default-logo.png')) }}" class="img-circle wp-post-image" alt="Nathan James">
                                     </a>
                                 </figure>
                                 <h3 class="agent-name">
