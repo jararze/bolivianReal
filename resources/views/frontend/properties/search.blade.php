@@ -303,13 +303,13 @@
                             <div class="option-bar col-xs-12 property-price-range">
                                 <select name="price_range" class="form-control search-select">
                                     <option value="any" {{ !request('price_range') || request('price_range') == 'any' ? 'selected' : '' }}>Rango de precio</option>
-                                    <option value="0-50000" {{ request('price_range') == '0-50000' ? 'selected' : '' }}>Hasta $50,000</option>
-                                    <option value="50000-100000" {{ request('price_range') == '50000-100000' ? 'selected' : '' }}>$50,000 - $100,000</option>
-                                    <option value="100000-200000" {{ request('price_range') == '100000-200000' ? 'selected' : '' }}>$100,000 - $200,000</option>
-                                    <option value="200000-300000" {{ request('price_range') == '200000-300000' ? 'selected' : '' }}>$200,000 - $300,000</option>
-                                    <option value="300000-500000" {{ request('price_range') == '300000-500000' ? 'selected' : '' }}>$300,000 - $500,000</option>
-                                    <option value="500000-1000000" {{ request('price_range') == '500000-1000000' ? 'selected' : '' }}>$500,000 - $1,000,000</option>
-                                    <option value="1000000-0" {{ request('price_range') == '1000000-0' ? 'selected' : '' }}>Más de $1,000,000</option>
+                                    <option value="0-50000" {{ request('price_range') == '0-50000' ? 'selected' : '' }}>Hasta 50,000</option>
+                                    <option value="50000-100000" {{ request('price_range') == '50000-100000' ? 'selected' : '' }}>50,000 - 100,000</option>
+                                    <option value="100000-200000" {{ request('price_range') == '100000-200000' ? 'selected' : '' }}>100,000 - 200,000</option>
+                                    <option value="200000-300000" {{ request('price_range') == '200000-300000' ? 'selected' : '' }}>200,000 - 300,000</option>
+                                    <option value="300000-500000" {{ request('price_range') == '300000-500000' ? 'selected' : '' }}>300,000 - 500,000</option>
+                                    <option value="500000-1000000" {{ request('price_range') == '500000-1000000' ? 'selected' : '' }}>500,000 - 1,000,000</option>
+                                    <option value="1000000-0" {{ request('price_range') == '1000000-0' ? 'selected' : '' }}>Más de 1,000,000</option>
                                 </select>
                             </div>
 
@@ -328,16 +328,16 @@
                             </div>
 
                             <!-- Antigüedad (nuevo) -->
-                            <div class="option-bar col-xs-12 property-age">
-                                <select name="property_age" class="form-control search-select">
-                                    <option value="any" {{ !request('property_age') || request('property_age') == 'any' ? 'selected' : '' }}>Antigüedad</option>
-                                    <option value="new" {{ request('property_age') == 'new' ? 'selected' : '' }}>A estrenar</option>
-                                    <option value="less-than-5" {{ request('property_age') == 'less-than-5' ? 'selected' : '' }}>Menos de 5 años</option>
-                                    <option value="5-to-10" {{ request('property_age') == '5-to-10' ? 'selected' : '' }}>Entre 5 y 10 años</option>
-                                    <option value="10-to-20" {{ request('property_age') == '10-to-20' ? 'selected' : '' }}>Entre 10 y 20 años</option>
-                                    <option value="more-than-20" {{ request('property_age') == 'more-than-20' ? 'selected' : '' }}>Más de 20 años</option>
-                                </select>
-                            </div>
+{{--                            <div class="option-bar col-xs-12 property-age">--}}
+{{--                                <select name="property_age" class="form-control search-select">--}}
+{{--                                    <option value="any" {{ !request('property_age') || request('property_age') == 'any' ? 'selected' : '' }}>Antigüedad</option>--}}
+{{--                                    <option value="new" {{ request('property_age') == 'new' ? 'selected' : '' }}>A estrenar</option>--}}
+{{--                                    <option value="less-than-5" {{ request('property_age') == 'less-than-5' ? 'selected' : '' }}>Menos de 5 años</option>--}}
+{{--                                    <option value="5-to-10" {{ request('property_age') == '5-to-10' ? 'selected' : '' }}>Entre 5 y 10 años</option>--}}
+{{--                                    <option value="10-to-20" {{ request('property_age') == '10-to-20' ? 'selected' : '' }}>Entre 10 y 20 años</option>--}}
+{{--                                    <option value="more-than-20" {{ request('property_age') == 'more-than-20' ? 'selected' : '' }}>Más de 20 años</option>--}}
+{{--                                </select>--}}
+{{--                            </div>--}}
 
                             <!-- Propiedades destacadas o en demanda (nuevo) -->
                             <div class="option-bar col-xs-12 property-featured">
