@@ -1,6 +1,6 @@
 <section class="advance-search main-advance-search">
     <div class="container">
-        <h3 class="ssearch-title">Búsqueda</h3>
+{{--        <h3 class="ssearch-title">Búsqueda</h3>--}}
 
         <form class="advance-search-form" action="{{ route('frontend.properties.search') }}" method="get">
             <!-- Campos principales en grid -->
