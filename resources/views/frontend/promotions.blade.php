@@ -470,150 +470,15 @@
 @endpush
 
 @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Filtro de promociones
-            const filterButtons = document.querySelectorAll('.filter-button');
-            const promoCards = document.querySelectorAll('.promo-card');
 
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remover la clase activa de todos los botones
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-
-                    // Añadir la clase activa al botón clickeado
-                    this.classList.add('active');
-
-                    const filterValue = this.getAttribute('data-filter');
-
-                    // Mostrar/ocultar tarjetas según el filtro seleccionado
-                    promoCards.forEach(card => {
-                        if (filterValue === 'all') {
-                            card.style.display = 'block';
-                        } else {
-                            if (card.getAttribute('data-category') === filterValue) {
-                                card.style.display = 'block';
-                            } else {
-                                card.style.display = 'none';
-                            }
-                        }
-                    });
-                });
-            });
-
-            // Contador de tiempo para ofertas
-            function startCountdown() {
-                // Fecha objetivo - ajusta esta fecha según tus necesidades
-                const targetDate = new Date();
-                targetDate.setDate(targetDate.getDate() + 5); // 5 días a partir de hoy
-
-                // Actualizar el contador cada segundo
-                const countdownInterval = setInterval(function() {
-                    const now = new Date().getTime();
-                    const distance = targetDate - now;
-
-                    // Calcular días, horas, minutos y segundos
-                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                    // Actualizar elementos HTML
-                    document.getElementById('countdown-days').textContent = days;
-                    document.getElementById('countdown-hours').textContent = hours;
-                    document.getElementById('countdown-minutes').textContent = minutes;
-                    document.getElementById('countdown-seconds').textContent = seconds;
-
-                    // Si el contador llega a cero
-                    if (distance < 0) {
-                        clearInterval(countdownInterval);
-                        document.getElementById('countdown-container').innerHTML = "<p class='expired-text'>¡La promoción ha terminado!</p>";
-                    }
-                }, 1000);
-            }
-
-            // Iniciar contador
-            startCountdown();
-
-            // Inicializar contadores individuales para cada tarjeta
-            document.querySelectorAll('.promo-timer').forEach(timer => {
-                const endDate = timer.getAttribute('data-end-date');
-                const timerElement = timer.querySelector('.timer-text');
-
-                if (endDate && timerElement) {
-                    const targetDate = new Date(endDate).getTime();
-
-                    const timerInterval = setInterval(function() {
-                        const now = new Date().getTime();
-                        const distance = targetDate - now;
-
-                        if (distance < 0) {
-                            clearInterval(timerInterval);
-                            timerElement.innerHTML = "¡Promoción finalizada!";
-                            return;
-                        }
-
-                        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-
-                        timerElement.innerHTML = `${days}d ${hours}h ${minutes}m restantes`;
-                    }, 60000); // Actualizar cada minuto para no sobrecargar
-                }
-            });
-        });
-    </script>
 @endpush
 
 <x-frontend-layout>
     <div class="promotions-header">
         <div class="container">
             <div class="promotions-header-content">
-                <h1 class="page-title">OFERTAS Y PROMOCIONES</h1>
+                <h1 class="page-title">Proyectos Bolivian Rean Estate</h1>
                 <p class="lead">Descubre oportunidades únicas para invertir en bienes raíces con los mejores precios del mercado</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="promo-filters">
-        <div class="section-container">
-            <div class="text-center">
-                <button class="filter-button active" data-filter="all">Todas</button>
-                <button class="filter-button" data-filter="sale">En Venta</button>
-                <button class="filter-button" data-filter="rental">Alquiler</button>
-                <button class="filter-button" data-filter="new">Nuevas</button>
-                <button class="filter-button" data-filter="special">Especiales</button>
-                <button class="filter-button" data-filter="limited">Tiempo Limitado</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="promo-counter">
-        <div class="section-container">
-            <div class="counter-content">
-                <h2 class="counter-title">Ofertas por Tiempo Limitado</h2>
-                <p class="counter-description">No pierdas la oportunidad de aprovechar nuestras promociones especiales. Estas ofertas exclusivas terminan en:</p>
-
-                <div id="countdown-container" class="countdown-container">
-                    <div class="countdown-item">
-                        <span id="countdown-days" class="countdown-value">5</span>
-                        <span class="countdown-label">Días</span>
-                    </div>
-                    <div class="countdown-item">
-                        <span id="countdown-hours" class="countdown-value">12</span>
-                        <span class="countdown-label">Horas</span>
-                    </div>
-                    <div class="countdown-item">
-                        <span id="countdown-minutes" class="countdown-value">45</span>
-                        <span class="countdown-label">Minutos</span>
-                    </div>
-                    <div class="countdown-item">
-                        <span id="countdown-seconds" class="countdown-value">30</span>
-                        <span class="countdown-label">Segundos</span>
-                    </div>
-                </div>
-
-                <a href="#promo-grid" class="counter-cta">Ver Ofertas Ahora</a>
             </div>
         </div>
     </div>
@@ -623,32 +488,32 @@
             <div class="row">
                 <!-- Promo 1 - Hot Deal -->
                 <div class="col-md-4 col-sm-6">
-                    <div class="promo-card" data-category="sale">
-                        <div class="promo-image hot-deal">
-                            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Apartamento de Lujo en Zona Exclusiva">
-                            <div class="hot-deal-badge">HOT DEAL</div>
-                            <div class="promo-tag">VENTA</div>
-                            <div class="promo-timer" data-end-date="2025-04-30T23:59:59">
-                                <i class="fa fa-clock"></i>
-                                <span class="timer-text">41d 1h 14m restantes</span>
+                    <div class="promo-card" data-category="rent">
+                        <div class="promo-image exclusive-property">
+                            <img src="{{ asset('storage/project/1.jpg') }}" alt="Casa Plaza España - Oficinas en Alquiler">
+                            <div class="promo-tag">ALQUILER</div>
+                            <div class="property-type">
+                                <i class="fa fa-building"></i>
+                                <span>OFICINAS</span>
                             </div>
                         </div>
                         <div class="promo-content">
-                            <h3 class="promo-title">Apartamento de Lujo</h3>
+                            <h3 class="promo-title">Casa Plaza España</h3>
                             <div class="promo-price">
-                                <span class="original-price">$250,000</span>
-                                <span class="discounted-price"><span class="price-currency">$</span>199,000</span>
-                                <span class="discount-badge">-20%</span>
+                                <span class="rental-price"><span class="price-currency">$</span>7,000</span>
+                                <span class="price-period">/mes</span>
                             </div>
                             <div class="promo-details">
-                                <p>Apartamento completamente amueblado con vistas panorámicas a la ciudad. </p>
+                                <p>Exclusivo espacio para oficinas en la prestigiosa zona de Sopocachi, Plaza España.</p>
                                 <ul>
-                                    <li>3 dormitorios, 2 baños</li>
-                                    <li>120m² de superficie</li>
-                                    <li>Estacionamiento privado</li>
+                                    <li>1,164 m² construidos</li>
+                                    <li>14 ambientes de oficina</li>
+                                    <li>2 salas de reuniones + auditorio</li>
+                                    <li>Parqueo para 3 vehículos</li>
+                                    <li>Amplio jardín lateral</li>
                                 </ul>
                             </div>
-                            <a href="#" class="promo-cta">Ver Detalles</a>
+                            <a href="{{ route('frontend.project.casa_plaza_espana') }}" class="promo-cta">Ver Detalles</a>
                         </div>
                     </div>
                 </div>

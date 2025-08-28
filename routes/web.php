@@ -74,9 +74,17 @@ Route::name('frontend.')->group(function () {
         return view('frontend.submit-property');
     })->name('submit-property');
 
-    Route::get('/project', function () {
+    Route::get('/project/soleil', function () {
+        return view('frontend.project_soleil');
+    })->name('project.soleil');
+
+    Route::get('/project/casa_plaza_espana', function () {
         return view('frontend.project');
-    })->name('project');
+    })->name('project.casa_plaza_espana');
+
+    Route::get('/project/riviera', function () {
+        return view('frontend.project_riviera');
+    })->name('project.riviera');
 
     Route::post('/properties/store', [PropertyController::class, 'store'])->name('store');
 });

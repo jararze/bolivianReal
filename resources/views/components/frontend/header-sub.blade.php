@@ -85,7 +85,7 @@
                                 </a>
                             </li>
                             <li class="{{ Route::currentRouteName() == 'frontend.promotions' ? 'current-menu-item' : '' }}" style="margin: 0 2px;">
-                                <a href="{{ route("frontend.project") }}"
+                                <a href="{{ route("frontend.promotions") }}"
                                    style="padding: 15px 25px; color: #fff; display: block; border-radius: 8px; transition: all 0.3s ease; text-decoration: none; position: relative; {{ Route::currentRouteName() == 'frontend.promotions' ? 'background: rgba(0, 123, 255, 0.2);' : '' }}"
                                    onmouseover="this.style.background='rgba(255, 255, 255, 0.15)'; this.style.transform='translateY(-2px)'"
                                    onmouseout="this.style.background='{{ Route::currentRouteName() == 'frontend.promotions' ? 'rgba(0, 123, 255, 0.2)' : 'transparent' }}'; this.style.transform='translateY(0)'">

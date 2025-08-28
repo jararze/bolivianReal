@@ -190,7 +190,7 @@
                         <div class="row field-wrap">
                             <!-- Ciudad -->
                             <div class="option-bar col-xs-12 property-location">
-                                <select name="location" class="form-control search-select">
+                                <select name="location" id="location" class="form-control search-select">
                                     <option value="any" {{ !request('location') || request('location') == 'any' ? 'selected' : '' }}>Ciudad</option>
                                     @foreach($cities as $city)
                                         <option value="{{ $city->id }}" {{ request('location') == $city->id ? 'selected' : '' }}>
