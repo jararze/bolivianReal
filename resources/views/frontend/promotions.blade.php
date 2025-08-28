@@ -520,229 +520,74 @@
 
                 <!-- Promo 2 -->
                 <div class="col-md-4 col-sm-6">
-                    <div class="promo-card" data-category="rental">
+                    <div class="promo-card" data-category="sale">
                         <div class="promo-image">
-                            <img src="https://images.unsplash.com/photo-1558036117-15d82a90b9b1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Casa Familiar con Jardín">
-                            <div class="promo-tag">ALQUILER</div>
-                            <div class="promo-timer" data-end-date="2025-04-25T23:59:59">
+                            <img src="{{ asset('assets/front/images/riviera/Riviera21.jpg') }}" alt="Condominio Riviera 21 - Departamentos en Venta">
+                            <div class="promo-tag">VENTA</div>
+                            <div class="promo-timer" data-end-date="2025-05-31T23:59:59">
                                 <i class="fa fa-clock"></i>
-                                <span class="timer-text">36d 1h 14m restantes</span>
+                                <span class="timer-text">Promoción de lanzamiento</span>
                             </div>
                         </div>
                         <div class="promo-content">
-                            <h3 class="promo-title">Casa Familiar con Jardín</h3>
+                            <h3 class="promo-title">Condominio Riviera 21</h3>
                             <div class="promo-price">
-                                <span class="original-price">$1,500/mes</span>
-                                <span class="discounted-price"><span class="price-currency">$</span>1,200/mes</span>
-                                <span class="discount-badge">-20%</span>
+                                <span class="original-price">Desde $75,000</span>
+                                <span class="discounted-price"><span class="price-currency">$</span>32,500</span>
+                                <span class="discount-badge">Precio de lanzamiento</span>
                             </div>
                             <div class="promo-details">
-                                <p>Amplia casa con jardín ideal para familias. Primer mes con descuento especial.</p>
+                                <p>Departamentos modernos en 3 torres premium con ubicación estratégica en La Paz.</p>
                                 <ul>
-                                    <li>4 dormitorios, 3 baños</li>
-                                    <li>200m² de superficie</li>
-                                    <li>Jardín y área de BBQ</li>
+                                    <li>Monoambiente a 3 dormitorios</li>
+                                    <li>3 torres: Diamante, Oro y Plata</li>
+                                    <li>240+ unidades disponibles</li>
+                                    <li>Parqueaderos y áreas comunes</li>
+                                    <li>Financiamiento disponible</li>
                                 </ul>
                             </div>
-                            <a href="#" class="promo-cta">Ver Detalles</a>
+                            <a href="{{ route('frontend.project.riviera') }}" class="promo-cta">Ver Detalles</a>
                         </div>
                     </div>
                 </div>
 
                 <!-- Promo 3 -->
                 <div class="col-md-4 col-sm-6">
-                    <div class="promo-card" data-category="new">
+                    <div class="promo-card" data-category="sale">
                         <div class="promo-image">
-                            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Loft Moderno en el Centro">
-                            <div class="promo-tag">NUEVO</div>
+                            <img src="{{ asset('assets/front/images/riviera/Riviera21.jpg') }}" alt="Condominio Riviera 21 - Departamentos en Venta">
+                            <div class="promo-tag">VENTA</div>
+                            <div class="promo-timer" data-end-date="2025-05-31T23:59:59">
+                                <i class="fa fa-clock"></i>
+                                <span class="timer-text">Promoción de lanzamiento</span>
+                            </div>
                         </div>
                         <div class="promo-content">
-                            <h3 class="promo-title">Loft Moderno en el Centro</h3>
+                            <h3 class="promo-title">Condominio Riviera 21</h3>
                             <div class="promo-price">
-                                <span class="original-price">$180,000</span>
-                                <span class="discounted-price"><span class="price-currency">$</span>165,000</span>
-                                <span class="discount-badge">-8%</span>
+                                <span class="original-price">Desde $75,000</span>
+                                <span class="discounted-price"><span class="price-currency">$</span>32,500</span>
+                                <span class="discount-badge">Precio de lanzamiento</span>
                             </div>
                             <div class="promo-details">
-                                <p>Loft de diseño moderno en pleno centro de la ciudad. Acabados de primera calidad.</p>
+                                <p>Departamentos modernos en 3 torres premium con ubicación estratégica en La Paz.</p>
                                 <ul>
-                                    <li>1 dormitorio, 1 baño</li>
-                                    <li>80m² de superficie</li>
-                                    <li>Terraza privada</li>
+                                    <li>Monoambiente a 3 dormitorios</li>
+                                    <li>3 torres: Diamante, Oro y Plata</li>
+                                    <li>240+ unidades disponibles</li>
+                                    <li>Parqueaderos y áreas comunes</li>
+                                    <li>Financiamiento disponible</li>
                                 </ul>
                             </div>
-                            <a href="#" class="promo-cta">Ver Detalles</a>
+                            <a href="{{ route('frontend.project.riviera') }}" class="promo-cta">Ver Detalles</a>
                         </div>
                     </div>
                 </div>
 
                 <!-- Promo 4 -->
-                <div class="col-md-4 col-sm-6">
-                    <div class="promo-card" data-category="special">
-                        <div class="promo-image hot-deal">
-                            <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Terreno con Vista al Mar">
-                            <div class="hot-deal-badge">EXCLUSIVO</div>
-                            <div class="promo-tag">ESPECIAL</div>
-                        </div>
-                        <div class="promo-content">
-                            <h3 class="promo-title">Terreno con Vista al Mar</h3>
-                            <div class="promo-price">
-                                <span class="original-price">$350,000</span>
-                                <span class="discounted-price"><span class="price-currency">$</span>299,000</span>
-                                <span class="discount-badge">-15%</span>
-                            </div>
-                            <div class="promo-details">
-                                <p>Amplio terreno con impresionantes vistas al mar. Ideal para construir la casa de tus sueños.</p>
-                                <ul>
-                                    <li>1,000m² de superficie</li>
-                                    <li>Servicios urbanos disponibles</li>
-                                    <li>Zona exclusiva y segura</li>
-                                </ul>
-                            </div>
-                            <a href="#" class="promo-cta">Ver Detalles</a>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Promo 5 -->
-                <div class="col-md-4 col-sm-6">
-                    <div class="promo-card" data-category="limited">
-                        <div class="promo-image">
-                            <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Oficina Corporativa Premium">
-                            <div class="promo-tag">TIEMPO LIMITADO</div>
-                            <div class="promo-timer" data-end-date="2025-04-20T23:59:59">
-                                <i class="fa fa-clock"></i>
-                                <span class="timer-text">31d 1h 14m restantes</span>
-                            </div>
-                        </div>
-                        <div class="promo-content">
-                            <h3 class="promo-title">Oficina Corporativa Premium</h3>
-                            <div class="promo-price">
-                                <span class="original-price">$2,000/mes</span>
-                                <span class="discounted-price"><span class="price-currency">$</span>1,600/mes</span>
-                                <span class="discount-badge">-20%</span>
-                            </div>
-                            <div class="promo-details">
-                                <p>Moderna oficina corporativa completamente equipada. Primeros 3 meses con descuento especial.</p>
-                                <ul>
-                                    <li>150m² de superficie</li>
-                                    <li>Sala de reuniones y recepción</li>
-                                    <li>Ubicación estratégica</li>
-                                </ul>
-                            </div>
-                            <a href="#" class="promo-cta">Ver Detalles</a>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Promo 6 -->
-                <div class="col-md-4 col-sm-6">
-                    <div class="promo-card" data-category="sale">
-                        <div class="promo-image">
-                            <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Villa de Lujo con Piscina">
-                            <div class="promo-tag">VENTA</div>
-                        </div>
-                        <div class="promo-content">
-                            <h3 class="promo-title">Villa de Lujo con Piscina</h3>
-                            <div class="promo-price">
-                                <span class="original-price">$500,000</span>
-                                <span class="discounted-price"><span class="price-currency">$</span>450,000</span>
-                                <span class="discount-badge">-10%</span>
-                            </div>
-                            <div class="promo-details">
-                                <p>Espectacular villa con piscina y jardín en zona residencial exclusiva. Oportunidad única por tiempo limitado.</p>
-                                <ul>
-                                    <li>5 dormitorios, 4 baños</li>
-                                    <li>350m² de superficie</li>
-                                    <li>Piscina privada y área de entretenimiento</li>
-                                </ul>
-                            </div>
-                            <a href="#" class="promo-cta">Ver Detalles</a>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Promo 7 -->
-                <div class="col-md-4 col-sm-6">
-                    <div class="promo-card" data-category="rental">
-                        <div class="promo-image">
-                            <img src="https://images.unsplash.com/photo-1600607687644-c7513dba89c6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Departamento Amoblado">
-                            <div class="promo-tag">ALQUILER</div>
-                        </div>
-                        <div class="promo-content">
-                            <h3 class="promo-title">Departamento Amoblado</h3>
-                            <div class="promo-price">
-                                <span class="original-price">$900/mes</span>
-                                <span class="discounted-price"><span class="price-currency">$</span>750/mes</span>
-                                <span class="discount-badge">-17%</span>
-                            </div>
-                            <div class="promo-details">
-                                <p>Moderno departamento completamente amoblado, ideal para parejas o ejecutivos.</p>
-                                <ul>
-                                    <li>2 dormitorios, 1 baño</li>
-                                    <li>90m² de superficie</li>
-                                    <li>Ubicación céntrica con excelente vista</li>
-                                </ul>
-                            </div>
-                            <a href="#" class="promo-cta">Ver Detalles</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Promo 8 -->
-                <div class="col-md-4 col-sm-6">
-                    <div class="promo-card" data-category="special">
-                        <div class="promo-image">
-                            <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Casa de Dos Pisos">
-                            <div class="promo-tag">ESPECIAL</div>
-                        </div>
-                        <div class="promo-content">
-                            <h3 class="promo-title">Casa de Dos Pisos en Achumani</h3>
-                            <div class="promo-price">
-                                <span class="original-price">$320,000</span>
-                                <span class="discounted-price"><span class="price-currency">$</span>280,000</span>
-                                <span class="discount-badge">-12.5%</span>
-                            </div>
-                            <div class="promo-details">
-                                <p>Hermosa casa en exclusivo barrio residencial con excelente distribución y acabados.</p>
-                                <ul>
-                                    <li>4 dormitorios, 3 baños</li>
-                                    <li>280m² de superficie</li>
-                                    <li>Garaje para 2 vehículos y jardín trasero</li>
-                                </ul>
-                            </div>
-                            <a href="#" class="promo-cta">Ver Detalles</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Promo 9 -->
-                <div class="col-md-4 col-sm-6">
-                    <div class="promo-card" data-category="new">
-                        <div class="promo-image hot-deal">
-                            <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80" alt="Casa Moderna">
-                            <div class="hot-deal-badge">NUEVO</div>
-                            <div class="promo-tag">NUEVO</div>
-                        </div>
-                        <div class="promo-content">
-                            <h3 class="promo-title">Casa Moderna en Calacoto</h3>
-                            <div class="promo-price">
-                                <span class="original-price">$420,000</span>
-                                <span class="discounted-price"><span class="price-currency">$</span>395,000</span>
-                                <span class="discount-badge">-6%</span>
-                            </div>
-                            <div class="promo-details">
-                                <p>Impresionante casa de diseño contemporáneo con amplios espacios y mucha luz natural.</p>
-                                <ul>
-                                    <li>4 dormitorios, 3.5 baños</li>
-                                    <li>320m² de superficie</li>
-                                    <li>Diseño arquitectónico moderno y eficiente</li>
-                                </ul>
-                            </div>
-                            <a href="#" class="promo-cta">Ver Detalles</a>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
