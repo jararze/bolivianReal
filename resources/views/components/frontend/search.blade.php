@@ -7,7 +7,7 @@
             <div class="search-fields-grid">
                 <div class="option-bar property-location">
                     <select name="location" id="location" class="search-select">
-                        <option value="any">Ubicación (Cualquiera)</option>
+                        <option value="any">Ubicación</option>
                         @foreach($cities as $city)
                             <option value="{{ $city->id }}">{{ $city->name }}</option>
                         @endforeach
@@ -16,7 +16,7 @@
 
                 <div class="option-bar property-type">
                     <select name="type" id="select-property-type" class="search-select">
-                        <option value="any" selected="selected">Tipo de inmueble (Cualquiera)</option>
+                        <option value="any" selected="selected">Tipo de inmueble</option>
                         @foreach($propertyTypes as $propertyType)
                             <option value="{{ $propertyType->id }}">{{ $propertyType->type_name }}</option>
                         @endforeach
@@ -25,7 +25,7 @@
 
                 <div class="option-bar property-status">
                     <select name="status" id="select-status" class="search-select">
-                        <option value="any" selected="selected">Tipo de transacción (Cualquiera)</option>
+                        <option value="any" selected="selected">Tipo de transacción</option>
                         @foreach($serviceTypes as $serviceType)
                             <option value="{{ $serviceType->id }}">{{ $serviceType->name }}</option>
                         @endforeach
@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="option-bar property-keyword">
-                    <input type="text" name="keyword" id="keyword-txt" value="" placeholder="Zona o palabra clave">
+                    <input type="text" name="keyword" id="keyword-txt" value="" placeholder="Zona">
                 </div>
             </div>
 
@@ -54,7 +54,7 @@
                 <div class="hidden-options-grid">
                     <div class="hidden-option-item">
                         <select name="bedrooms" id="select-bedrooms">
-                            <option value="any" selected="selected">Dormitorios mínimos (Cualquiera)</option>
+                            <option value="any" selected="selected">Dormitorios mínimos</option>
                             <option value="1">1 dormitorio</option>
                             <option value="2">2 dormitorios</option>
                             <option value="3">3 dormitorios</option>
@@ -66,7 +66,7 @@
 
                     <div class="hidden-option-item">
                         <select name="bathrooms" id="select-bathrooms">
-                            <option value="any" selected="selected">Baños mínimos (Cualquiera)</option>
+                            <option value="any" selected="selected">Baños mínimos</option>
                             <option value="1">1 baño</option>
                             <option value="2">2 baños</option>
                             <option value="3">3 baños</option>
@@ -77,7 +77,7 @@
 
                     <div class="hidden-option-item">
                         <select name="min-price" id="select-min-price">
-                            <option value="any" selected="selected">Precio mínimo (Cualquiera)</option>
+                            <option value="any" selected="selected">Precio mínimo</option>
                             <option value="10000">$10,000</option>
                             <option value="25000">$25,000</option>
                             <option value="50000">$50,000</option>
@@ -94,7 +94,7 @@
 
                     <div class="hidden-option-item">
                         <select name="max-price" id="select-max-price">
-                            <option value="any" selected="selected">Precio máximo (Cualquiera)</option>
+                            <option value="any" selected="selected">Precio máximo</option>
                             <option value="25000">$25,000</option>
                             <option value="50000">$50,000</option>
                             <option value="75000">$75,000</option>

@@ -1,94 +1,97 @@
-<div class="homepage-slider slider-variation-one flexslider" style="position: relative; height: 470px; width: 100%; background-image: url('{{ asset('assets/media/slider3.jpg') }}'); background-size: none; background-position: center; background-color: #494c53; background-repeat: no-repeat;">
-0
-    <!-- Overlay -->
-    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.3);"></div>
 
-    <!-- Texto -->
-    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6));">
+<div style="position: relative; height: 470px; width: 100%; background-image: url('{{ asset('assets/media/slider3.jpg') }}'); background-position: center; background-color: #494c53; background-repeat: no-repeat;"></div>
 
-        <div style="text-align: center; padding: 0 40px; max-width: 800px;">
+{{--<div class="homepage-slider slider-variation-one flexslider" style="position: relative; height: 470px; width: 100%; background-image: url('{{ asset('assets/media/slider3.jpg') }}'); background-size: none; background-position: center; background-color: #494c53; background-repeat: no-repeat;">--}}
 
-            <h1 style="
+{{--    <!-- Overlay -->--}}
+{{--    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; "></div>--}}
 
-            font-size: clamp(2.5rem, 6vw, 5rem);
+{{--    <!-- Texto -->--}}
+{{--    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.6));">--}}
 
-            font-weight: 300;
+{{--        <div style="text-align: center; padding: 0 40px; max-width: 800px;">--}}
 
-            color: #ffffff;
+{{--            <h1 style="--}}
 
-            margin-bottom: 20px;
+{{--            font-size: clamp(2.5rem, 6vw, 5rem);--}}
 
-            line-height: 1.2;
+{{--            font-weight: 300;--}}
 
-            text-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 2px 10px rgba(0,0,0,0.5);
+{{--            color: #ffffff;--}}
+
+{{--            margin-bottom: 20px;--}}
+
+{{--            line-height: 1.2;--}}
+
+{{--            text-shadow: 0 4px 20px rgba(0,0,0,0.8), 0 2px 10px rgba(0,0,0,0.5);--}}
 
 
-            letter-spacing: 2px;
+{{--            letter-spacing: 2px;--}}
 
-            text-transform: uppercase;
+{{--            text-transform: uppercase;--}}
 
-            background: linear-gradient(45deg, #ffffff, #f0f0f0);
+{{--            background: linear-gradient(45deg, #ffffff, #f0f0f0);--}}
 
-            -webkit-background-clip: text;
+{{--            -webkit-background-clip: text;--}}
 
-            -webkit-text-fill-color: transparent;
+{{--            -webkit-text-fill-color: transparent;--}}
 
-            background-clip: text;
+{{--            background-clip: text;--}}
 
-            animation: fadeInUp 1.2s ease-out;
+{{--            animation: fadeInUp 1.2s ease-out;--}}
 
-        ">
+{{--        ">--}}
 
-                El lugar de tus sueños
+{{--                El lugar de tus sueños--}}
 
-            </h1>
+{{--            </h1>--}}
 
-            <p style="
+{{--            <p style="--}}
 
-            font-size: clamp(1.2rem, 3vw, 2rem);
+{{--            font-size: clamp(1.2rem, 3vw, 2rem);--}}
 
-            color: #f8f8f8;
+{{--            color: #f8f8f8;--}}
 
-            font-weight: 200;
+{{--            font-weight: 200;--}}
 
-            text-shadow: 0 2px 15px rgba(0,0,0,0.7);
+{{--            text-shadow: 0 2px 15px rgba(0,0,0,0.7);--}}
 
-            font-family: 'Georgia', 'Times New Roman', serif;
+{{--            font-family: 'Georgia', 'Times New Roman', serif;--}}
 
-            opacity: 0.9;
+{{--            opacity: 0.9;--}}
 
-            letter-spacing: 1px;
+{{--            letter-spacing: 1px;--}}
 
-            font-style: italic;
+{{--            font-style: italic;--}}
 
-            margin-top: 10px;
+{{--            margin-top: 10px;--}}
 
-            animation: fadeInUp 1.5s ease-out;
+{{--            animation: fadeInUp 1.5s ease-out;--}}
 
-        ">
+{{--        ">--}}
 
-                al alcance de tus manos
+{{--                al alcance de tus manos--}}
 
-            </p>
+{{--            </p>--}}
 
-            <div style="
+{{--            <div style="--}}
 
-            width: 80px;
+{{--            width: 80px;--}}
 
-            height: 2px;
+{{--            height: 2px;--}}
 
-            background: linear-gradient(90deg, transparent, #ffffff, transparent);
 
-            margin: 30px auto 0;
 
-            animation: fadeIn 2s ease-out;
+{{--            margin: 30px auto 0;--}}
 
-        "></div>
+{{--            animation: fadeIn 2s ease-out;--}}
 
-        </div>
+{{--        "></div>--}}
 
-    </div>
-</div>
+{{--        </div>--}}
+
+{{--    </div>--}}
+{{--</div>--}}
 {{--    <img src="{{ asset("assets/media/slider2.jpg") }}"--}}
 {{--         alt=""--}}
 {{--         style="height: 650px; width: 100%; object-fit: none; background-color: #494c53 ">--}}

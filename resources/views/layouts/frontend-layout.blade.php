@@ -36,7 +36,8 @@
         }
 
         .site-header .container-fluid {
-            background: rgba(0, 0, 0, 0.9) !important;
+            /*background: rgba(0, 0, 0, 0.9) !important;*/
+            background: #3a3e47 !important;
             transition: all 0.3s ease;
         }
 
