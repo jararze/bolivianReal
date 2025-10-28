@@ -1,5 +1,39 @@
 
-<div style="position: relative; height: 470px; width: 100%; background-image: url('{{ asset('assets/media/slider3.jpg') }}'); background-position: center; background-color: #494c53; background-repeat: no-repeat;"></div>
+<div style="position: relative; height: 470px; width: 100%; background-image: url('{{ asset('assets/media/slider3.jpg') }}'); background-position: center; background-size: cover; background-color: #494c53; background-repeat: no-repeat;">
+
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; background: radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, transparent 70%);">
+        <h1 style="color: #ffffff; font-size: 48px; margin: 0; text-align: center; animation: fadeInDown 1s ease-out; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+            El lugar de tus sueños
+        </h1>
+        <p style="color: #ffffff; font-size: 24px; margin-top: 15px; text-align: center; animation: fadeInUp 1s ease-out 0.3s backwards; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">
+            al alcance de tus manos
+        </p>
+    </div>
+</div>
+
+<style>
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
 
 {{--<div class="homepage-slider slider-variation-one flexslider" style="position: relative; height: 470px; width: 100%; background-image: url('{{ asset('assets/media/slider3.jpg') }}'); background-size: none; background-position: center; background-color: #494c53; background-repeat: no-repeat;">--}}
 

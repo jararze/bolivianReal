@@ -2239,7 +2239,9 @@
 {{--                                    </i>--}}
 {{--                                    <div class="meta-inner-wrapper">--}}
 {{--                                        <span class="meta-item-label">Garajes</span>--}}
-{{--                                        <span class="meta-item-value">{{ $property->garage }}</span>--}}
+{{--                                        <span class="meta-item-value">{{ $property->gara
++
+ge }}</span>--}}
 {{--                                    </div>--}}
 {{--                                </div>--}}
 {{--                                <div class="meta-item">--}}
