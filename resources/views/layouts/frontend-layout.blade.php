@@ -180,8 +180,6 @@
                 transform: none !important;
             }
         }
-    </style>
-    <style>
         /* Contenedor principal del buscador */
         .advance-search.main-advance-search {
             background: linear-gradient(135deg, #dee7ee, #dee7ee);
@@ -510,6 +508,133 @@
                 opacity: 1;
             }
         }
+        .neighborhood-dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .neighborhood-toggle {
+            width: 100%;
+            padding: 10px 15px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .neighborhood-toggle:hover {
+            border-color: #999;
+        }
+
+        .neighborhood-toggle svg {
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .neighborhood-dropdown.active .neighborhood-toggle svg {
+            transform: rotate(180deg);
+        }
+
+        .neighborhood-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            max-height: 300px;
+            overflow: hidden;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: -1px;
+        }
+
+        .neighborhood-dropdown.active .neighborhood-options {
+            display: block;
+        }
+
+        .neighborhood-search {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            background: #f9f9f9;
+        }
+
+        .neighborhood-search input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .neighborhood-search input:focus {
+            border-color: #999;
+        }
+
+        .neighborhood-list {
+            max-height: 240px;
+            overflow-y: auto;
+        }
+
+        .neighborhood-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            margin: 0;
+        }
+
+        .neighborhood-item:hover {
+            background: #f5f5f5;
+        }
+
+        .neighborhood-item.hidden {
+            display: none;
+        }
+
+        .neighborhood-item input[type="checkbox"] {
+            margin-right: 10px;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        .neighborhood-item span {
+            font-size: 14px;
+            color: #333;
+            user-select: none;
+        }
+
+        /* Scrollbar personalizado para la lista */
+        .neighborhood-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .neighborhood-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .neighborhood-list::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+
+        .neighborhood-list::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
 
     </style>
 
@@ -589,13 +714,10 @@
         "use strict";
 
         if (jQuery().validate) {
-
             //Login
             $('#login-form').validate();
-
             //Register
             $('#register-form').validate();
-
             //Forgot Password
             $('#forgot-form').validate();
         }
@@ -618,7 +740,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Smooth scroll para enlaces internos (si los tienes)
+        // Smooth scroll para enlaces internos
         const menuLinks = document.querySelectorAll('.main-menu a[href^="#"]');
         menuLinks.forEach(link => {
             link.addEventListener('click', function(e) {
@@ -637,7 +759,6 @@
         const allMenuLinks = document.querySelectorAll('.main-menu a');
         allMenuLinks.forEach(link => {
             link.addEventListener('click', function() {
-                // Solo si no es un enlace interno
                 if (!this.href.includes('#')) {
                     this.style.opacity = '0.7';
                     this.style.transform = 'scale(0.95)';
@@ -647,89 +768,6 @@
     });
 </script>
 
-<script>
-    $(document).ready(function () {
-        // Inicializar Select2 si está disponible
-        if ($.fn.select2) {
-            $('.search-select').select2({
-                dropdownAutoWidth: true,
-                width: '100%',
-                minimumResultsForSearch: 6
-            });
-
-            // Filtrado de vecindarios basado en la ciudad seleccionada
-            const $citySelect = $('#location');
-            const $neighborhoodSelect = $('#neighborhood');
-
-            function filterNeighborhoods() {
-                const cityId = $citySelect.val();
-
-                // Obtener todos los vecindarios originales si no los tenemos guardados
-                if (!window.allNeighborhoods) {
-                    window.allNeighborhoods = [];
-                    $neighborhoodSelect.find('option').each(function () {
-                        window.allNeighborhoods.push({
-                            value: $(this).val(),
-                            text: $(this).text(),
-                            cityId: $(this).data('city')
-                        });
-                    });
-                }
-
-                // Limpiar el select de vecindarios
-                $neighborhoodSelect.empty();
-
-                // Filtrar y añadir las opciones relevantes
-                window.allNeighborhoods.forEach(function (neighborhood) {
-                    if (neighborhood.value === 'any' || cityId === 'any' || neighborhood.cityId == cityId) {
-                        $neighborhoodSelect.append(new Option(neighborhood.text, neighborhood.value));
-                    }
-                });
-
-                // Actualizar el Select2 para reflejar los cambios
-                $neighborhoodSelect.val('any').trigger('change');
-            }
-
-            // Aplicar filtro inicial
-            filterNeighborhoods();
-
-            // Filtrar cuando cambie la ciudad
-            $citySelect.on('change', filterNeighborhoods);
-        }
-
-        // Aplicar parámetros de URL a los selects si existen
-        function applyUrlParams() {
-            const urlParams = new URLSearchParams(window.location.search);
-
-            // Para cada parámetro en la URL, establecer el valor en el select correspondiente
-            for (const [key, value] of urlParams.entries()) {
-                const $element = $('[name="' + key + '"]');
-                if ($element.length > 0) {
-                    $element.val(value);
-
-                    // Si es un select2, disparar el evento change
-                    if ($element.hasClass('search-select')) {
-                        $element.trigger('change');
-                    }
-                }
-            }
-
-            // Si hay parámetros avanzados, mostrar los campos avanzados
-            const hasAdvancedParams = [
-                'price_range', 'size_range', 'bedrooms', 'bathrooms', 'garage',
-                'is_project', 'property_age', 'featured', 'keyword', 'code'
-            ].some(param => urlParams.has(param) && urlParams.get(param) !== 'any' && urlParams.get(param) !== '');
-
-            if (hasAdvancedParams) {
-                $('#advanced-search-fields').show();
-                $('#toggle-advanced-search i').removeClass('fa-plus').addClass('fa-minus');
-            }
-        }
-
-        // Aplicar parámetros de URL cuando se carga la página
-        applyUrlParams();
-    });
-</script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const toggleBtn = document.getElementById('toggle-more-options');
@@ -768,6 +806,217 @@
                 }, 200);
             });
         }
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Inicializar Select2 si está disponible
+        if ($.fn.select2) {
+            $('.search-select').select2({
+                dropdownAutoWidth: true,
+                width: '100%',
+                minimumResultsForSearch: 6
+            });
+        }
+
+        // === FUNCIONALIDAD PARA SIDEBAR (SELECT NORMAL) ===
+        const $sidebarCitySelect = $('.search-sidebar #location');
+        const $sidebarNeighborhoodSelect = $('.search-sidebar #neighborhood');
+
+        // Solo ejecutar si existen los elementos del sidebar
+        if ($sidebarCitySelect.length && $sidebarNeighborhoodSelect.length) {
+            function filterSidebarNeighborhoods() {
+                const cityId = $sidebarCitySelect.val();
+
+                // Obtener todos los vecindarios originales si no los tenemos guardados
+                if (!window.sidebarNeighborhoods) {
+                    window.sidebarNeighborhoods = [];
+                    $sidebarNeighborhoodSelect.find('option').each(function () {
+                        window.sidebarNeighborhoods.push({
+                            value: $(this).val(),
+                            text: $(this).text(),
+                            cityId: $(this).data('city')
+                        });
+                    });
+                }
+
+                // Limpiar el select de vecindarios
+                $sidebarNeighborhoodSelect.empty();
+
+                // Filtrar y añadir las opciones relevantes
+                window.sidebarNeighborhoods.forEach(function (neighborhood) {
+                    if (neighborhood.value === 'any' || cityId === 'any' || neighborhood.cityId == cityId) {
+                        $sidebarNeighborhoodSelect.append(new Option(neighborhood.text, neighborhood.value));
+                    }
+                });
+
+                // Actualizar el Select2 para reflejar los cambios
+                $sidebarNeighborhoodSelect.val('any').trigger('change');
+            }
+
+            // Aplicar filtro inicial
+            filterSidebarNeighborhoods();
+
+            // Filtrar cuando cambie la ciudad
+            $sidebarCitySelect.on('change', filterSidebarNeighborhoods);
+        }
+
+        // === FUNCIONALIDAD PARA NEIGHBORHOODS CON RADIO BUTTONS (FORMULARIO PRINCIPAL) ===
+        const $mainCitySelect = $('.advance-search-form #location');
+        const $neighborhoodDropdown = $('#neighborhood-dropdown');
+        const $neighborhoodToggle = $('#neighborhood-toggle');
+        const $neighborhoodOptions = $('#neighborhood-options');
+        const $neighborhoodLabel = $('#neighborhood-label');
+        const $neighborhoodSearchInput = $('#neighborhood-search-input');
+        const $neighborhoodItems = $('.neighborhood-item');
+        const $neighborhoodRadios = $('.neighborhood-item input[type="radio"]');
+
+        // Solo ejecutar si existen los elementos del dropdown personalizado
+        if ($neighborhoodDropdown.length && $mainCitySelect.length) {
+            // Guardar todos los vecindarios al inicio
+            window.mainNeighborhoods = [];
+            $neighborhoodItems.each(function () {
+                window.mainNeighborhoods.push({
+                    element: $(this),
+                    cityId: $(this).data('city'),
+                    name: $(this).find('span').text().toLowerCase(),
+                    value: $(this).find('input').val()
+                });
+            });
+
+            // Toggle dropdown
+            $neighborhoodToggle.on('click', function(e) {
+                e.stopPropagation();
+                $neighborhoodDropdown.toggleClass('active');
+            });
+
+            // Cerrar dropdown al hacer clic fuera
+            $(document).on('click', function(e) {
+                if ($neighborhoodDropdown[0] && !$neighborhoodDropdown[0].contains(e.target)) {
+                    $neighborhoodDropdown.removeClass('active');
+                }
+            });
+
+            // Prevenir que el dropdown se cierre al hacer clic dentro
+            $neighborhoodOptions.on('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // Filtrar zonas por ciudad seleccionada
+            function filterNeighborhoodsByCity() {
+                const selectedCityId = $mainCitySelect.val();
+
+                window.mainNeighborhoods.forEach(function(neighborhood) {
+                    const $item = neighborhood.element;
+                    const itemCityId = neighborhood.cityId;
+
+                    // Siempre mostrar la opción "Todas las zonas"
+                    if (itemCityId === 'any') {
+                        $item.removeClass('hidden');
+                    } else if (selectedCityId === 'any' || itemCityId == selectedCityId) {
+                        $item.removeClass('hidden');
+                    } else {
+                        $item.addClass('hidden');
+                        // Si el radio oculto estaba seleccionado, seleccionar "Todas las zonas"
+                        if ($item.find('input[type="radio"]').is(':checked')) {
+                            $('input[name="neighborhood_id"][value="any"]').prop('checked', true);
+                        }
+                    }
+                });
+
+                updateLabel();
+            }
+
+            // Filtrar por búsqueda de texto
+            $neighborhoodSearchInput.on('input', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                const selectedCityId = $mainCitySelect.val();
+
+                window.mainNeighborhoods.forEach(function(neighborhood) {
+                    const $item = neighborhood.element;
+                    const itemCityId = neighborhood.cityId;
+                    const matchesCity = itemCityId === 'any' || selectedCityId === 'any' || itemCityId == selectedCityId;
+                    const matchesSearch = neighborhood.name.includes(searchTerm);
+
+                    if (matchesCity && matchesSearch) {
+                        $item.removeClass('hidden');
+                    } else {
+                        $item.addClass('hidden');
+                    }
+                });
+            });
+
+            // Actualizar etiqueta según selección
+            function updateLabel() {
+                const checkedRadio = $neighborhoodRadios.filter(':checked');
+
+                if (checkedRadio.length === 0 || checkedRadio.val() === 'any') {
+                    $neighborhoodLabel.text('Zona');
+                } else {
+                    $neighborhoodLabel.text(checkedRadio.closest('.neighborhood-item').find('span').text());
+                }
+            }
+
+            // Listener para cambios en radio buttons
+            $neighborhoodRadios.on('change', function() {
+                updateLabel();
+                // Cerrar dropdown después de seleccionar
+                $neighborhoodDropdown.removeClass('active');
+            });
+
+            // Listener para cambio de ciudad
+            $mainCitySelect.on('change', function() {
+                filterNeighborhoodsByCity();
+                $neighborhoodSearchInput.val('');
+            });
+
+            // Inicializar filtro al cargar
+            filterNeighborhoodsByCity();
+        }
+
+        // === APLICAR PARÁMETROS DE URL (PARA AMBOS FORMULARIOS) ===
+        function applyUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Para cada parámetro en la URL, establecer el valor en el select correspondiente
+            for (const [key, value] of urlParams.entries()) {
+                const $element = $('[name="' + key + '"]');
+                if ($element.length > 0) {
+                    $element.val(value);
+
+                    // Si es un select2, disparar el evento change
+                    if ($element.hasClass('search-select')) {
+                        $element.trigger('change');
+                    }
+                }
+            }
+
+            // Aplicar neighborhood desde URL para el dropdown personalizado
+            if (urlParams.has('neighborhood_id') && $neighborhoodRadios.length) {
+                const neighborhoodId = urlParams.get('neighborhood_id');
+                $('input[name="neighborhood_id"][value="' + neighborhoodId + '"]').prop('checked', true);
+                if ($neighborhoodDropdown.length) {
+                    updateLabel();
+                }
+            }
+
+            // Si hay parámetros avanzados, mostrar los campos avanzados
+            const hasAdvancedParams = [
+                'price_range', 'size_range', 'bedrooms', 'bathrooms', 'garage',
+                'is_project', 'property_age', 'featured', 'keyword', 'code',
+                'min-price', 'max-price', 'min-area', 'max-area', 'property-id'
+            ].some(param => urlParams.has(param) && urlParams.get(param) !== 'any' && urlParams.get(param) !== '');
+
+            if (hasAdvancedParams) {
+                $('#more-options').show();
+                $('#advanced-search-fields').show();
+                $('#toggle-advanced-search i').removeClass('fa-plus').addClass('fa-minus');
+            }
+        }
+
+        // Aplicar parámetros de URL cuando se carga la página
+        applyUrlParams();
     });
 </script>
 </body>

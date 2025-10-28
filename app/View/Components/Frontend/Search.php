@@ -4,6 +4,7 @@ namespace App\View\Components\Frontend;
 
 use App\Models\Amenity;
 use App\Models\City;
+use App\Models\Neighborhood;
 use App\Models\PropertyType;
 use App\Models\ServiceType;
 use Illuminate\Contracts\View\View;
@@ -28,12 +29,18 @@ class Search extends Component
             ->where('status', true)
             ->get();
 
+        $neighborhoods = Neighborhood::select(['id', 'name', 'city_id'])
+            ->where('status', true)
+            ->orderBy('name')
+            ->get();
+
 
         return view('components.frontend.search', compact(
             'cities',
             'propertyTypes',
             'serviceTypes',
-            'amenities'
+            'amenities',
+            'neighborhoods'
         ));
 
     }

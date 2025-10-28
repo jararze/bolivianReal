@@ -7,9 +7,11 @@
             <div class="search-fields-grid">
                 <div class="option-bar property-location">
                     <select name="location" id="location" class="search-select">
-                        <option value="any">Ubicación</option>
+                        <option value="any" {{ !request('location') || request('location') == 'any' ? 'selected' : '' }}>Ciudad</option>
                         @foreach($cities as $city)
-                            <option value="{{ $city->id }}">{{ $city->name }}</option>
+                            <option value="{{ $city->id }}" {{ request('location') == $city->id ? 'selected' : '' }}>
+                                {{ $city->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -32,8 +34,38 @@
                     </select>
                 </div>
 
-                <div class="option-bar property-keyword">
-                    <input type="text" name="keyword" id="keyword-txt" value="" placeholder="Zona">
+                <div class="option-bar property-neighborhood">
+                    <div class="neighborhood-dropdown" id="neighborhood-dropdown">
+                        <button type="button" class="neighborhood-toggle" id="neighborhood-toggle">
+                            <span id="neighborhood-label">Zona</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
+                                <path fill="currentColor" d="M6 9L1 4h10z"/>
+                            </svg>
+                        </button>
+                        <div class="neighborhood-options" id="neighborhood-options">
+                            <div class="neighborhood-search">
+                                <input type="text" id="neighborhood-search-input" placeholder="Buscar zona...">
+                            </div>
+                            <div class="neighborhood-list">
+                                <label class="neighborhood-item" data-city="any">
+                                    <input type="radio"
+                                           name="neighborhood_id"
+                                           value="any"
+                                        {{ !request('neighborhood_id') || request('neighborhood_id') == 'any' ? 'checked' : '' }}>
+                                    <span>Todas las zonas</span>
+                                </label>
+                                @foreach($neighborhoods as $neighborhood)
+                                    <label class="neighborhood-item" data-city="{{ $neighborhood->city_id }}">
+                                        <input type="radio"
+                                               name="neighborhood_id"
+                                               value="{{ $neighborhood->id }}"
+                                            {{ request('neighborhood_id') == $neighborhood->id ? 'checked' : '' }}>
+                                        <span>{{ $neighborhood->name }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -50,7 +82,6 @@
 
             <!-- Opciones adicionales -->
             <div class="extra-search-fields" id="more-options">
-
                 <div class="hidden-options-grid">
                     <div class="hidden-option-item">
                         <select name="bedrooms" id="select-bedrooms">
