@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 
 class Property extends Model
@@ -29,6 +30,7 @@ class Property extends Model
         'chosen_currency' => 'boolean',
         'delivery' => 'datetime',
         'construction_Date' => 'datetime',
+        'off_market_date' => 'datetime',
     ];
 
 
@@ -66,7 +68,6 @@ class Property extends Model
         }
     }
 
-    // Método para debug
     public function debugImagePaths()
     {
         $imagePath = str_replace('\\', '/', $this->image);
@@ -186,5 +187,114 @@ class Property extends Model
         return $this->belongsTo(Neighborhood::class, 'neighborhood_id');
     }
 
+    public function contracts()
+    {
+        return $this->hasMany(PropertyContract::class);
+    }
+
+    public function activeContract()
+    {
+        return $this->hasOne(PropertyContract::class)
+            ->where('status', 'active')
+            ->where('end_date', '>=', now())
+            ->latest('start_date');
+    }
+
+    public function activeContracts()
+    {
+        return $this->hasMany(PropertyContract::class)
+            ->where('status', 'active')
+            ->where('end_date', '>=', now());
+    }
+
+    public function hasActiveContract(): bool
+    {
+        return $this->activeContract()->exists();
+    }
+
+    public function latestContract()
+    {
+        return $this->hasOne(PropertyContract::class)
+            ->latest('created_at');
+    }
+
+
+    public function scopeActive($query)
+    {
+        return $query->where('market_status', 'active');
+    }
+
+    public function scopeOffMarket($query)
+    {
+        return $query->where('market_status', 'off_market');
+    }
+
+    public function scopeWithActiveContracts($query)
+    {
+        return $query->whereHas('activeContract');
+    }
+
+    public function scopeWithExpiringContracts($query, $months = 3)
+    {
+        $futureDate = now()->addMonths($months);
+
+        return $query->whereHas('activeContract', function ($q) use ($futureDate) {
+            $q->where('end_date', '<=', $futureDate)
+                ->where('end_date', '>=', now());
+        });
+    }
+
+
+    public function hasExpiringContract(int $months = 3): bool
+    {
+        $contract = $this->activeContract;
+
+        if (!$contract) {
+            return false;
+        }
+
+        return $contract->isExpiringInMonths($months);
+    }
+
+    public function getDaysUntilContractExpiration(): ?int
+    {
+        $contract = $this->activeContract;
+
+        if (!$contract) {
+            return null;
+        }
+
+        return $contract->getDaysRemaining();
+    }
+
+    public function getOffMarketReasonLabel(): string
+    {
+        $reasons = [
+            'sold' => 'Vendida',
+            'rented' => 'Alquilada',
+            'anticretico' => 'Anticrético',
+            'owner_decision' => 'Decisión del propietario',
+            'other' => 'Otro',
+        ];
+
+        return $reasons[$this->off_market_reason] ?? '-';
+    }
+
+    public function getMarketStatusBadgeClass(): string
+    {
+        return $this->market_status === 'active' ? 'badge-success' : 'badge-danger';
+    }
+
+    public function getMarketStatusLabel(): string
+    {
+        return $this->market_status === 'active' ? 'Activa' : 'Fuera de Mercado';
+    }
+
+    public function canHaveContract(): bool
+    {
+        // Solo propiedades de alquiler o anticrético pueden tener contratos
+        // Ajusta esta lógica según tus service_types
+        return in_array($this->service_type_id, [2, 3]); // Ejemplo: 2=Alquiler, 3=Anticrético
+    }
 
 }

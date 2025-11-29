@@ -69,7 +69,14 @@
                     <article class="property-listing-simple property-listing-simple-2 hentry clearfix">
                         <div class="property-thumbnail col-sm-5 zero-horizontal-padding">
                             <div class="price-wrapper">
-                                <span class="price" style="color: white">{{ $property->currency }} {{ number_format($property->max_price, 2) }} </span>
+
+                                @if($property->market_status === 'off_market')
+                                    <span class="badge" style="background-color: #dc3545; color: white; padding: 5px 10px; margin-left: 10px; border-radius: 3px; font-size: 12px;">
+                                        {{ strtoupper($property->getOffMarketReasonLabel()) }}
+                                    </span>
+                                @else
+                                    <span class="price" style="color: white">{{ $property->currency }} {{ number_format($property->max_price, 2) }} </span>
+                                @endif
                             </div>
                             <div class="gallery-slider-two flexslider">
                                 <ul class="slides">

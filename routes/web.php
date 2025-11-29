@@ -15,6 +15,7 @@ use App\Models\Configuration;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/css/theme-dynamic.css', function () {
     try {
@@ -54,14 +55,14 @@ Route::get('/css/theme-dynamic.css', function () {
 
 Route::get('/api/refresh-random-properties', [HomeController::class, 'refreshRandomProperties']);
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::name('frontend.')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/property/search', [HomeController::class, 'search'])->name('properties.search');
-    Route::get('/property/{id}', [HomeController::class, 'show'])->name('properties.show');
+    Route::get('/property/{slug}', [HomeController::class, 'show'])->name('properties.show');
     Route::get('/about/', [HomeController::class, 'about'])->name('about');
     Route::get('/services/', [HomeController::class, 'services'])->name('services');
     Route::get('/promotions/', [HomeController::class, 'promotions'])->name('promotions');
@@ -108,6 +109,64 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('properties', PropertyController::class, ['as' => 'backend']);
 
+    Route::prefix('properties')->name('backend.properties.')->group(function () {
+        // Vista principal de gestión
+        Route::get('management/final-phase', [PropertyController::class, 'lastPhase'])
+            ->name('lastPhase.index');
+
+        // Gestión de estado de mercado
+        Route::patch('{property}/off-market', [PropertyController::class, 'offMarket'])
+            ->name('offMarket');
+
+        Route::patch('{property}/reactivate', [PropertyController::class, 'reactivate'])
+            ->name('reactivate');
+
+        // Gestión de contratos
+        Route::patch('{property}/contract', [PropertyController::class, 'saveContract'])
+            ->name('saveContract');
+
+        Route::delete('contract/{contract}', [PropertyController::class, 'deleteContract'])
+            ->name('deleteContract');
+
+        Route::post('contract/{contract}/renew', [PropertyController::class, 'renewContract'])
+            ->name('renewContract');
+
+        Route::patch('contract/{contract}/terminate', [PropertyController::class, 'terminateContract'])
+            ->name('terminateContract');
+
+        // Historial de contratos
+        Route::get('{property}/contracts/history', [PropertyController::class, 'contractHistory'])
+            ->name('contractHistory');
+    });
+
+    Route::prefix('contracts')->name('backend.contracts.')->group(function () {
+        // Vista principal - Todos los contratos
+        Route::get('/', [PropertyController::class, 'contractsIndex'])
+            ->name('index');
+
+        // Reportes filtrados
+        Route::get('/report/{type}', [PropertyController::class, 'contractsReport'])
+            ->name('report');
+
+        // Alertas de vencimiento
+        Route::get('/alerts', [PropertyController::class, 'contractsAlerts'])
+            ->name('alerts');
+
+        // Exportación
+        Route::get('/export/{format}', [PropertyController::class, 'contractsExport'])
+            ->name('export');
+
+        // Vista de detalles de un contrato específico
+        Route::get('/{contract}', [PropertyController::class, 'contractShow'])
+            ->name('show');
+
+        Route::post('/{contract}/renew', [PropertyController::class, 'renewContract'])
+            ->name('renewContract');
+
+        Route::patch('/{contract}/terminate', [PropertyController::class, 'terminateContract'])
+            ->name('terminateContract');
+    });
+
     Route::get('/api/neighborhoods/by-city/{cityId}', [PropertyController::class, 'getNeighborhoodsByCity']);
 
     Route::prefix('configurations')->name('backend.configurations.')->group(function () {
@@ -153,8 +212,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $files = $configService->listUploadedFiles();
         return view('configuration.files', compact('files'));
     });
-
-
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

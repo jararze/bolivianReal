@@ -19,28 +19,28 @@ class HomeController extends Controller
 {
     public function index(): View
     {
-
         $randomProperties = Property::with(['images', 'propertyType'])
             ->where('status', true)
+            ->where('market_status', 'active') // ← AGREGAR
             ->inRandomOrder()
             ->take(4)
             ->get();
 
-
         $hotProperties = Property::where('hot', true)
             ->where('status', true)
+            ->where('market_status', 'active') // ← AGREGAR
             ->inRandomOrder()
             ->take(4)
             ->get();
 
         $featuredProperties = Property::where('featured', true)
             ->where('status', true)
-            ->with(['propertytype', 'images']) // Carga eager el tipo de propiedad
+            ->where('market_status', 'active') // ← AGREGAR
+            ->with(['propertytype', 'images'])
             ->inRandomOrder()
             ->take(6)
             ->get();
 
-        // Obtener tipos de propiedades para el buscador
         $propertyTypes = PropertyType::select(['id', 'type_name'])
             ->where('status', true)
             ->get();
@@ -225,6 +225,7 @@ class HomeController extends Controller
     {
         $query = Property::query()->with(['propertyType', 'images', 'amenities', 'serviceType', 'neighborhood', 'whatcity'])
             ->where('status', true);
+//            ->where('market_status', 'active');
 
         // Filtro por ciudad
         if ($request->filled('location') && $request->location !== 'any') {
@@ -453,6 +454,7 @@ class HomeController extends Controller
         // Obtener propiedades destacadas para el sidebar
         $featuredProperties = Property::with(['images', 'propertyType', 'serviceType'])
             ->where('status', true)
+//            ->where('market_status', 'active')
             ->where('featured', true)
             ->inRandomOrder()
             ->take(2)

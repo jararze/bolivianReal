@@ -26,6 +26,10 @@ use Illuminate\View\View;
 use Log;
 use Intervention\Image\Laravel\Facades\Image;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use App\Models\PropertyContract;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ContractsExport;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PropertyController extends Controller
 {
@@ -1526,5 +1530,540 @@ class PropertyController extends Controller
         // Si no encuentra patrón, devolver 999 para que vaya al final
         return 999;
     }
+
+    public function lastPhase(): View
+    {
+        $properties = Property::with([
+            'propertyType',
+            'citys',
+            'images',
+            'activeContract',
+            'contracts' => function($query) {
+                $query->latest();
+            }
+        ])->orderBy('created_at', 'DESC')->get();
+
+        // Estadísticas
+        $stats = [
+            'active' => Property::where('market_status', 'active')->count(),
+            'off_market' => Property::where('market_status', 'off_market')->count(),
+            'with_contracts' => Property::withActiveContracts()->count(),
+            'expiring_soon' => Property::withExpiringContracts(3)->count(),
+        ];
+
+        return view('backend.lastPhase.index', compact('properties', 'stats'));
+    }
+
+    /**
+     * Sacar propiedad del mercado
+     */
+    public function offMarket(Request $request, Property $property): RedirectResponse
+    {
+        try {
+            $validated = $request->validate([
+                'off_market_reason' => 'required|in:sold,rented,anticretico,owner_decision,other',
+                'off_market_notes' => 'nullable|string|max:1000',
+                'off_market_date' => 'nullable|date',
+            ]);
+
+            $property->update([
+                'market_status' => 'off_market',
+                'off_market_reason' => $validated['off_market_reason'],
+                'off_market_notes' => $validated['off_market_notes'] ?? null,
+                'off_market_date' => $validated['off_market_date'] ?? now(),
+            ]);
+
+            Log::info('Propiedad sacada del mercado:', [
+                'property_id' => $property->id,
+                'property_name' => $property->name,
+                'reason' => $validated['off_market_reason'],
+                'user_id' => auth()->id()
+            ]);
+
+            flash()->success('Propiedad sacada del mercado exitosamente.');
+            return redirect()->route('backend.properties.lastPhase.index');
+
+        } catch (ValidationException $e) {
+            flash()->error('Error en los datos proporcionados.');
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Error sacando propiedad del mercado:', [
+                'error' => $e->getMessage(),
+                'property_id' => $property->id,
+                'user_id' => auth()->id()
+            ]);
+
+            flash()->error('Ocurrió un error al sacar la propiedad del mercado.');
+            return back()->withInput();
+        }
+    }
+
+    /**
+     * Reactivar propiedad
+     */
+    public function reactivate(Property $property): RedirectResponse
+    {
+        try {
+            $property->update([
+                'market_status' => 'active',
+                'off_market_reason' => null,
+                'off_market_notes' => null,
+                'off_market_date' => null,
+                'status' => true,
+            ]);
+
+            Log::info('Propiedad reactivada:', [
+                'property_id' => $property->id,
+                'property_name' => $property->name,
+                'user_id' => auth()->id()
+            ]);
+
+            flash()->success('Propiedad reactivada exitosamente.');
+            return redirect()->route('backend.properties.lastPhase.index');
+
+        } catch (\Exception $e) {
+            Log::error('Error reactivando propiedad:', [
+                'error' => $e->getMessage(),
+                'property_id' => $property->id,
+                'user_id' => auth()->id()
+            ]);
+
+            flash()->error('Ocurrió un error al reactivar la propiedad.');
+            return back();
+        }
+    }
+
+    /**
+     * Guardar o actualizar contrato
+     */
+    public function saveContract(Request $request, Property $property): RedirectResponse
+    {
+        try {
+            $validated = $request->validate([
+                'contract_id' => 'nullable|exists:property_contracts,id',
+                'contract_type' => 'required|in:rent,anticretico',
+                'start_date' => 'required|date',
+                'duration_months' => 'required|integer|min:1|max:120',
+                'end_date' => 'nullable|date|after:start_date',
+                'amount' => 'nullable|numeric|min:0',
+                'currency' => 'required|in:Bs,$us',
+                'tenant_name' => 'nullable|string|max:255',
+                'tenant_phone' => 'nullable|string|max:50',
+                'tenant_email' => 'nullable|email|max:255',
+                'tenant_ci' => 'nullable|string|max:50',
+                'tenant_address' => 'nullable|string|max:500',
+                'notes' => 'nullable|string|max:1000',
+            ]);
+
+            // Calcular fecha de fin si no se proporcionó
+            if (empty($validated['end_date'])) {
+                $startDate = \Carbon\Carbon::parse($validated['start_date']);
+                $validated['end_date'] = $startDate->copy()
+                    ->addMonths($validated['duration_months'])
+                    ->format('Y-m-d');
+            }
+
+            // Si existe contract_id, actualizar; sino, crear
+            if (!empty($validated['contract_id'])) {
+                $contract = PropertyContract::findOrFail($validated['contract_id']);
+
+                // Resetear alertas si se actualizan las fechas
+                if ($contract->end_date != $validated['end_date']) {
+                    $validated['alert_3months_sent'] = false;
+                    $validated['alert_3months_sent_at'] = null;
+                    $validated['alert_1month_sent'] = false;
+                    $validated['alert_1month_sent_at'] = null;
+                    $validated['alert_1week_sent'] = false;
+                    $validated['alert_1week_sent_at'] = null;
+                }
+
+                unset($validated['contract_id']);
+                $contract->update($validated);
+
+                $message = 'Contrato actualizado exitosamente.';
+                $action = 'updated';
+            } else {
+                unset($validated['contract_id']);
+                $validated['property_id'] = $property->id;
+                $validated['status'] = 'active';
+
+                $contract = PropertyContract::create($validated);
+
+                $message = 'Contrato creado exitosamente.';
+                $action = 'created';
+            }
+
+            Log::info('Contrato guardado:', [
+                'action' => $action,
+                'contract_id' => $contract->id,
+                'property_id' => $property->id,
+                'property_name' => $property->name,
+                'contract_type' => $validated['contract_type'],
+                'start_date' => $validated['start_date'],
+                'end_date' => $validated['end_date'],
+                'user_id' => auth()->id()
+            ]);
+
+            flash()->success($message);
+            return redirect()->route('backend.properties.lastPhase.index');
+
+        } catch (ValidationException $e) {
+            flash()->error('Error en los datos proporcionados.');
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Error guardando contrato:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'property_id' => $property->id,
+                'user_id' => auth()->id()
+            ]);
+
+            flash()->error('Ocurrió un error al guardar el contrato.');
+            return back()->withInput();
+        }
+    }
+
+    /**
+     * Eliminar contrato
+     */
+    public function deleteContract(PropertyContract $contract): RedirectResponse
+    {
+        try {
+            $propertyName = $contract->property->name;
+            $contractId = $contract->id;
+
+            $contract->delete();
+
+            Log::info('Contrato eliminado:', [
+                'contract_id' => $contractId,
+                'property_id' => $contract->property_id,
+                'property_name' => $propertyName,
+                'user_id' => auth()->id()
+            ]);
+
+            flash()->success('Contrato eliminado exitosamente.');
+            return redirect()->route('backend.properties.lastPhase.index');
+
+        } catch (\Exception $e) {
+            Log::error('Error eliminando contrato:', [
+                'error' => $e->getMessage(),
+                'contract_id' => $contract->id ?? 'unknown',
+                'user_id' => auth()->id()
+            ]);
+
+            flash()->error('Ocurrió un error al eliminar el contrato.');
+            return back();
+        }
+    }
+
+    /**
+     * Renovar contrato
+     */
+    public function renewContract(Request $request, PropertyContract $contract): RedirectResponse
+    {
+        try {
+            $validated = $request->validate([
+                'start_date' => 'required|date', // ← Simplificado
+                'duration_months' => 'required|integer|min:1|max:120',
+                'amount' => 'nullable|numeric|min:0',
+                'notes' => 'nullable|string|max:1000',
+            ]);
+
+            // Crear el nuevo contrato usando el método renew del modelo
+            $newContract = $contract->renew($validated);
+
+            Log::info('Contrato renovado:', [
+                'old_contract_id' => $contract->id,
+                'new_contract_id' => $newContract->id,
+                'property_id' => $contract->property_id,
+                'property_name' => $contract->property->name,
+                'user_id' => auth()->id()
+            ]);
+
+            flash()->success('Contrato renovado exitosamente. Nuevo contrato #' . $newContract->id . ' creado.');
+            return redirect()->route('backend.contracts.show', $newContract);
+
+        } catch (ValidationException $e) {
+            flash()->error('Error en los datos proporcionados.');
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Error renovando contrato:', [
+                'error' => $e->getMessage(),
+                'contract_id' => $contract->id,
+                'user_id' => auth()->id()
+            ]);
+
+            flash()->error('Ocurrió un error al renovar el contrato: ' . $e->getMessage());
+            return back()->withInput();
+        }
+    }
+
+    /**
+     * Terminar contrato anticipadamente
+     */
+    public function terminateContract(Request $request, PropertyContract $contract): RedirectResponse
+    {
+        try {
+            $validated = $request->validate([
+                'termination_reason' => 'required|string|max:1000',
+                'termination_date' => 'nullable|date|before_or_equal:today',
+            ]);
+
+            $terminationDate = $validated['termination_date'] ?? now();
+
+            // Actualizar el contrato
+            $contract->update([
+                'status' => 'terminated',
+                'notes' => $contract->notes . "\n\n--- TERMINADO ANTICIPADAMENTE ---\n" .
+                    "Fecha: " . $terminationDate . "\n" .
+                    "Motivo: " . $validated['termination_reason'] . "\n" .
+                    "Terminado por: " . auth()->user()->name,
+            ]);
+
+            Log::info('Contrato terminado:', [
+                'contract_id' => $contract->id,
+                'property_id' => $contract->property_id,
+                'property_name' => $contract->property->name,
+                'reason' => $validated['termination_reason'],
+                'user_id' => auth()->id()
+            ]);
+
+            flash()->success('Contrato terminado exitosamente.');
+            return redirect()->route('backend.contracts.show', $contract);
+
+        } catch (ValidationException $e) {
+            flash()->error('Error en los datos proporcionados.');
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            Log::error('Error terminando contrato:', [
+                'error' => $e->getMessage(),
+                'contract_id' => $contract->id,
+                'user_id' => auth()->id()
+            ]);
+
+            flash()->error('Ocurrió un error al terminar el contrato.');
+            return back();
+        }
+    }
+
+    /**
+     * Vista principal - Todos los contratos
+     */
+    public function contractsIndex(Request $request): View
+    {
+        $query = PropertyContract::with(['property.propertyType', 'property.citys'])
+            ->orderBy('created_at', 'DESC');
+
+        // Filtros opcionales
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('contract_type')) {
+            $query->where('contract_type', $request->contract_type);
+        }
+
+        if ($request->filled('property_id')) {
+            $query->where('property_id', $request->property_id);
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('start_date', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('end_date', '<=', $request->date_to);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('tenant_name', 'LIKE', "%{$search}%")
+                    ->orWhere('tenant_ci', 'LIKE', "%{$search}%")
+                    ->orWhereHas('property', function($q2) use ($search) {
+                        $q2->where('name', 'LIKE', "%{$search}%")
+                            ->orWhere('code', 'LIKE', "%{$search}%");
+                    });
+            });
+        }
+
+        $contracts = $query->paginate(15)->withQueryString();
+
+        // Estadísticas
+        $stats = [
+            'total' => PropertyContract::count(),
+            'active' => PropertyContract::active()->count(),
+            'expired' => PropertyContract::expired()->count(),
+            'expiring_soon' => PropertyContract::expiringIn(3)->count(),
+            'rent' => PropertyContract::where('contract_type', 'rent')->count(),
+            'anticretico' => PropertyContract::where('contract_type', 'anticretico')->count(),
+        ];
+
+        // Propiedades para filtro
+        $properties = Property::select(['id', 'name', 'code'])
+            ->orderBy('name')
+            ->get();
+
+        return view('backend.contracts.index', compact('contracts', 'stats', 'properties'));
+    }
+
+    /**
+     * Reportes filtrados por tipo
+     */
+    public function contractsReport(Request $request, string $type): View
+    {
+        $query = PropertyContract::with(['property.propertyType', 'property.citys']);
+
+        switch ($type) {
+            case 'active':
+                $query->active();
+                $title = 'Contratos Activos';
+                break;
+
+            case 'expiring':
+                $query->expiringIn(3);
+                $title = 'Contratos por Vencer (3 meses)';
+                break;
+
+            case 'expired':
+                $query->expired();
+                $title = 'Contratos Vencidos';
+                break;
+
+            case 'rent':
+                $query->rent()->active();
+                $title = 'Contratos de Alquiler';
+                break;
+
+            case 'anticretico':
+                $query->anticretico()->active();
+                $title = 'Contratos de Anticrético';
+                break;
+
+            default:
+                abort(404);
+        }
+
+        $contracts = $query->orderBy('end_date', 'asc')->paginate(20);
+
+        return view('backend.contracts.report', compact('contracts', 'title', 'type'));
+    }
+
+    /**
+     * Vista de alertas de vencimiento
+     */
+    public function contractsAlerts(): View
+    {
+        // Contratos que vencen en 3 meses
+        $expiring3Months = PropertyContract::expiringIn(3)
+            ->where('alert_3months_sent', false)
+            ->with(['property'])
+            ->orderBy('end_date', 'asc')
+            ->get();
+
+        // Contratos que vencen en 1 mes
+        $expiring1Month = PropertyContract::expiringIn(1)
+            ->where('alert_1month_sent', false)
+            ->with(['property'])
+            ->orderBy('end_date', 'asc')
+            ->get();
+
+        // Contratos que vencen en 1 semana
+        $expiring1Week = PropertyContract::with(['property'])
+            ->where('status', 'active')
+            ->whereDate('end_date', '<=', now()->addWeek())
+            ->whereDate('end_date', '>=', now())
+            ->where('alert_1week_sent', false)
+            ->orderBy('end_date', 'asc')
+            ->get();
+
+        // Contratos ya vencidos
+        $expired = PropertyContract::expired()
+            ->with(['property'])
+            ->orderBy('end_date', 'desc')
+            ->take(10)
+            ->get();
+
+        return view('backend.contracts.alerts', compact(
+            'expiring3Months',
+            'expiring1Month',
+            'expiring1Week',
+            'expired'
+        ));
+    }
+
+    /**
+     * Exportar contratos
+     */
+    public function contractsExport(Request $request, string $format)
+    {
+        $query = PropertyContract::with(['property.propertyType', 'property.citys']);
+
+        // Aplicar filtros si vienen en la URL
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('contract_type')) {
+            $query->where('contract_type', $request->contract_type);
+        }
+
+        if ($request->filled('type')) {
+            switch ($request->type) {
+                case 'active':
+                    $query->active();
+                    break;
+                case 'expiring':
+                    $query->expiringIn(3);
+                    break;
+                case 'expired':
+                    $query->expired();
+                    break;
+            }
+        }
+
+        $contracts = $query->orderBy('created_at', 'DESC')->get();
+
+        switch ($format) {
+            case 'excel':
+                return Excel::download(
+                    new ContractsExport($contracts),
+                    'contratos_' . date('Y-m-d') . '.xlsx'
+                );
+
+            case 'csv':
+                return Excel::download(
+                    new ContractsExport($contracts),
+                    'contratos_' . date('Y-m-d') . '.csv',
+                    \Maatwebsite\Excel\Excel::CSV
+                );
+
+            case 'pdf':
+                $pdf = Pdf::loadView('backend.contracts.pdf', compact('contracts'));
+                return $pdf->download('contratos_' . date('Y-m-d') . '.pdf');
+
+            default:
+                abort(404);
+        }
+    }
+
+    /**
+     * Ver detalles de un contrato específico
+     */
+    public function contractShow(PropertyContract $contract): View
+    {
+        $contract->load([
+            'property.propertyType',
+            'property.citys',
+            'property.images',
+            'createdBy',
+            'updatedBy',
+            'renewedFrom',
+            'renewedTo'
+        ]);
+
+        return view('backend.contracts.show', compact('contract'));
+    }
+
 
 }

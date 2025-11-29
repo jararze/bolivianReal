@@ -122,13 +122,9 @@
                                                              data-menu-dismiss="true">
                                                             <div class="menu-item">
                                                                 <a class="menu-link" href="#">
-                  <span class="menu-icon">
-                   <i class="ki-filled ki-document">
-                   </i>
-                  </span>
-                                                                    <span class="menu-title">
-                   View
-                  </span>
+                                                                    <span class="menu-icon"><i
+                                                                            class="ki-filled ki-document"></i></span>
+                                                                    <span class="menu-title">View</span>
                                                                 </a>
                                                             </div>
                                                             <div class="menu-item" data-menu-item-offset="-15px, 0"
@@ -136,42 +132,28 @@
                                                                  data-menu-item-toggle="dropdown"
                                                                  data-menu-item-trigger="click|lg:hover">
                                                                 <div class="menu-link">
-                  <span class="menu-icon">
-                   <i class="ki-filled ki-notification-status">
-                   </i>
-                  </span>
-                                                                    <span class="menu-title">
-                   Export
-                  </span>
-                                                                    <span class="menu-arrow">
-                   <i class="ki-filled ki-right text-3xs rtl:transform rtl:rotate-180">
-                   </i>
-                  </span>
+                                                                    <span class="menu-icon"><i
+                                                                            class="ki-filled ki-notification-status"></i></span>
+                                                                    <span class="menu-title">Export</span>
+                                                                    <span class="menu-arrow"><i
+                                                                            class="ki-filled ki-right text-3xs rtl:transform rtl:rotate-180"></i></span>
                                                                 </div>
                                                                 <div
                                                                     class="menu-dropdown menu-default w-full max-w-[175px]">
                                                                     <div class="menu-item">
                                                                         <a class="menu-link"
                                                                            href="html/demo8/account/home/settings-sidebar.html">
-                    <span class="menu-icon">
-                     <i class="ki-filled ki-sms">
-                     </i>
-                    </span>
-                                                                            <span class="menu-title">
-                     Email
-                    </span>
+                                                                            <span class="menu-icon"><i
+                                                                                    class="ki-filled ki-sms"></i></span>
+                                                                            <span class="menu-title">Email</span>
                                                                         </a>
                                                                     </div>
                                                                     <div class="menu-item">
                                                                         <a class="menu-link"
                                                                            href="html/demo8/account/home/settings-sidebar.html">
-                    <span class="menu-icon">
-                     <i class="ki-filled ki-message-notify">
-                     </i>
-                    </span>
-                                                                            <span class="menu-title">
-                     SMS
-                    </span>
+                                                                            <span class="menu-icon"><i
+                                                                                    class="ki-filled ki-message-notify"></i></span>
+                                                                            <span class="menu-title">SMS</span>
                                                                         </a>
                                                                     </div>
                                                                     <div class="menu-item">
