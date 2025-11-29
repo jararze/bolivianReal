@@ -19,7 +19,7 @@ class DashboardController extends Controller
         // ========================================
         // KPIs PRINCIPALES
         // ========================================
-        
+
         $kpis = [
             // Propiedades
             'total_properties' => Property::count(),
@@ -30,23 +30,23 @@ class DashboardController extends Controller
             'featured_properties' => Property::where('featured', true)
                 ->where('status', true)
                 ->count(),
-            
+
             // Contratos
             'total_contracts' => PropertyContract::count(),
             'active_contracts' => PropertyContract::active()->count(),
             'expiring_soon_contracts' => PropertyContract::expiringIn(3)->count(),
             'expired_contracts' => PropertyContract::expired()->count(),
-            
+
             // Usuarios
             'total_users' => User::count(),
             'active_agents' => User::where('role', 'agent')
                 ->where('status', 'active')
                 ->count(),
-            
+
             // Mensajes
             'unread_messages' => PropertyMessage::whereDate('created_at', '>=', now()->subDays(7))
                 ->count(),
-            
+
             // Wishlist y Comparaciones
             'total_wishlists' => Wishlist::count(),
             'total_compares' => Compare::count(),
@@ -55,7 +55,7 @@ class DashboardController extends Controller
         // ========================================
         // PROPIEDADES RECIENTES
         // ========================================
-        
+
         $recent_properties = Property::with(['propertyType', 'citys', 'images'])
             ->where('status', true)
             ->orderBy('created_at', 'DESC')
@@ -65,7 +65,7 @@ class DashboardController extends Controller
         // ========================================
         // CONTRATOS POR VENCER (URGENTE)
         // ========================================
-        
+
         $expiring_contracts = PropertyContract::with(['property'])
             ->where('status', 'active')
             ->whereDate('end_date', '<=', now()->addMonth())
@@ -77,7 +77,7 @@ class DashboardController extends Controller
         // ========================================
         // ESTADÍSTICAS POR TIPO DE PROPIEDAD
         // ========================================
-        
+
         $properties_by_type = Property::select('propertytype_id', DB::raw('count(*) as total'))
             ->where('status', true)
             ->with('propertyType:id,type_name')
@@ -93,7 +93,7 @@ class DashboardController extends Controller
         // ========================================
         // ESTADÍSTICAS POR CIUDAD
         // ========================================
-        
+
         $properties_by_city = Property::select('city', DB::raw('count(*) as total'))
             ->where('status', true)
             ->whereNotNull('city')
@@ -105,7 +105,7 @@ class DashboardController extends Controller
         // ========================================
         // VENTAS POR MES (Últimos 6 meses)
         // ========================================
-        
+
         $sales_by_month = Property::select(
                 DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'),
                 DB::raw('count(*) as total')
@@ -118,10 +118,26 @@ class DashboardController extends Controller
         // ========================================
         // PROPIEDADES MÁS VISTAS (Wishlist)
         // ========================================
-        
-        $most_wishlisted = Property::select('properties.*', DB::raw('count(wishlists.id) as wishlist_count'))
+
+        $most_wishlisted = Property::select(
+            'properties.id',
+            'properties.name',
+            'properties.thumbnail',
+            'properties.propertytype_id',
+            'properties.lowest_price',
+            'properties.currency',
+            DB::raw('count(wishlists.id) as wishlist_count')
+        )
             ->join('wishlists', 'properties.id', '=', 'wishlists.property_id')
-            ->groupBy('properties.id')
+            ->with('propertyType:id,type_name')
+            ->groupBy(
+                'properties.id',
+                'properties.name',
+                'properties.thumbnail',
+                'properties.propertytype_id',
+                'properties.lowest_price',
+                'properties.currency'
+            )
             ->orderBy('wishlist_count', 'DESC')
             ->take(5)
             ->get();
@@ -129,7 +145,7 @@ class DashboardController extends Controller
         // ========================================
         // ACTIVIDAD RECIENTE
         // ========================================
-        
+
         $recent_messages = PropertyMessage::with(['property:id,name', 'user:id,name'])
             ->orderBy('created_at', 'DESC')
             ->take(5)
@@ -138,7 +154,7 @@ class DashboardController extends Controller
         // ========================================
         // CONTRATOS POR TIPO
         // ========================================
-        
+
         $contracts_by_type = [
             'rent' => PropertyContract::where('contract_type', 'rent')->count(),
             'anticretico' => PropertyContract::where('contract_type', 'anticretico')->count(),
@@ -147,7 +163,7 @@ class DashboardController extends Controller
         // ========================================
         // INGRESOS PROYECTADOS (Contratos Activos)
         // ========================================
-        
+
         $projected_income = PropertyContract::where('status', 'active')
             ->where('contract_type', 'rent')
             ->sum('amount');
@@ -155,7 +171,7 @@ class DashboardController extends Controller
         // ========================================
         // PROPIEDADES HOT (Destacadas)
         // ========================================
-        
+
         $hot_properties = Property::with(['propertyType', 'images'])
             ->where('hot', true)
             ->where('status', true)
@@ -166,7 +182,7 @@ class DashboardController extends Controller
         // ========================================
         // RANGOS DE PRECIOS
         // ========================================
-        
+
         $price_ranges = [
             'under_100k' => Property::where('status', true)
                 ->where('lowest_price', '<', 100000)
@@ -185,7 +201,7 @@ class DashboardController extends Controller
         // ========================================
         // USUARIOS RECIENTES
         // ========================================
-        
+
         $recent_users = User::orderBy('created_at', 'DESC')
             ->take(5)
             ->get();
