@@ -121,8 +121,18 @@ class PropertyController extends Controller
         try {
             Log::info('🚀 Iniciando store en PropertyController');
 
+            // ========================================
+            // PASO 1: GUARDAR O ACTUALIZAR CLIENTE
+            // ========================================
+            $clientController = new ClientController();
+            $client = $clientController->storeFromProperty($request);
+            Log::info('👤 Cliente procesado:', ['client_id' => $client->id, 'nombre' => $client->full_name]);
+
             $validated = $request->validated();
             Log::info('✅ Datos validados:', ['validated' => $validated]);
+
+            // Agregar client_id a los datos validados
+            $validated['client_id'] = $client->id;
 
             $propertyData = $this->preparePropertyData($validated);
             Log::info('📋 Datos preparados para DB:', ['propertyData' => $propertyData]);
@@ -624,54 +634,73 @@ class PropertyController extends Controller
     public function update(UpdateRequest $request, Property $property): RedirectResponse
     {
         try {
-            Log::info('🚀 Iniciando update CON COMPRESIÓN en PropertyController para la propiedad ' . $property->id);
+            Log::info('🚀 Iniciando update en PropertyController', ['property_id' => $property->id]);
 
-            // Obtener datos validados
+            // ========================================
+            // PASO 1: GUARDAR O ACTUALIZAR CLIENTE
+            // ========================================
+            $clientController = new \App\Http\Controllers\ClientController();
+            $client = $clientController->storeFromProperty($request);
+            Log::info('👤 Cliente procesado:', ['client_id' => $client->id, 'nombre' => $client->full_name]);
+
             $validated = $request->validated();
-            Log::info('✅ Datos validados:', ['validated' => $validated]);
+            Log::info('✅ Datos validados');
 
-            return DB::transaction(function () use ($request, $property, $validated) {
+            // Agregar client_id a los datos validados
+            $validated['client_id'] = $client->id;
+
+            $propertyData = $this->preparePropertyData($validated);
+            Log::info('📋 Datos preparados para update');
+
+            return DB::transaction(function () use ($request, $property, $propertyData) {
                 try {
-                    // 1. Filtrar solo los campos que pertenecen a la tabla properties
-                    $propertyData = array_intersect_key($validated, array_flip([
-                        'name', 'address', 'neighborhood_id', 'size', 'size_max',
-                        'city', 'country', 'propertytype_id', 'service_type_id',
-                        'currency', 'chosen_currency', 'lowest_price', 'max_price',
-                        'bedrooms', 'bathrooms', 'garage', 'garage_size',
-                        'short_description', 'long_description', 'latitude', 'longitude',
-                        'video', 'featured', 'hot', 'agent_id', 'status', 'is_project',
-                        'units', 'project_id'
-                    ]));
-
-                    // 2. Actualizar los datos básicos de la propiedad
+                    // Actualizar la propiedad
                     $property->update($propertyData);
-                    Log::info('📝 Datos básicos de la propiedad actualizados');
+                    Log::info('🏠 Propiedad actualizada:', ['property_id' => $property->id]);
 
-                    // 3. Procesar las relaciones
-                    $this->processRelationsUpdate($property, $validated);
+                    $this->processRelations($property, $request->validated());
                     Log::info('🔗 Relaciones procesadas');
 
-                    // 4. ========== USAR EL NUEVO MÉTODO CON COMPRESIÓN ==========
-                    $this->handleImagesUpdateWithCompression($property, $request);
+                    $this->handleImageUpdates($property, $request);
+                    Log::info('🖼️ Imágenes actualizadas');
 
                     flash()->success('Propiedad actualizada satisfactoriamente.');
-                    Log::info('🎉 Proceso de actualización completado con éxito');
+                    Log::info('🎉 Update completado con éxito');
 
                     return redirect()->route('backend.properties.index');
+
+                } catch (ValidationException $e) {
+                    DB::rollBack();
+                    Log::error('❌ Excepción de validación en transacción:', ['errors' => $e->errors()]);
+                    return back()->withErrors($e->errors())->withInput();
                 } catch (\Exception $e) {
                     DB::rollBack();
-                    Log::error('❌ Error en la actualización:', [
-                        'error' => $e->getMessage(),
-                        'trace' => $e->getTraceAsString()
+                    Log::error('❌ Excepción en transacción:', [
+                        'message' => $e->getMessage(),
+                        'line' => $e->getLine()
                     ]);
-                    throw $e;
+                    return back()->withError($e->getMessage())->withInput();
                 }
             });
 
+        } catch (ValidationException $e) {
+            Log::error('❌ Excepción de validación:', ['errors' => $e->errors()]);
+            flash()->error('Por favor corrige los errores en el formulario.');
+            return back()->withErrors($e->errors())->withInput();
+        } catch (QueryException $e) {
+            Log::error('❌ Error de base de datos:', [
+                'error' => $e->getMessage(),
+                'code' => $e->getCode(),
+                'property_id' => $property->id
+            ]);
+
+            flash()->warning('Error al guardar en la base de datos. Por favor, intente nuevamente.');
+            return back()->withInput();
         } catch (\Exception $e) {
             Log::error('❌ Error actualizando propiedad:', [
                 'error' => $e->getMessage(),
-                'stack' => $e->getTraceAsString()
+                'stack' => $e->getTraceAsString(),
+                'property_id' => $property->id
             ]);
 
             flash()->warning('Ocurrió un error al actualizar la propiedad: ' . $e->getMessage());

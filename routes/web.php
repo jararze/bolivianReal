@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AmenityController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ConfigurationController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\Frontend\HomeController;
@@ -11,6 +12,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\PropertyTypeController;
 use App\Http\Controllers\ServiceTypeController;
+use App\Http\Controllers\TenantController;
+use App\Http\Controllers\UserController;
 use App\Models\Configuration;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
@@ -165,6 +168,51 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::patch('/{contract}/terminate', [PropertyController::class, 'terminateContract'])
             ->name('terminateContract');
+    });
+
+    Route::prefix('clients')->name('backend.clients.')->group(function () {
+        Route::get('/', [ClientController::class, 'index'])->name('index');
+        Route::get('/create', [ClientController::class, 'create'])->name('create');
+        Route::post('/', [ClientController::class, 'store'])->name('store');
+        Route::get('/{client}', [ClientController::class, 'show'])->name('show');
+        Route::get('/{client}/edit', [ClientController::class, 'edit'])->name('edit');
+        Route::put('/{client}', [ClientController::class, 'update'])->name('update');
+        Route::delete('/{client}', [ClientController::class, 'destroy'])->name('destroy');
+        Route::post('/{client}/toggle-status', [ClientController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
+    // ============================================
+    // MÓDULO DE USUARIOS
+    // ============================================
+    Route::prefix('users')->name('backend.users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::get('/create', [UserController::class, 'create'])->name('create');
+        Route::post('/', [UserController::class, 'store'])->name('store');
+        Route::get('/{user}', [UserController::class, 'show'])->name('show');
+        Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
+        Route::put('/{user}', [UserController::class, 'update'])->name('update');
+        Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+        Route::post('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status');
+    });
+
+    // ============================================
+    // MÓDULO DE INQUILINOS
+    // ============================================
+    Route::prefix('tenants')->name('backend.tenants.')->group(function () {
+        // Vista principal - Todos los contratos con inquilinos
+        Route::get('/', [TenantController::class, 'index'])->name('index');
+
+        // Vista de inquilinos únicos agrupados
+        Route::get('/list', [TenantController::class, 'tenantsList'])->name('list');
+
+        // Historial de contratos de un inquilino específico
+        Route::get('/history', [TenantController::class, 'history'])->name('history');
+
+        // Exportar inquilinos
+        Route::get('/export/{format}', [TenantController::class, 'export'])->name('export');
+
+        // Ver detalles de un contrato específico (debe ir al final)
+        Route::get('/{contract}', [TenantController::class, 'show'])->name('show');
     });
 
     Route::get('/api/neighborhoods/by-city/{cityId}', [PropertyController::class, 'getNeighborhoodsByCity']);

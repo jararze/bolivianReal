@@ -151,6 +151,8 @@
                 </div>
 
                 <div class="flex flex-col items-stretch grow gap-5 lg:gap-7.5">
+                    <!-- ========== CARD DE CLIENTE (PRIMERO) ========== -->
+                    @include('backend.properties.partials.client-search-edit')
                     <!-- Información Básica -->
                     <div class="card p-6">
                         <div class="card-header mb-6" id="basic_info">

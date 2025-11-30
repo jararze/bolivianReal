@@ -35,160 +35,392 @@
                 </a>
             </div>
 
-{{--            <div class="menu-item" data-menu-item-offset="-10px, 14px" data-menu-item-overflow="true"--}}
-{{--                 data-menu-item-placement="right-start" data-menu-item-toggle="dropdown"--}}
-{{--                 data-menu-item-trigger="click|lg:hover">--}}
-{{--                <div--}}
-{{--                    class="menu-link rounded-[9px] border border-transparent menu-item-here:border-gray-200 menu-item-here:bg-light menu-link-hover:bg-light menu-link-hover:border-gray-200 w-[62px] h-[60px] flex flex-col justify-center items-center gap-1 p-2 grow">--}}
-{{--                      <span--}}
-{{--                          class="menu-icon menu-item-here:text-primary menu-item-active:text-primary menu-link-hover:text-primary text-gray-600">--}}
-{{--                        <i class="ki-filled ki-profile-circle text-1.5xl"></i>--}}
-{{--                      </span>--}}
-{{--                    <span--}}
-{{--                        class="menu-title menu-item-here:text-primary menu-item-active:text-primary menu-link-hover:text-primary font-medium text-xs text-gray-600"> Profiles </span>--}}
-{{--                </div>--}}
-{{--                <div--}}
-{{--                    class="menu-default menu-dropdown gap-0.5 w-[220px] scrollable-y-auto lg:overflow-visible max-h-[50vh]">--}}
-{{--                    <div class="menu-item" data-menu-item-placement="right-start"--}}
-{{--                         data-menu-item-toggle="accordion|lg:dropdown" data-menu-item-trigger="click|lg:hover">--}}
-{{--                        <div class="menu-link grow cursor-pointer">--}}
-{{--                            <span class="menu-title"> Profiles </span>--}}
-{{--                            <span class="menu-arrow"><i--}}
-{{--                                    class="ki-filled ki-right text-3xs rtl:translate rtl:rotate-180"></i></span>--}}
-{{--                        </div>--}}
-{{--                        <div class="menu-default menu-dropdown gap-0.5 w-[220px]">--}}
-{{--                            <div class="menu-item">--}}
-{{--                                <a class="menu-link" href="html/demo8/public-profile/profiles/default.html">--}}
-{{--                                    <span class="menu-title"> Default </span>--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                            <div class="menu-item">--}}
-{{--                                <a class="menu-link" href="html/demo8/public-profile/profiles/creator.html">--}}
-{{--                                    <span class="menu-title"> Creator </span>--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                            <div class="menu-item">--}}
-{{--                                <a class="menu-link" href="html/demo8/public-profile/profiles/company.html">--}}
-{{--                                    <span class="menu-title"> Company </span>--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                            <div class="menu-item">--}}
-{{--                                <a class="menu-link" href="html/demo8/public-profile/profiles/nft.html">--}}
-{{--                                    <span class="menu-title"> NFT </span>--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                            <div class="menu-item">--}}
-{{--                                <a class="menu-link" href="html/demo8/public-profile/profiles/blogger.html">--}}
-{{--                                    <span class="menu-title"> Blogger </span>--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                            <div class="menu-item">--}}
-{{--                                <a class="menu-link" href="html/demo8/public-profile/profiles/crm.html">--}}
-{{--                                    <span class="menu-title"> CRM </span>--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                            <div class="menu-item" data-menu-item-placement="right-start"--}}
-{{--                                 data-menu-item-toggle="accordion|lg:dropdown" data-menu-item-trigger="click|lg:hover">--}}
-{{--                                <div class="menu-link grow cursor-pointer">--}}
-{{--                                    <span class="menu-title"> More </span>--}}
-{{--                                    <span class="menu-arrow">--}}
-{{--                    <i class="ki-filled ki-right text-3xs rtl:translate rtl:rotate-180"></i>--}}
-{{--                  </span>--}}
-{{--                                </div>--}}
-{{--                                <div class="menu-default menu-dropdown gap-0.5 w-[220px]">--}}
-{{--                                    <div class="menu-item">--}}
-{{--                                        <a class="menu-link" href="html/demo8/public-profile/profiles/gamer.html">--}}
-{{--                                            <span class="menu-title"> Gamer </span>--}}
-{{--                                        </a>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="menu-item">--}}
-{{--                                        <a class="menu-link" href="html/demo8/public-profile/profiles/feeds.html">--}}
-{{--                                            <span class="menu-title"> Feeds </span>--}}
-{{--                                        </a>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="menu-item">--}}
-{{--                                        <a class="menu-link" href="html/demo8/public-profile/profiles/plain.html">--}}
-{{--                                            <span class="menu-title"> Plain </span>--}}
-{{--                                        </a>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="menu-item">--}}
-{{--                                        <a class="menu-link" href="html/demo8/public-profile/profiles/modal.html">--}}
-{{--                                            <span class="menu-title"> Modal </span>--}}
-{{--                                        </a>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="menu-item" data-menu-item-placement="right-start"--}}
-{{--                         data-menu-item-toggle="accordion|lg:dropdown" data-menu-item-trigger="click|lg:hover">--}}
-{{--                        <div class="menu-link grow cursor-pointer">--}}
-{{--                            <span class="menu-title"> Projects </span>--}}
-{{--                            <span class="menu-arrow">--}}
-{{--                <i class="ki-filled ki-right text-3xs rtl:translate rtl:rotate-180"></i>--}}
-{{--              </span>--}}
-{{--                        </div>--}}
-{{--                        <div class="menu-default menu-dropdown gap-0.5 w-[220px]">--}}
-{{--                            <div class="menu-item">--}}
-{{--                                <a class="menu-link" href="html/demo8/public-profile/projects/3-columns.html">--}}
-{{--                                    <span class="menu-title"> 3 Columns </span>--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                            <div class="menu-item">--}}
-{{--                                <a class="menu-link" href="html/demo8/public-profile/projects/2-columns.html">--}}
-{{--                                    <span class="menu-title"> 2 Columns </span>--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="menu-item">--}}
-{{--                        <a class="menu-link" href="html/demo8/public-profile/works.html">--}}
-{{--                            <span class="menu-title"> Works </span>--}}
-{{--                        </a>--}}
-{{--                    </div>--}}
-{{--                    <div class="menu-item">--}}
-{{--                        <a class="menu-link" href="html/demo8/public-profile/teams.html">--}}
-{{--                            <span class="menu-title"> Teams </span>--}}
-{{--                        </a>--}}
-{{--                    </div>--}}
-{{--                    <div class="menu-item">--}}
-{{--                        <a class="menu-link" href="html/demo8/public-profile/network.html">--}}
-{{--                            <span class="menu-title"> Network </span>--}}
-{{--                        </a>--}}
-{{--                    </div>--}}
-{{--                    <div class="menu-item">--}}
-{{--                        <a class="menu-link" href="html/demo8/public-profile/activity.html">--}}
-{{--                            <span class="menu-title"> Activity </span>--}}
-{{--                        </a>--}}
-{{--                    </div>--}}
-{{--                    <div class="menu-item" data-menu-item-placement="right-start"--}}
-{{--                         data-menu-item-toggle="accordion|lg:dropdown" data-menu-item-trigger="click|lg:hover">--}}
-{{--                        <div class="menu-link grow cursor-pointer">--}}
-{{--                            <span class="menu-title"> More </span>--}}
-{{--                            <span class="menu-arrow">--}}
-{{--                <i class="ki-filled ki-right text-3xs rtl:translate rtl:rotate-180"></i>--}}
-{{--              </span>--}}
-{{--                        </div>--}}
-{{--                        <div class="menu-default menu-dropdown gap-0.5 w-[220px]">--}}
-{{--                            <div class="menu-item">--}}
-{{--                                <a class="menu-link" href="html/demo8/public-profile/campaigns/card.html">--}}
-{{--                                    <span class="menu-title"> Campaigns - Card </span>--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                            <div class="menu-item">--}}
-{{--                                <a class="menu-link" href="html/demo8/public-profile/campaigns/list.html">--}}
-{{--                                    <span class="menu-title"> Campaigns - List </span>--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                            <div class="menu-item">--}}
-{{--                                <a class="menu-link" href="html/demo8/public-profile/empty.html">--}}
-{{--                                    <span class="menu-title"> Empty </span>--}}
-{{--                                </a>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+            <!-- ============================================ -->
+            <!-- MENÚ DE CLIENTES -->
+            <!-- ============================================ -->
+            <div class="menu-item" data-menu-item-offset="-10px, 14px" data-menu-item-overflow="true"
+                 data-menu-item-placement="right-start" data-menu-item-toggle="dropdown"
+                 data-menu-item-trigger="click|lg:hover">
+                <div class="menu-link rounded-[9px] border border-transparent menu-item-here:border-gray-200 menu-item-here:bg-light menu-link-hover:bg-light menu-link-hover:border-gray-200 w-[62px] h-[60px] flex flex-col justify-center items-center gap-1 p-2 grow">
+        <span class="menu-icon menu-item-here:text-primary menu-item-active:text-primary menu-link-hover:text-primary text-gray-600">
+            <i class="ki-filled ki-people text-1.5xl"></i>
+        </span>
+                    <span class="menu-title menu-item-here:text-primary menu-item-active:text-primary menu-link-hover:text-primary font-medium text-xs text-gray-600">
+            Clientes
+        </span>
+                </div>
+                <div class="menu-default menu-dropdown gap-0.5 w-[220px] scrollable-y-auto lg:overflow-visible max-h-[50vh]">
+                    <!-- Todos los Clientes -->
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ route('backend.clients.index') }}">
+                <span class="menu-icon">
+                    <i class="ki-filled ki-people"></i>
+                </span>
+                            <span class="menu-title">Todos los Clientes</span>
+                        </a>
+                    </div>
+
+                    <!-- Nuevo Cliente -->
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ route('backend.clients.create') }}">
+                <span class="menu-icon">
+                    <i class="ki-filled ki-plus-circle"></i>
+                </span>
+                            <span class="menu-title">Nuevo Cliente</span>
+                        </a>
+                    </div>
+
+                    <div class="menu-separator"></div>
+
+                    <!-- Filtros Rápidos -->
+                    <div class="menu-item" data-menu-item-placement="right-start"
+                         data-menu-item-toggle="accordion|lg:dropdown" data-menu-item-trigger="click|lg:hover">
+                        <div class="menu-link grow cursor-pointer">
+                <span class="menu-icon">
+                    <i class="ki-filled ki-filter"></i>
+                </span>
+                            <span class="menu-title">Filtros Rápidos</span>
+                            <span class="menu-arrow">
+                    <i class="ki-filled ki-right text-3xs rtl:translate rtl:rotate-180"></i>
+                </span>
+                        </div>
+                        <div class="menu-default menu-dropdown gap-0.5 w-[220px]">
+                            <!-- Propietarios -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.clients.index', ['client_type' => 'owner']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-home"></i>
+                        </span>
+                                    <span class="menu-title">Propietarios</span>
+                                </a>
+                            </div>
+
+                            <!-- Compradores -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.clients.index', ['client_type' => 'buyer']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-dollar"></i>
+                        </span>
+                                    <span class="menu-title">Compradores</span>
+                                </a>
+                            </div>
+
+                            <!-- Inquilinos -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.clients.index', ['client_type' => 'tenant']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-security-user"></i>
+                        </span>
+                                    <span class="menu-title">Inquilinos</span>
+                                </a>
+                            </div>
+
+                            <div class="menu-separator"></div>
+
+                            <!-- Con Propiedades -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.clients.index') }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-chart-line-up-2"></i>
+                        </span>
+                                    <span class="menu-title">Con Propiedades</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-separator"></div>
+
+                    <!-- Estado -->
+                    <div class="menu-item" data-menu-item-placement="right-start"
+                         data-menu-item-toggle="accordion|lg:dropdown" data-menu-item-trigger="click|lg:hover">
+                        <div class="menu-link grow cursor-pointer">
+                <span class="menu-icon">
+                    <i class="ki-filled ki-toggle-on"></i>
+                </span>
+                            <span class="menu-title">Por Estado</span>
+                            <span class="menu-arrow">
+                    <i class="ki-filled ki-right text-3xs rtl:translate rtl:rotate-180"></i>
+                </span>
+                        </div>
+                        <div class="menu-default menu-dropdown gap-0.5 w-[220px]">
+                            <!-- Activos -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.clients.index', ['status' => '1']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-check-circle text-success"></i>
+                        </span>
+                                    <span class="menu-title">Activos</span>
+                                </a>
+                            </div>
+
+                            <!-- Inactivos -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.clients.index', ['status' => '0']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-cross-circle text-danger"></i>
+                        </span>
+                                    <span class="menu-title">Inactivos</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- MENÚ DE USUARIOS -->
+            <!-- ============================================ -->
+            <div class="menu-item" data-menu-item-offset="-10px, 14px" data-menu-item-overflow="true"
+                 data-menu-item-placement="right-start" data-menu-item-toggle="dropdown"
+                 data-menu-item-trigger="click|lg:hover">
+                <div class="menu-link rounded-[9px] border border-transparent menu-item-here:border-gray-200 menu-item-here:bg-light menu-link-hover:bg-light menu-link-hover:border-gray-200 w-[62px] h-[60px] flex flex-col justify-center items-center gap-1 p-2 grow">
+        <span class="menu-icon menu-item-here:text-primary menu-item-active:text-primary menu-link-hover:text-primary text-gray-600">
+            <i class="ki-filled ki-address-book text-1.5xl"></i>
+        </span>
+                    <span class="menu-title menu-item-here:text-primary menu-item-active:text-primary menu-link-hover:text-primary font-medium text-xs text-gray-600">
+            Usuarios
+        </span>
+                </div>
+                <div class="menu-default menu-dropdown gap-0.5 w-[220px] scrollable-y-auto lg:overflow-visible max-h-[50vh]">
+                    <!-- Todos los Usuarios -->
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ route('backend.users.index') }}">
+                <span class="menu-icon">
+                    <i class="ki-filled ki-people"></i>
+                </span>
+                            <span class="menu-title">Todos los Usuarios</span>
+                        </a>
+                    </div>
+
+                    <!-- Nuevo Usuario -->
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ route('backend.users.create') }}">
+                <span class="menu-icon">
+                    <i class="ki-filled ki-plus-circle"></i>
+                </span>
+                            <span class="menu-title">Nuevo Usuario</span>
+                        </a>
+                    </div>
+
+                    <div class="menu-separator"></div>
+
+                    <!-- Por Rol -->
+                    <div class="menu-item" data-menu-item-placement="right-start"
+                         data-menu-item-toggle="accordion|lg:dropdown" data-menu-item-trigger="click|lg:hover">
+                        <div class="menu-link grow cursor-pointer">
+                <span class="menu-icon">
+                    <i class="ki-filled ki-badge"></i>
+                </span>
+                            <span class="menu-title">Por Rol</span>
+                            <span class="menu-arrow">
+                    <i class="ki-filled ki-right text-3xs rtl:translate rtl:rotate-180"></i>
+                </span>
+                        </div>
+                        <div class="menu-default menu-dropdown gap-0.5 w-[220px]">
+                            <!-- Administradores -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.users.index', ['role' => 'admin']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-shield-tick text-danger"></i>
+                        </span>
+                                    <span class="menu-title">Administradores</span>
+                                </a>
+                            </div>
+
+                            <!-- Agentes -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.users.index', ['role' => 'agent']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-user-tick text-primary"></i>
+                        </span>
+                                    <span class="menu-title">Agentes</span>
+                                </a>
+                            </div>
+
+                            <!-- Usuarios -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.users.index', ['role' => 'user']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-profile-circle text-info"></i>
+                        </span>
+                                    <span class="menu-title">Usuarios</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-separator"></div>
+
+                    <!-- Por Estado -->
+                    <div class="menu-item" data-menu-item-placement="right-start"
+                         data-menu-item-toggle="accordion|lg:dropdown" data-menu-item-trigger="click|lg:hover">
+                        <div class="menu-link grow cursor-pointer">
+                <span class="menu-icon">
+                    <i class="ki-filled ki-toggle-on"></i>
+                </span>
+                            <span class="menu-title">Por Estado</span>
+                            <span class="menu-arrow">
+                    <i class="ki-filled ki-right text-3xs rtl:translate rtl:rotate-180"></i>
+                </span>
+                        </div>
+                        <div class="menu-default menu-dropdown gap-0.5 w-[220px]">
+                            <!-- Activos -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.users.index', ['status' => 'active']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-check-circle text-success"></i>
+                        </span>
+                                    <span class="menu-title">Activos</span>
+                                </a>
+                            </div>
+
+                            <!-- Inactivos -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.users.index', ['status' => 'inactive']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-cross-circle text-danger"></i>
+                        </span>
+                                    <span class="menu-title">Inactivos</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- MENÚ DE INQUILINOS (desde contratos) -->
+            <!-- ============================================ -->
+            <div class="menu-item" data-menu-item-offset="-10px, 14px" data-menu-item-overflow="true"
+                 data-menu-item-placement="right-start" data-menu-item-toggle="dropdown"
+                 data-menu-item-trigger="click|lg:hover">
+                <div class="menu-link rounded-[9px] border border-transparent menu-item-here:border-gray-200 menu-item-here:bg-light menu-link-hover:bg-light menu-link-hover:border-gray-200 w-[62px] h-[60px] flex flex-col justify-center items-center gap-1 p-2 grow">
+        <span class="menu-icon menu-item-here:text-primary menu-item-active:text-primary menu-link-hover:text-primary text-gray-600">
+            <i class="ki-filled ki-security-user text-1.5xl"></i>
+        </span>
+                    <span class="menu-title menu-item-here:text-primary menu-item-active:text-primary menu-link-hover:text-primary font-medium text-xs text-gray-600">
+            Inquilinos
+        </span>
+                </div>
+                <div class="menu-default menu-dropdown gap-0.5 w-[220px] scrollable-y-auto lg:overflow-visible max-h-[50vh]">
+                    <!-- Todos los Contratos -->
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ route('backend.tenants.index') }}">
+                <span class="menu-icon">
+                    <i class="ki-filled ki-document"></i>
+                </span>
+                            <span class="menu-title">Todos los Contratos</span>
+                        </a>
+                    </div>
+
+                    <!-- Inquilinos Únicos -->
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ route('backend.tenants.list') }}">
+                <span class="menu-icon">
+                    <i class="ki-filled ki-people"></i>
+                </span>
+                            <span class="menu-title">Inquilinos Únicos</span>
+                        </a>
+                    </div>
+
+                    <div class="menu-separator"></div>
+
+                    <!-- Por Estado de Contrato -->
+                    <div class="menu-item" data-menu-item-placement="right-start"
+                         data-menu-item-toggle="accordion|lg:dropdown" data-menu-item-trigger="click|lg:hover">
+                        <div class="menu-link grow cursor-pointer">
+                <span class="menu-icon">
+                    <i class="ki-filled ki-chart-simple"></i>
+                </span>
+                            <span class="menu-title">Por Estado</span>
+                            <span class="menu-arrow">
+                    <i class="ki-filled ki-right text-3xs rtl:translate rtl:rotate-180"></i>
+                </span>
+                        </div>
+                        <div class="menu-default menu-dropdown gap-0.5 w-[220px]">
+                            <!-- Contratos Activos -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.tenants.index', ['status' => 'active']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-check-circle text-success"></i>
+                        </span>
+                                    <span class="menu-title">Activos</span>
+                                </a>
+                            </div>
+
+                            <!-- Contratos Expirados -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.tenants.index', ['status' => 'expired']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-cross-circle text-danger"></i>
+                        </span>
+                                    <span class="menu-title">Expirados</span>
+                                </a>
+                            </div>
+
+                            <!-- Contratos Terminados -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.tenants.index', ['status' => 'terminated']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-minus-circle text-gray-500"></i>
+                        </span>
+                                    <span class="menu-title">Terminados</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-separator"></div>
+
+                    <!-- Por Tipo de Contrato -->
+                    <div class="menu-item" data-menu-item-placement="right-start"
+                         data-menu-item-toggle="accordion|lg:dropdown" data-menu-item-trigger="click|lg:hover">
+                        <div class="menu-link grow cursor-pointer">
+                <span class="menu-icon">
+                    <i class="ki-filled ki-category"></i>
+                </span>
+                            <span class="menu-title">Tipo de Contrato</span>
+                            <span class="menu-arrow">
+                    <i class="ki-filled ki-right text-3xs rtl:translate rtl:rotate-180"></i>
+                </span>
+                        </div>
+                        <div class="menu-default menu-dropdown gap-0.5 w-[220px]">
+                            <!-- Alquileres -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.tenants.index', ['contract_type' => 'rent']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-home-2 text-primary"></i>
+                        </span>
+                                    <span class="menu-title">Alquileres</span>
+                                </a>
+                            </div>
+
+                            <!-- Anticréticos -->
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.tenants.index', ['contract_type' => 'anticretico']) }}">
+                        <span class="menu-icon">
+                            <i class="ki-filled ki-dollar text-warning"></i>
+                        </span>
+                                    <span class="menu-title">Anticréticos</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-separator"></div>
+
+                    <!-- Exportar -->
+                    <div class="menu-item">
+                        <a class="menu-link" href="{{ route('backend.tenants.export', 'csv') }}">
+                <span class="menu-icon">
+                    <i class="ki-filled ki-file-down"></i>
+                </span>
+                            <span class="menu-title">Exportar a CSV</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
 
             <div class="menu-item" data-menu-item-offset="-10px, 14px" data-menu-item-overflow="true"
                  data-menu-item-placement="right-start" data-menu-item-toggle="dropdown"
@@ -460,6 +692,7 @@
 
                 </div>
             </div>
+
             <div class="menu-item" data-menu-item-offset="-10px, 14px" data-menu-item-overflow="true"
                  data-menu-item-placement="right-start" data-menu-item-toggle="dropdown"
                  data-menu-item-trigger="click|lg:hover">
@@ -596,211 +829,191 @@
     </div>
 
 
+    <!-- ============================================ -->
+    <!-- SIDEBAR FOOTER - Menú de Perfil de Usuario -->
+    <!-- ============================================ -->
     <div class="flex flex-col gap-5 items-center shrink-0 pb-4" id="sidebar_footer">
         <div class="menu" data-menu="true">
             <div class="menu-item" data-menu-item-offset="-20px, 28px" data-menu-item-overflow="true"
                  data-menu-item-placement="right-end" data-menu-item-toggle="dropdown"
                  data-menu-item-trigger="click|lg:click">
                 <div class="menu-toggle btn btn-icon">
-                    <img alt="" class="size-8 justify-center rounded-lg border border-gray-500 shrink-0"
-                         src="assets/media/avatars/gray/5.png"></img>
+                    @if(auth()->user()->photo)
+                        <img alt="{{ auth()->user()->full_name }}"
+                             class="size-8 justify-center rounded-lg border border-gray-500 shrink-0"
+                             src="{{ asset('storage/' . auth()->user()->photo) }}">
+                    @else
+                        <div class="size-8 justify-center rounded-lg border border-gray-500 shrink-0 bg-primary-light flex items-center">
+                            <span class="text-primary font-bold text-sm">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                        </div>
+                    @endif
                 </div>
                 <div class="menu-dropdown menu-default light:border-gray-300 w-screen max-w-[250px]">
+                    <!-- Header con info del usuario -->
                     <div class="flex items-center justify-between px-5 py-1.5 gap-1.5">
                         <div class="flex items-center gap-2">
-                            <img alt="" class="size-9 rounded-full border-2 border-success"
-                                 src="assets/media/avatars/300-2.png">
+                            @if(auth()->user()->photo)
+                                <img alt="{{ auth()->user()->full_name }}"
+                                     class="size-9 rounded-full border-2 border-success"
+                                     src="{{ asset('storage/' . auth()->user()->photo) }}">
+                            @else
+                                <div class="size-9 rounded-full border-2 border-success bg-primary-light flex items-center justify-center">
+                                    <span class="text-primary font-bold">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                                </div>
+                            @endif
                             <div class="flex flex-col gap-1.5">
-                                <span class="text-sm text-gray-800 font-semibold leading-none"> Cody Fisher </span>
+                                <span class="text-sm text-gray-800 font-semibold leading-none">{{ auth()->user()->full_name }}</span>
                                 <a class="text-xs text-gray-600 hover:text-primary font-medium leading-none"
-                                   href="html/demo8/account/home/get-started.html"> c.fisher@gmail.com </a>
+                                   href="{{ route('profile.edit') }}">{{ auth()->user()->email }}</a>
                             </div>
-                            </img>
                         </div>
-                        <span class="badge badge-xs badge-primary badge-outline"> Pro </span>
+                        @php
+                            $roleColors = [
+                                'admin' => 'danger',
+                                'agent' => 'primary',
+                                'user' => 'info'
+                            ];
+                            $roleLabels = [
+                                'admin' => 'Admin',
+                                'agent' => 'Agente',
+                                'user' => 'Usuario'
+                            ];
+                        @endphp
+                        <span class="badge badge-xs badge-{{ $roleColors[auth()->user()->role] ?? 'light' }} badge-outline">
+                        {{ $roleLabels[auth()->user()->role] ?? 'Usuario' }}
+                    </span>
                     </div>
                     <div class="menu-separator"></div>
+
+                    <!-- Menú Principal -->
                     <div class="flex flex-col">
+                        <!-- Mi Perfil -->
                         <div class="menu-item">
-                            <a class="menu-link" href="html/demo8/public-profile/profiles/default.html">
-                <span class="menu-icon">
-                  <i class="ki-filled ki-badge"></i>
-                </span>
-                                <span class="menu-title"> Public Profile </span>
+                            <a class="menu-link" href="{{ route('profile.edit') }}">
+                            <span class="menu-icon">
+                                <i class="ki-filled ki-profile-circle"></i>
+                            </span>
+                                <span class="menu-title">Mi Perfil</span>
                             </a>
                         </div>
-                        <div class="menu-item">
-                            <a class="menu-link" href="html/demo8/account/home/user-profile.html">
-                <span class="menu-icon">
-                  <i class="ki-filled ki-profile-circle"></i>
-                </span>
-                                <span class="menu-title"> My Profile </span>
-                            </a>
-                        </div>
+
+                        <!-- Mis Propiedades (solo para agentes) -->
+                        @if(auth()->user()->role === 'agent')
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.properties.index', ['agent_id' => auth()->id()]) }}">
+                            <span class="menu-icon">
+                                <i class="ki-filled ki-home-2"></i>
+                            </span>
+                                    <span class="menu-title">Mis Propiedades</span>
+                                    <span class="badge badge-sm badge-primary">
+                                {{ auth()->user()->properties()->count() }}
+                            </span>
+                                </a>
+                            </div>
+                        @endif
+
+                        <!-- Mi Cuenta (Submenu) -->
                         <div class="menu-item" data-menu-item-offset="-50px, 0" data-menu-item-placement="left-start"
                              data-menu-item-placement-rtl="right-start" data-menu-item-toggle="dropdown"
                              data-menu-item-trigger="click|lg:hover">
                             <div class="menu-link">
-                <span class="menu-icon">
-                  <i class="ki-filled ki-setting-2"></i>
-                </span>
-                                <span class="menu-title"> My Account </span>
+                            <span class="menu-icon">
+                                <i class="ki-filled ki-setting-2"></i>
+                            </span>
+                                <span class="menu-title">Mi Cuenta</span>
                                 <span class="menu-arrow">
-                  <i class="ki-filled ki-right text-3xs rtl:transform rtl:rotate-180"></i>
-                </span>
+                                <i class="ki-filled ki-right text-3xs rtl:transform rtl:rotate-180"></i>
+                            </span>
                             </div>
                             <div class="menu-dropdown menu-default light:border-gray-300 w-full max-w-[220px]">
+                                <!-- Información Personal -->
                                 <div class="menu-item">
-                                    <a class="menu-link" href="html/demo8/account/home/get-started.html">
-                    <span class="menu-icon">
-                      <i class="ki-filled ki-coffee"></i>
-                    </span>
-                                        <span class="menu-title"> Get Started </span>
+                                    <a class="menu-link" href="{{ route('profile.edit') }}">
+                                    <span class="menu-icon">
+                                        <i class="ki-filled ki-profile-user"></i>
+                                    </span>
+                                        <span class="menu-title">Información Personal</span>
                                     </a>
                                 </div>
+
+                                <!-- Cambiar Contraseña -->
                                 <div class="menu-item">
-                                    <a class="menu-link" href="html/demo8/account/home/user-profile.html">
-                    <span class="menu-icon">
-                      <i class="ki-filled ki-some-files"></i>
-                    </span>
-                                        <span class="menu-title"> My Profile </span>
+                                    <a class="menu-link" href="{{ route('profile.edit') }}#password">
+                                    <span class="menu-icon">
+                                        <i class="ki-filled ki-key"></i>
+                                    </span>
+                                        <span class="menu-title">Cambiar Contraseña</span>
                                     </a>
                                 </div>
-                                <div class="menu-item">
-                                    <a class="menu-link" href="#">
-                    <span class="menu-icon">
-                      <i class="ki-filled ki-icon"></i>
-                    </span>
-                                        <span class="menu-title"> Billing </span>
-                                        <span class="menu-badge" data-tooltip="true" data-tooltip-placement="top">
-                      <i class="ki-filled ki-information-2 text-md text-gray-500"></i>
-                      <span class="tooltip" data-tooltip-content="true"> Payment and subscription info </span>
-                    </span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link" href="html/demo8/account/security/overview.html">
-                    <span class="menu-icon">
-                      <i class="ki-filled ki-medal-star"></i>
-                    </span>
-                                        <span class="menu-title"> Security </span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link" href="html/demo8/account/members/teams.html">
-                    <span class="menu-icon">
-                      <i class="ki-filled ki-setting"></i>
-                    </span>
-                                        <span class="menu-title"> Members & Roles </span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link" href="html/demo8/account/integrations.html">
-                    <span class="menu-icon">
-                      <i class="ki-filled ki-switch"></i>
-                    </span>
-                                        <span class="menu-title"> Integrations </span>
-                                    </a>
-                                </div>
+
+                                <!-- Mi Paquete -->
+                                @if(auth()->user()->package)
+                                    <div class="menu-item">
+                                        <a class="menu-link" href="#">
+                                    <span class="menu-icon">
+                                        <i class="ki-filled ki-award"></i>
+                                    </span>
+                                            <span class="menu-title">Mi Paquete</span>
+                                            <span class="badge badge-sm badge-success">
+                                        {{ auth()->user()->package->name }}
+                                    </span>
+                                        </a>
+                                    </div>
+                                @endif
+
                                 <div class="menu-separator"></div>
-                                <div class="menu-item">
-                                    <a class="menu-link" href="html/demo8/account/security/overview.html">
-                    <span class="menu-icon">
-                      <i class="ki-filled ki-shield-tick"></i>
-                    </span>
-                                        <span class="menu-title"> Notifications </span>
-                                        <label class="switch switch-sm">
-                                            <input checked="" name="check" type="checkbox" value="1"></input>
-                                        </label>
-                                    </a>
-                                </div>
+
+                                <!-- Estadísticas (solo agentes) -->
+                                @if(auth()->user()->role === 'agent')
+                                    <div class="menu-item">
+                                        <a class="menu-link" href="{{ route('backend.properties.index') }}">
+                                    <span class="menu-icon">
+                                        <i class="ki-filled ki-chart-line"></i>
+                                    </span>
+                                            <span class="menu-title">Mis Estadísticas</span>
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
                         </div>
-                        <div class="menu-item">
-                            <a class="menu-link" href="https://devs.keenthemes.com">
-                <span class="menu-icon">
-                  <i class="ki-filled ki-message-programming"></i>
-                </span>
-                                <span class="menu-title"> Dev Forum </span>
-                            </a>
-                        </div>
-                        <div class="menu-item" data-menu-item-offset="-10px, 0" data-menu-item-placement="left-start"
-                             data-menu-item-toggle="dropdown" data-menu-item-trigger="click|lg:hover">
-                            <div class="menu-link">
-                <span class="menu-icon">
-                  <i class="ki-filled ki-icon"></i>
-                </span>
-                                <span class="menu-title"> Language </span>
-                                <div
-                                    class="flex items-center gap-1.5 rounded-md border border-gray-300 text-gray-600 p-1.5 text-2xs font-medium shrink-0">
-                                    English <img alt="" class="inline-block size-3.5 rounded-full"
-                                                 src="assets/media/flags/united-states.svg"/>
-                                </div>
+
+                        <!-- Gestión de Usuarios (solo admins) -->
+                        @if(auth()->user()->role === 'admin')
+                            <div class="menu-separator"></div>
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('backend.users.index') }}">
+                            <span class="menu-icon">
+                                <i class="ki-filled ki-people"></i>
+                            </span>
+                                    <span class="menu-title">Gestionar Usuarios</span>
+                                </a>
                             </div>
-                            <div class="menu-dropdown menu-default light:border-gray-300 w-full max-w-[170px]">
-                                <div class="menu-item active">
-                                    <a class="menu-link h-10" href="?dir=ltr">
-                    <span class="menu-icon">
-                      <img alt="" class="inline-block size-4 rounded-full" src="assets/media/flags/united-states.svg"/>
-                    </span>
-                                        <span class="menu-title"> English </span>
-                                        <span class="menu-badge">
-                      <i class="ki-solid ki-check-circle text-success text-base"></i>
-                    </span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link h-10" href="?dir=rtl">
-                    <span class="menu-icon">
-                      <img alt="" class="inline-block size-4 rounded-full" src="assets/media/flags/saudi-arabia.svg"/>
-                    </span>
-                                        <span class="menu-title"> Arabic(Saudi) </span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link h-10" href="?dir=ltr">
-                    <span class="menu-icon">
-                      <img alt="" class="inline-block size-4 rounded-full" src="assets/media/flags/spain.svg"/>
-                    </span>
-                                        <span class="menu-title"> Spanish </span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link h-10" href="?dir=ltr">
-                    <span class="menu-icon">
-                      <img alt="" class="inline-block size-4 rounded-full" src="assets/media/flags/germany.svg"/>
-                    </span>
-                                        <span class="menu-title"> German </span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link h-10" href="?dir=ltr">
-                    <span class="menu-icon">
-                      <img alt="" class="inline-block size-4 rounded-full" src="assets/media/flags/japan.svg"/>
-                    </span>
-                                        <span class="menu-title"> Japanese </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        @endif
                     </div>
+
                     <div class="menu-separator"></div>
+
+                    <!-- Dark Mode y Logout -->
                     <div class="flex flex-col">
                         <div class="menu-item mb-0.5">
                             <div class="menu-link">
-                <span class="menu-icon">
-                  <i class="ki-filled ki-moon"></i>
-                </span>
-                                <span class="menu-title"> Dark Mode </span>
+                            <span class="menu-icon">
+                                <i class="ki-filled ki-moon"></i>
+                            </span>
+                                <span class="menu-title">Modo Oscuro</span>
                                 <label class="switch switch-sm">
-                                    <input data-theme-state="dark" data-theme-toggle="true" name="check" type="checkbox"
-                                           value="1"></input>
+                                    <input data-theme-state="dark" data-theme-toggle="true" name="check" type="checkbox" value="1">
                                 </label>
                             </div>
                         </div>
                         <div class="menu-item px-4 py-1.5">
-                            <a class="btn btn-sm btn-light justify-center"
-                               href="html/demo8/authentication/classic/sign-in.html"> Log out </a>
+                            <form method="POST" action="{{ route('logout') }}" class="w-full">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-light justify-center w-full">
+                                    <i class="ki-filled ki-exit-left"></i>
+                                    Cerrar Sesión
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

@@ -338,4 +338,28 @@ class PropertyContract extends Model
             $contract->updated_by = auth()->id();
         });
     }
+
+    /**
+     * Obtener nombre completo del inquilino
+     */
+    public function getTenantFullName(): string
+    {
+        return $this->tenant_name ?? 'Sin inquilino';
+    }
+
+    /**
+     * Verificar si tiene información de inquilino
+     */
+    public function hasTenant(): bool
+    {
+        return !empty($this->tenant_name);
+    }
+
+    /**
+     * Scope para contratos con inquilino
+     */
+    public function scopeWithTenant($query)
+    {
+        return $query->whereNotNull('tenant_name');
+    }
 }

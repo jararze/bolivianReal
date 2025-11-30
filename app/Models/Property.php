@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -295,6 +296,11 @@ class Property extends Model
         // Solo propiedades de alquiler o anticrético pueden tener contratos
         // Ajusta esta lógica según tus service_types
         return in_array($this->service_type_id, [2, 3]); // Ejemplo: 2=Alquiler, 3=Anticrético
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
     }
 
 }
